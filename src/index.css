@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  font-family: "Poppins", system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: #ffffff;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Dark blue color scheme */
+  --scrollbar-track: #eceef2;       /* Tailwind's blue-900 */
+  --scrollbar-thumb: #1e40af;      /* Tailwind's blue-800 */
+  --scrollbar-thumb-hover: #1e3a8a; /* Tailwind's blue-900 */
+  --scrollbar-border: #3b82f6;      /* Tailwind's blue-500 for accent */      --radius: 0.625rem;      --background: oklch(1 0 0);      --foreground: oklch(0.145 0 0);      --card: oklch(1 0 0);      --card-foreground: oklch(0.145 0 0);      --popover: oklch(1 0 0);      --popover-foreground: oklch(0.145 0 0);      --primary: oklch(0.205 0 0);      --primary-foreground: oklch(0.985 0 0);      --secondary: oklch(0.97 0 0);      --secondary-foreground: oklch(0.205 0 0);      --muted: oklch(0.97 0 0);      --muted-foreground: oklch(0.556 0 0);      --accent: oklch(0.97 0 0);      --accent-foreground: oklch(0.205 0 0);      --destructive: oklch(0.577 0.245 27.325);      --border: oklch(0.922 0 0);      --input: oklch(0.922 0 0);      --ring: oklch(0.708 0 0);      --chart-1: oklch(0.646 0.222 41.116);      --chart-2: oklch(0.6 0.118 184.704);      --chart-3: oklch(0.398 0.07 227.392);      --chart-4: oklch(0.828 0.189 84.429);      --chart-5: oklch(0.769 0.188 70.08);      --sidebar: oklch(0.985 0 0);      --sidebar-foreground: oklch(0.145 0 0);      --sidebar-primary: oklch(0.205 0 0);      --sidebar-primary-foreground: oklch(0.985 0 0);      --sidebar-accent: oklch(0.97 0 0);      --sidebar-accent-foreground: oklch(0.205 0 0);      --sidebar-border: oklch(0.922 0 0);      --sidebar-ring: oklch(0.708 0 0);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 10px;
+  border: 2px solid var(--scrollbar-border);
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border-color: #60a5fa; /* Tailwind's blue-400 */
+  transform: scale(1.05);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
+}
+
+/* Firefox - Custom Styling */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-gutter: stable;
+}
+
+/* Optional: Animated scrollbar for interactive feel */
+@keyframes scrollbar-pulse {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+
+::-webkit-scrollbar-thumb {
+  animation: scrollbar-pulse 3s ease infinite;
+}
+
+/* Special styling for horizontal scrollbars */
+::-webkit-scrollbar-thumb:horizontal {
+  background: linear-gradient(90deg, var(--scrollbar-thumb), var(--scrollbar-border), var(--scrollbar-thumb));
+}
+
+/* Custom scrollbar for specific containers */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.custom-scroll::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--scrollbar-thumb), var(--scrollbar-thumb-hover));
+}
