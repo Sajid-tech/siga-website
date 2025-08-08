@@ -1,11 +1,10 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
 import "swiper/css/navigation"
-import { SparklesIcon } from "lucide-react"
 import {
   Autoplay,
   EffectCoverflow,
@@ -13,7 +12,6 @@ import {
   Pagination,
 } from "swiper/modules"
 
-import { Badge } from "../../components/ui/badge"
 
 export const CardCarousel = ({
   images,
@@ -21,6 +19,10 @@ export const CardCarousel = ({
   showPagination = true,
   showNavigation = true,
 }) => {
+
+ 
+
+
   const css = `
   .swiper {
     width: 100%;
