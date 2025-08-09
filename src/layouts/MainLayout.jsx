@@ -7,9 +7,9 @@ const MainLayout = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
      
-     <div className="fixed top-0 left-0 w-full z-50  ">
+     {/* <div className="fixed top-0 left-0 w-full z-50  ">
         <Navbar />
-      </div>
+      </div> */}
 
    {/* // pt-36  */}
       <main className="flex-grow   "> 
@@ -19,7 +19,7 @@ const MainLayout = ({ children }) => {
       </main>
 
       <Footer />
-      <AppBottombar/>
+      {/* <AppBottombar/> */}
     </div>
    
   );

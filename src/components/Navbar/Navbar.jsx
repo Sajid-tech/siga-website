@@ -65,10 +65,10 @@ const Navbar = () => {
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
-    { name: "Event", path: "/categories" },
-    { name: "Gallery", path: "/products" },
-    { name: "Member", path: "/contact" },
-    { name: "Service", path: "/contact" },
+    { name: "Event", path: "/event" },
+    { name: "Gallery", path: "/gallery" },
+    { name: "Member", path: "/member" },
+    { name: "Service", path: "/service" },
     { name: "Contact", path: "/contact" },
   ];
 
