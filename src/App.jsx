@@ -21,12 +21,14 @@ import RecentlyViewed from "./pages/recently-viewed/RecentlyViewed.jsx";
 
 import Blog from "./pages/blog/Blog.jsx";
 import BlogDetails from "./pages/blog/BlogDetails.jsx";
+import Newsletter from "./components/newsletter/Newsletter";
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
+      <Newsletter/>
       <Toaster richColors position="top-right" />
       <QueryClientProvider client={queryClient}>
         <MainLayout>
