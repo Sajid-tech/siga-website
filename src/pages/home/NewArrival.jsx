@@ -51,7 +51,7 @@ const NewArrival = () => {
           autoplayDelay={3000}
           showPagination={true}
           showNavigation={true}
-          className="relative z-30"
+          className="relative z-0"
         />
       </div>
     </div>

@@ -1,6 +1,8 @@
 import React from 'react'
-import InfoCard from '../../components/Cards/InfoCard'
+
 import TeamMeeting from '../home/TeamMeeting'
+
+import FeaturedAbout from './FeaturedAbout'
 
 
 const AboutUs = () => {
@@ -78,6 +80,7 @@ SIGA has been acting as a catalyst, interacting with the government in matters o
         </div>
 
      <div className='mt-5 '>
+     <FeaturedAbout/>
          <TeamMeeting/>
      </div>
 
