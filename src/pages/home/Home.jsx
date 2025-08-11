@@ -8,6 +8,7 @@ import { HeroSection } from '@/components/blocks/hero-section-1'
 
 import HomeAbout from './HomeAbout'
 import Testimonial from './Testimonial'
+import TeamMeeting from './TeamMeeting'
 
 
 const Home = () => {
@@ -17,13 +18,14 @@ const Home = () => {
      
           {/* <HeroSection /> */}
           <HeroSection />
+              <Featured/>
          <Category/>
     
     <HomeAbout/>
     <NewArrival/>
     <Testimonial/>
-    {/* <Featured/>
-        <Info />
+<TeamMeeting/>
+        {/* <Info />
         <Trending /> */}
     
     
