@@ -1,7 +1,6 @@
 import React from 'react'
 import Category from './Category'
 import NewArrival from './NewArrival'
-import Featured from './Featured'
 import Info from './Info'
 import Trending from './Trending'
 import { HeroSection } from '@/components/blocks/hero-section-1'
@@ -18,7 +17,7 @@ const Home = () => {
      
           {/* <HeroSection /> */}
           <HeroSection />
-              <Featured/>
+            
          <Category/>
     
     <HomeAbout/>

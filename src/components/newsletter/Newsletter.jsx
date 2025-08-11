@@ -6,33 +6,25 @@ const Newsletter = () => {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    // Check if newsletter was already dismissed
-    const isDismissed = localStorage.getItem('newsletter-dismissed');
-    
-    if (!isDismissed) {
-      // Show newsletter after 2 seconds with animation
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
+  
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 2000);
+  
+    return () => clearTimeout(timer);
   }, []);
-
+  
   const handleClose = () => {
     setIsClosing(true);
-    
-    // Save dismissal in localStorage
-    localStorage.setItem('newsletter-dismissed', 'true');
-    
-    // Hide after animation completes
+  
+  
     setTimeout(() => {
       setIsVisible(false);
     }, 500);
   };
-
+  
   const handleSubscribe = () => {
-    // Add your subscription logic here
+
     console.log('Subscribed!');
     handleClose();
   };

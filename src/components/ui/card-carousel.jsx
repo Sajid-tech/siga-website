@@ -23,7 +23,7 @@ export const CardCarousel = ({
  
 
 
-  const css = `
+  const css1 = `
   .swiper {
     width: 100%;
     padding-bottom: 50px;
@@ -54,8 +54,8 @@ export const CardCarousel = ({
   }
   `
   return (
-    <section className="w-ace-y-4">
-      <style>{css}</style>
+    <section className="w-ace-y-4 ">
+      <style>{css1}</style>
       <div
         className="mx-auto  p-2 ">
         <div
