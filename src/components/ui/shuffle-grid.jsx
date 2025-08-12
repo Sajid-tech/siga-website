@@ -17,13 +17,11 @@ export const ShuffleHero = () => {
           waveSpeedY={0.01}
           waveAmpX={40}
           waveAmpY={20}
-          friction={0.9}
-          tension={0.01}
-          maxCursorMove={120}
           xGap={12}
           yGap={36}
+      
         />
-      </div>
+      </div>  
 
       {/* Foreground Content */}
       <div className="relative z-10 w-full px-8 py-12 grid grid-cols-1 md:grid-cols-2 items-center gap-8 max-w-[85rem] mx-auto">

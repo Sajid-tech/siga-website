@@ -8,7 +8,9 @@ import { TextEffect } from "../ui/text-effect";
 import { BackgroundBeamsWithCollision } from "../ui/background-beams-with-collision";
 import FlipLink from "../ui/text-effect-flipper";
 import { CardSwipe } from "@/components/ui/card-swipe";
-import HeroGallery from "./HeroGallery";
+import FlipGallery from "../ui/flip-gallery";
+import BecomeMember from "./BecomeMember";
+
 
 const images = [
   {
@@ -133,7 +135,7 @@ AWAITED
                           key={1}
                           className="bg-foreground/10  rounded-[14px] p-0.5"
                         >
-                          <Button
+                          {/* <Button
                             asChild
                             size="lg"
                             className="rounded-xl  px-5 text-base relative overflow-hidden group"
@@ -146,14 +148,15 @@ AWAITED
                               </span>
                               <span className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 via-yellow-500/40 to-yellow-400/30 opacity-100 transition-opacity duration-300 -skew-x-12" />
                             </Link>
-                          </Button>
+                          </Button> */}
+                          <BecomeMember/>
                         </div>
                       </AnimatedGroup>
                     </div>
                   </div>
 
                   {/* CardSwipe - takes 35% on large screens */}
-                  <div className="lg:w-[35%] relative w-full mt-12 lg:mt-0 p-8">
+                  <div className="lg:w-[35%]  relative w-full mt-12 lg:mt-0 p-8">
 
 
 
@@ -178,18 +181,19 @@ AWAITED
         ></div>
       </div>
       
-                    <CardSwipe
+                    {/* <CardSwipe
                       images={images}
                       autoplayDelay={2000}
                       slideShadows={false}
-                    />
+                    /> */}
+                     <FlipGallery />
                   </div>
                 </div>
               </div>
             </BackgroundBeamsWithCollision>
           </div>
         </section>
-        <HeroGallery/>
+     
       </main>
     </>
   );
