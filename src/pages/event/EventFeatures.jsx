@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { Calendar, Map } from 'lucide-react';
 
 
-export function Features() {
+export function EventFeatures() {
     const timelineEvents = [
         {
             id: 1,
@@ -74,7 +74,7 @@ export function Features() {
     ];
 
     return (
-        <section className="bg-zinc-50 py-1 md:py-3 dark:bg-transparent">
+        <section className="  bg-gradient-to-r from-yellow-50 via-transparent to-purple-50 py-1 md:py-3 dark:bg-transparent">
             <div className="mx-auto max-w-2xl px-6 lg:max-w-[85rem]">
                 <div className="mx-auto grid gap-4 lg:grid-cols-2">
                     {/* Timeline Card */}

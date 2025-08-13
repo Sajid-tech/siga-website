@@ -1,6 +1,6 @@
 import React from 'react'
 import { TestimonialsColumn } from "@/components/ui/testimonials-columns-1";
-import { motion } from "framer-motion";
+
 
 const testimonials = [
   {
@@ -71,11 +71,8 @@ const Testimonial = () => {
    <section className="bg-background my-20 relative">
    
          <div className="mx-auto max-w-[85rem] z-10 ">
-           <motion.div
-             initial={{ opacity: 0, y: 20 }}
-             whileInView={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-             viewport={{ once: true }}
+           <div
+           
              className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
            >
              <div className="flex justify-center">
@@ -88,7 +85,7 @@ const Testimonial = () => {
              <p className="text-center mt-5 opacity-75">
                See what our partners have to say about us.
              </p>
-           </motion.div>
+           </div>
    
            <div className="flex justify-center gap-6 mt-10 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[540px] overflow-hidden">
              <TestimonialsColumn testimonials={firstColumn} duration={15} />

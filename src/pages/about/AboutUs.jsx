@@ -89,4 +89,5 @@ SIGA has been acting as a catalyst, interacting with the government in matters o
   )
 }
 
-export default AboutUs
+
+export default React.memo(AboutUs);

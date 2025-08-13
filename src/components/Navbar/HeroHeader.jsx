@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils"
 import React from "react"
-
-import { Link } from 'react-router-dom'
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Link, useNavigate } from 'react-router-dom'
 import { ArrowRight, ChevronRight, Menu, X } from 'lucide-react'
 import { Button } from "../ui/button"
 const menuItems = [
@@ -14,7 +15,7 @@ const menuItems = [
 const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
-
+const navigate = useNavigate()
     React.useEffect(() => {
         const handleScroll = () => {
             setIsScrolled(window.scrollY > 50)
@@ -26,7 +27,7 @@ const HeroHeader = () => {
         <header>
             <nav
                 data-state={menuState && 'active'}
-                className="fixed z-9999 w-full px-2 group">
+                className="fixed z-999 w-full px-2 group">
                 <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-white max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
                     <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
                         <div className="flex w-full justify-between lg:w-auto">
@@ -50,11 +51,11 @@ const HeroHeader = () => {
                             <ul className="flex gap-8 text-sm">
                                 {menuItems.map((item, index) => (
                                     <li key={index}>
-                                        <Link
-                                            to={item.href}
+                                        <button
+                                            onClick={()=>navigate(item.href)}
                                             className="text-muted-foreground hover:text-accent-foreground block duration-150">
                                             <span>{item.name}</span>
-                                        </Link>
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
@@ -110,12 +111,19 @@ const HeroHeader = () => {
 }
 
 export default HeroHeader
+
 const Logo = ({ className }) => {
     return (
-        <img
-            src="https://southindiagarmentsassociation.com/assets/images/logo.png"
-            alt="Company Logo"
-            className={cn('h-10 w-auto', className)}
-        />
+        // <img
+        //     src="https://southindiagarmentsassociation.com/assets/images/logo.png"
+        //     alt="Company Logo"
+        //     className={cn('h-10 w-auto', className)}
+        // />
+        <LazyLoadImage
+   alt="Company Logo"
+effect="blur"
+  src="https://southindiagarmentsassociation.com/assets/images/logo.png"
+  className={cn('h-10 w-auto', className)}
+  />
     )
 }
