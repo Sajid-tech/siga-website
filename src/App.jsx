@@ -1,44 +1,69 @@
-import Home from "./pages/home/Home";
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-import Contact from "./pages/contact/Contact";
-
 import { Toaster } from "sonner";
-import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
 
-import AboutUs from "./pages/about/AboutUs.jsx";
-
-import Newsletter from "./components/newsletter/Newsletter";
-import VerticalCelebrationText from "./components/verticalText/VerticalDottedText";
+const Home = lazy(() => import("./pages/home/Home"));
+const Contact = lazy(() => import("./pages/contact/Contact"));
+const AboutUs = lazy(() => import("./pages/about/AboutUs"));
+const EventSection = lazy(() => import("./pages/event/EventSection"));
+const MainLayout = lazy(() => import("./layouts/MainLayout"));
+const VerticalCelebrationText = lazy(() => import("./components/verticalText/VerticalDottedText"));
+const Newsletter = lazy(() => import("./components/newsletter/Newsletter"));
+const ScrollToTop = lazy(() => import("./components/ScrollToTop/ScrollToTop.jsx"));
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Router>
-   
-      <Toaster richColors position="top-right" />
-      <QueryClientProvider client={queryClient}>
-     <VerticalCelebrationText/>
-      <ScrollToTop />
-      <Newsletter/> 
-         
-        <MainLayout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-        
-           
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<AboutUs />} />
-         
-          </Routes>
+    <QueryClientProvider client={queryClient}>
+      <Router >
+        <Toaster richColors position="top-right" />
+     
+          <VerticalCelebrationText />
+          <ScrollToTop />
+          <Newsletter />
           
-        </MainLayout>
-      </QueryClientProvider>
-    </Router>
+          <MainLayout>
+  <Routes>
+    <Route
+      path="/"
+      element={
+        <Suspense fallback={<div className="min-h-screen  bg-yellow-500" />}>
+          <Home />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/contact"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <Contact />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/about"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <AboutUs />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/event"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <EventSection />
+        </Suspense>
+      }
+    />
+  </Routes>
+</MainLayout>
+
+     
+      </Router>
+    </QueryClientProvider>
   );
 }
 

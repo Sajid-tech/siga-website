@@ -57,19 +57,22 @@ const SectionWithMockup = ({
     const imageOrderClass = reverseLayout ? "md:col-start-1" : "";
 
     return (
-        <section className="relative bg-zinc-50 py-10 md:py-12 overflow-hidden">
+        <section className="relative  bg-gradient-to-r from-yellow-50 via-transparent to-purple-50 py-10 md:py-12 overflow-hidden">
             <div className="container max-w-[1220px] w-full px-6 md:px-10 relative z-10 mx-auto">
-                <motion.div
+                <div
                     className={`grid grid-cols-1 gap-16 md:gap-8 w-full items-center ${layoutClasses}`}
-                    variants={containerVariants}
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
+                    // variants={containerVariants}
+                    // initial="hidden"
+                    // whileInView="visible"
+                    // viewport={{ once: true, amount: 0.2 }}
                 >
                     {/* Text Content */}
                     <motion.div
                         className={`flex flex-col items-start gap-4 mt-10 md:mt-0 max-w-[546px] mx-auto md:mx-0 ${textOrderClass}`}
-                        variants={itemVariants}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay:  0.1, duration: 0.5 }}
+                        viewport={{ once: true }}
                     >
                         <div className="space-y-2 md:space-y-1">
                             <h2 className="text-black text-3xl md:text-[40px] font-semibold leading-tight md:leading-[53px]">
@@ -77,7 +80,7 @@ const SectionWithMockup = ({
                             </h2>
                         </div>
 
-                        <p className="text-[#868f97] text-sm md:text-[15px] leading-6">
+                        <p className="text-gray-800 text-sm md:text-[15px] leading-6">
                             {description}
                         </p>
                         <div className="flex gap-4 mt-12">
@@ -107,7 +110,7 @@ const SectionWithMockup = ({
               </div>
 
               <div className="mt-16">
-                <p className="text-xs tracking-widest text-gray-400 uppercase mb-4">Event Details</p>
+                <p className="text-xs tracking-widest text-gray-700 uppercase mb-4">Event Details</p>
                 <div className="flex gap-8">
                   <div>
                     <p className="text-sm text-gray-500">Date</p>
@@ -180,7 +183,7 @@ const SectionWithMockup = ({
                             </div>
                         </motion.div>
                     </motion.div>
-                </motion.div>
+                </div>
 
 
                 <EventHighlights />

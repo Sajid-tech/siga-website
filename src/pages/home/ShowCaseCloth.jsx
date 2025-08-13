@@ -1,7 +1,7 @@
 import { CardCarousel } from "../../components/ui/card-carousel";
 import React from "react";
 
-const NewArrival = () => {
+const ShowCaseCloth = () => {
   const images = React.useMemo(() => [
     { src: "https://southindiagarmentsassociation.com/assets/images/brand/100.jpg", alt: "Image 1" },
     { src: "https://southindiagarmentsassociation.com/assets/images/brand/101.jpg", alt: "Image 2" },
@@ -58,4 +58,4 @@ const NewArrival = () => {
   );
 };
 
-export default NewArrival;
+export default ShowCaseCloth;

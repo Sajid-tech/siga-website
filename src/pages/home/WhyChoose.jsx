@@ -1,7 +1,7 @@
 import React from "react";
 import { Heart, Users, Mail, Trophy, ArrowRight } from "lucide-react";
 
-const Category = () => {
+const WhyChoose = () => {
   return (
     <div className="py-12 px-4 relative overflow-hidden  ">
       {/* Refined SVG Pattern Background */}
@@ -152,4 +152,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default WhyChoose;

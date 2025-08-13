@@ -1,12 +1,14 @@
-"use client";
+
 
 import { Waves } from "@/components/ui/waves-background";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const ShuffleHero = () => {
+ const ShuffleHero = () => {
   return (
+    <div className="w-full py-12">
+      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
     <section className="relative w-full overflow-hidden bg-background">
       {/* Waves Background */}
       <div className="absolute inset-0 z-0">
@@ -52,8 +54,11 @@ export const ShuffleHero = () => {
         <ShuffleGrid />
       </div>
     </section>
+    </div>
+    </div>
   );
 };
+
 
 const shuffle = (array) => {
   let currentIndex = array.length, randomIndex;
@@ -119,3 +124,6 @@ const ShuffleGrid = () => {
     </div>
   );
 };
+
+
+export default ShuffleHero
