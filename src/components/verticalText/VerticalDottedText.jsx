@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 const VerticalDottedText = () => {
-  const text = "SIGA FAIR";
+  const text = "SIGA";
   const containerRef = useRef(null);
   const lettersRef = useRef([]);
   const dotsRef = useRef([]);
@@ -35,7 +35,7 @@ const VerticalDottedText = () => {
   return (
     <div 
       ref={containerRef}
-      className="fixed left-4 top-1/2 transform -translate-y-1/2 z-50"
+      className=" hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 z-50"
     >
       <div className="flex flex-col items-center space-y-4">
         {text.split('').map((char, index) => (
@@ -43,7 +43,7 @@ const VerticalDottedText = () => {
           
             <span 
               ref={el => lettersRef.current[index] = el}
-              className="text-xs font-light text-gray-400 tracking-widest transition-all duration-300 hover:text-blue-400 hover:scale-110"
+              className="text-xs font-light text-gray-600 tracking-widest transition-all duration-300 hover:text-blue-400 hover:scale-110"
               style={{
                 opacity: 0,
                 transform: 'translateY(10px)',

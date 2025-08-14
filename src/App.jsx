@@ -2,15 +2,19 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
+import Newsletter from "./components/newsletter/Newsletter.jsx";
+import VerticalDottedText from "./components/verticalText/VerticalDottedText.jsx";
+import MainLayout from "./layouts/MainLayout.jsx";
+
 
 const Home = lazy(() => import("./pages/home/Home"));
 const Contact = lazy(() => import("./pages/contact/Contact"));
 const AboutUs = lazy(() => import("./pages/about/AboutUs"));
 const EventSection = lazy(() => import("./pages/event/EventSection"));
-const MainLayout = lazy(() => import("./layouts/MainLayout"));
-const VerticalCelebrationText = lazy(() => import("./components/verticalText/VerticalDottedText"));
-const Newsletter = lazy(() => import("./components/newsletter/Newsletter"));
-const ScrollToTop = lazy(() => import("./components/ScrollToTop/ScrollToTop.jsx"));
+
+
+const Service = lazy(() => import("./pages/service/Service"));
 
 const queryClient = new QueryClient();
 
@@ -20,7 +24,7 @@ function App() {
       <Router >
         <Toaster richColors position="top-right" />
      
-          <VerticalCelebrationText />
+          <VerticalDottedText />
           <ScrollToTop />
           <Newsletter />
           
@@ -55,6 +59,14 @@ function App() {
       element={
         <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
           <EventSection />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/service"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <Service />
         </Suspense>
       }
     />

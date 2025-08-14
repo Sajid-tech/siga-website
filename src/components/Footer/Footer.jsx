@@ -36,7 +36,7 @@ const data = {
   contact: {
     email: 'sigabengluru@gmail.com',
     phone: '+91 9998887776',
-    address: 'Jaydeva, Karnataka, India',
+    address: 'No. 308, 1st Floor, Auto Tower #9, J.C. Road, Bangalore-560002.',
   },
   company: {
     name: 'SIGA-FAIR',
@@ -83,8 +83,8 @@ const contactInfo = [
 
 export default function Footer() {
   return (
-    <footer className="bg-red-200/20 mt-16  w-full place-self-end rounded-t-xl">
-      <div className="mx-auto max-w-[85rem] px-4 pt-16 pb-6 sm:px-6 lg:px-8 lg:pt-24">
+    <footer className=" mt-16  w-full place-self-end rounded-t-xl">
+      <div className="mx-auto max-w-[85rem] px-4 pt-5 pb-6 sm:px-6 lg:px-8 ">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div>
             <div className="text-primary flex justify-center gap-2 sm:justify-start">
@@ -117,9 +117,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium">About Us</p>
+              <p className="text-lg text-red-600 font-medium">About Us</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
                   <li key={text}>
@@ -135,7 +135,7 @@ export default function Footer() {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium">Our Services</p>
+              <p className="text-lg text-red-600 font-medium">Our Services</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
@@ -151,7 +151,7 @@ export default function Footer() {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium">Helpful Links</p>
+              <p className="text-lg text-red-600 font-medium">Helpful Links</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {helpfulLinks.map(({ text, href, hasIndicator }) => (
                   <li key={text}>
@@ -179,7 +179,7 @@ export default function Footer() {
             </div>
 
             <div className="text-center sm:text-left">
-              <p className="text-lg font-medium">Contact Us</p>
+              <p className="text-lg text-red-600 font-medium">Contact Us</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {contactInfo.map(({ icon: Icon, text, isAddress }) => (
                   <li key={text}>
@@ -187,13 +187,13 @@ export default function Footer() {
                       className="flex items-center justify-center gap-1.5 sm:justify-start"
                       href="#"
                     >
-                      <Icon className="text-primary size-5 shrink-0 shadow-sm" />
+                      <Icon className="text-primary size-5 hidden md:block shrink-0 shadow-sm" />
                       {isAddress ? (
                         <address className="text-secondary-foreground/70 -mt-0.5 flex-1 not-italic transition">
                           {text}
                         </address>
                       ) : (
-                        <span className="text-secondary-foreground/70 flex-1 transition">
+                        <span className="text-secondary-foreground/70 flex-1 transition break-words w-12">
                           {text}
                         </span>
                       )}

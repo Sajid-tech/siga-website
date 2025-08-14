@@ -94,7 +94,6 @@ const Firework = ({ x, y, id }) => {
 
 const EventSection = () => {
   const [fireworks, setFireworks] = useState([]);
-  const [rotation, setRotation] = useState(0);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const containerRef = useRef(null);
 
@@ -130,15 +129,6 @@ const EventSection = () => {
     return () => clearInterval(fireworkInterval);
   }, [dimensions]);
 
-  useEffect(() => {
-    const animationId = requestAnimationFrame(function animate() {
-      setRotation(prev => prev + 0.002 * 57.2958); 
-      requestAnimationFrame(animate);
-    });
-
-    return () => cancelAnimationFrame(animationId);
-  }, []);
-
   const rayCount = 24;
   const centerX = dimensions.width / 2;
   const centerY = dimensions.height / 2;
@@ -154,12 +144,10 @@ const EventSection = () => {
         style={{ width: '100vw', height: '100vh' }}
       >
         <defs>
-      
           <filter id="blur40">
             <feGaussianBlur stdDeviation="40" />
           </filter>
           
-
           <linearGradient id="gradientSoft" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="rgba(255, 215, 0, 0.12)" />
             <stop offset="50%" stopColor="rgba(192, 192, 192, 0.06)" />
@@ -173,35 +161,29 @@ const EventSection = () => {
           </linearGradient>
         </defs>
         
-
-        <g transform={`translate(${centerX}, ${centerY}) rotate(${rotation})`}>
-          {Array.from({ length: rayCount }).map((_, i) => {
-            const rayAngle = (360 / rayCount) * i;
-            return (
-              <g key={i} transform={`rotate(${rayAngle})`}>
-          
-                <path
-                  d={`M0,0 L${dimensions.width},200 L${dimensions.width},-200 Z`}
-                  fill="url(#gradientSoft)"
-                  filter="url(#blur40)"
-                />
-           
-                <path
-                  d={`M0,0 L${dimensions.width},80 L${dimensions.width},-80 Z`}
-                  fill="url(#gradientSharp)"
-                />
-              </g>
-            );
-          })}
-        </g>
-        
+        {/* Static rays (no rotation) */}
+        {Array.from({ length: rayCount }).map((_, i) => {
+          const rayAngle = (360 / rayCount) * i;
+          return (
+            <g key={i} transform={`translate(${centerX}, ${centerY}) rotate(${rayAngle})`}>
+              <path
+                d={`M0,0 L${dimensions.width},200 L${dimensions.width},-200 Z`}
+                fill="url(#gradientSoft)"
+                filter="url(#blur40)"
+              />
+              <path
+                d={`M0,0 L${dimensions.width},80 L${dimensions.width},-80 Z`}
+                fill="url(#gradientSharp)"
+              />
+            </g>
+          );
+        })}
         
         {fireworks.map(fw => (
           <Firework key={fw.id} x={fw.x} y={fw.y} id={fw.id} />
         ))}
       </svg>
 
-     
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
         <SectionWithMockup
           title={exampleData1.title}

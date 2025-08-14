@@ -91,7 +91,7 @@ const BecomeMember = () => {
     "distributor": "bg-blue-100 text-blue-800",
     "agent": "bg-emerald-100 text-emerald-800",
     "consultant": "bg-amber-100 text-amber-800",
-    "promoter": "bg-purple-100 text-purple-800"
+    "wholesaler": "bg-purple-100 text-purple-800"
   };
 
   const handleCategorySelect = (value) => {
@@ -109,15 +109,19 @@ const BecomeMember = () => {
       <Drawer.Trigger asChild>
         <Button
           size="lg"
-          className="rounded-xl px-5 text-base relative overflow-hidden hover:cursor-pointer group"
+          className="rounded-xl  hover:scale-105  text-yellow-800  px-5 text-base relative overflow-hidden hover:cursor-pointer group"
         >
           <span className="relative z-10">
             <TextEffect preset="scale" per="word">
-              Become a Member
+            Apply for Membership
             </TextEffect>
           </span>
-          <span className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 via-yellow-500/40 to-yellow-400/30 opacity-100 transition-opacity duration-300 -skew-x-12" />
+          <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
         </Button>
+
+
+
+        
       </Drawer.Trigger>
 
       <Drawer.Portal>
@@ -126,7 +130,15 @@ const BecomeMember = () => {
         <Drawer.Content className={` bg-white z-50 flex flex-col rounded-t-[10px] h-[96%] mt-24 fixed bottom-0 left-0 right-0 ${
           membershipCategory ? membershipData[membershipCategory]?.borderColor : 'border-indigo-200'
         } border-t-4`}>
-
+<div className="absolute top-2 right-4 ">
+    <Drawer.Close asChild>
+      <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </Button>
+    </Drawer.Close>
+  </div>
 
 
 
@@ -200,26 +212,6 @@ const BecomeMember = () => {
 
               {step === 1 ? (
                 <>
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900">Become a part of SIGA</h2>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Join our community of garment industry professionals
-                    </p>
-                  </div>
-
-                  <div className="mb-8">
-                    <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-                      <p className="text-sm text-gray-900 mb-3">
-                        Any firm or individual involved in the Garment trade & industry as a manufacturer,
-                        distributor or agent or involved as a consultant or promoter is eligible to become
-                        a member of SIGA subject to approval of the managing committee.
-                      </p>
-                      <p className="text-sm text-gray-900">
-                        Membership will be considered only with an application form along with the payment
-                        to the marked membership category.
-                      </p>
-                    </div>
-                  </div>
                   
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-center">Choose Your Membership</h3>
@@ -290,11 +282,11 @@ const BecomeMember = () => {
                               {data.description}
                             </p>
 
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-row items-center justify-between gap-2">
                               {data.features.map((feature, index) => (
                                 <span 
                                   key={index}
-                                  className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+                                  className={`px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${
                                     membershipCategory === key 
                                       ? `${data.accentColor} text-white shadow-sm` 
                                       : 'bg-gray-100 text-gray-700'
@@ -303,7 +295,16 @@ const BecomeMember = () => {
                                   {feature}
                                 </span>
                               ))}
+                            
+                               
+                                <span
+  className={`px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 ${data.accentColor} text-white shadow-sm `}
+>
+  Select
+</span>
+
                             </div>
+                            
                             
                             <RadioGroupItem 
                               value={key} 
@@ -315,6 +316,27 @@ const BecomeMember = () => {
                       </div>
                     ))}
                   </RadioGroup>
+                  <div className="text-center mb-8 mt-8">
+                    <h2 className="text-2xl font-bold text-gray-900">Become a part of SIGA</h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Join our community of garment industry professionals
+                    </p>
+                  </div>
+
+                  <div className="mb-8">
+                    <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                      <p className="text-sm text-gray-900 mb-3">
+                        Any firm or individual involved in the Garment trade & industry as a manufacturer,
+                        distributor or agent or involved as a consultant or promoter is eligible to become
+                        a member of SIGA subject to approval of the managing committee.
+                      </p>
+                      <p className="text-sm text-gray-900">
+                        Membership will be considered only with an application form along with the payment
+                        to the marked membership category.
+                      </p>
+                    </div>
+                  </div>
+                  
                 </>
               ) : (
                 <>
@@ -619,7 +641,7 @@ const BecomeMember = () => {
                             "distributor": "Distributor",
                             "agent": "Agent",
                             "consultant": "Consultant",
-                            "promoter": "Promoter"
+                            "wholesaler": "Wholesaler"
                           }).map(([value, label]) => (
                             <TabsTrigger 
                               key={value}

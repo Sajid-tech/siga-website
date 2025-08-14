@@ -1,14 +1,73 @@
 
 
 import { Waves } from "@/components/ui/waves-background";
-import { motion } from "framer-motion";
-import { useState } from "react";
 import { cn } from "@/lib/utils";
+import CircularTestimonials from "./circular-testimonial";
 
+const testimonials = [
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/1.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/2.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/3.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/4.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/5.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/6.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/7.jpg",
+  },
+  {
+    quote:
+      "Meeting with Honarable Prime Minister Narendara Modi",
+ 
+    src:
+      "./efforts/8.jpg",
+  },
+ 
+ 
+];
  const ShuffleHero = () => {
   return (
-    <div className="w-full py-12">
-      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full pt-8">
+      <div className=" mx-auto ">
     <section className="relative w-full overflow-hidden bg-background">
       {/* Waves Background */}
       <div className="absolute inset-0 z-0">
@@ -32,14 +91,14 @@ import { cn } from "@/lib/utils";
             South India Garment Association (SIGA)
           </span>
           <h3 className="text-4xl md:text-6xl font-semibold text-foreground">
-            
-            Driving Growth in the Garment Industry
-          </h3>
+  Efforts by the SIGA Association
+</h3>
           <p className="text-base md:text-lg text-muted-foreground my-4 md:my-6">
-            For over a decade, SIGA has been a uniting platform for manufacturers,
-            distributors, agents, and retailers across South India. From representing
-            industry interests to organizing annual garment fairs, we work to uplift the
-            garment trade, connect businesses, and foster growth throughout the region.
+          From engaging with national leaders to presenting the SIGA Pre-Budget Memo, 
+  hosting insightful Apparel Talks, and organizing the grand SIGA Fair, 
+  our association works tirelessly to represent the garment industry’s voice. 
+  These moments capture our ongoing commitment to strengthening connections 
+  between industry stakeholders, policymakers, and the business community.
           </p>
           <button
             className={cn(
@@ -48,10 +107,26 @@ import { cn } from "@/lib/utils";
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             )}
           >
-            Explore SIGA Fair
+            Explore SIGA 
           </button>
         </div>
-        <ShuffleGrid />
+  <CircularTestimonials
+            testimonials={testimonials}
+            autoplay={true}
+            colors={{
+              name: "#f7f7ff",
+              designation: "#e1e1e1",
+              testimony: "#f1f1f7",
+              arrowBackground: "#0582CA",
+              arrowForeground: "#141414",
+              arrowHoverBackground: "#f7f7ff",
+            }}
+            fontSizes={{
+              name: "28px",
+              designation: "20px",
+              quote: "20px",
+            }}
+          />
       </div>
     </section>
     </div>
@@ -60,70 +135,6 @@ import { cn } from "@/lib/utils";
 };
 
 
-const shuffle = (array) => {
-  let currentIndex = array.length, randomIndex;
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]
-    ];
-  }
-  return array;
-};
-
-
-const squareData = [
-    { id: 1, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 2, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 3, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 4, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 5, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 6, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 7, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 8, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 9, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 10, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 11, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 12, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 13, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 14, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 15, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-    { id: 16, src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG" },
-  
-  ];
-
-const generateSquares = () => {
-  return shuffle([...squareData]).map((sq) => (
-    <motion.div
-      key={sq.id}
-      layout
-      transition={{ duration: 0.8, type: "spring" }}
-      className="w-full h-full rounded-md overflow-hidden bg-muted"
-      style={{
-        backgroundImage: `url(${sq.src})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    ></motion.div>
-  ));
-};
-
-const ShuffleGrid = () => {
-  const [squares, setSquares] = useState(generateSquares());
-  const handleShuffle = () => {
-    setSquares(generateSquares());
-  };
-
-  return (
-    <div
-      className="grid grid-cols-4 grid-rows-4 h-[450px] gap-1"
-      onMouseEnter={handleShuffle}
-    >
-      {squares}
-    </div>
-  );
-};
 
 
 export default ShuffleHero
