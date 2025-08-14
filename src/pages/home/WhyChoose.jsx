@@ -1,9 +1,166 @@
-import React from "react";
-import { Heart, Users, Mail, Trophy, ArrowRight } from "lucide-react";
+import React, { useState } from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Heart, Users, Mail, Trophy, ChevronRight, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+
+const BentoGrid = ({ children, className }) => {
+  return (
+    <div
+      className={cn(
+        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
+const CardDecorator = () => (
+  <>
+    <span className="absolute -left-px -top-px block size-2 border-l-2 border-t-2 border-red-500"></span>
+    <span className="absolute -right-px -top-px block size-2 border-r-2 border-t-2 border-red-500"></span>
+    <span className="absolute -bottom-px -left-px block size-2 border-b-2 border-l-2 border-red-500"></span>
+    <span className="absolute -bottom-px -right-px block size-2 border-b-2 border-r-2 border-red-500"></span>
+  </>
+);
+
+const BentoCard = ({
+  name,
+  className,
+  background,
+  Icon,
+  description,
+  href,
+  cta,
+  cardBackground
+}) => {
+  const [active, setActive] = useState(false);
+
+  return (
+    <motion.div
+      key={name}
+      className={cn(
+        `group relative col-span-3  flex flex-col justify-between overflow-hidden`,
+        "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
+        "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+        className
+      )}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      onClick={() => setActive(!active)}
+    >
+      <CardDecorator />
+      <div>{background}</div>
+ 
+      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300">
+        {Icon && (
+          <div className="w-14 h-14 mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
+            <Icon className="h-6 w-6 text-gray-700 group-hover:text-red-500 transition-colors" />
+          </div>
+        )}
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-neutral-300">
+          {name}
+        </h3>
+        <p className="max-w-lg text-gray-600 dark:text-neutral-400">{description}</p>
+      </div>
+
+      <div
+        className={cn(
+          "pointer-events-none absolute right-0 flex items-center transition-all duration-300",
+          (active ? "opacity-100" : "opacity-0"),
+          "group-hover:opacity-100"
+        )}
+      >
+        <Button
+          asChild
+          size="sm"
+          className="pointer-events-auto relative text-black overflow-hidden"
+        >
+          <a href={href} className="flex items-center gap-1 relative z-10">
+            {cta}
+            <ArrowRight
+              size={14}
+              className="group-hover:translate-x-0.5 transition-transform"
+            />
+            <span className="absolute inset-0 -z-10 bg-gradient-to-r from-green-400/70 via-green-500/60 to-green-400/70 opacity-100 transition-opacity duration-300 -skew-x-12" />
+          </a>
+        </Button>
+      </div>
+
+      <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
+    </motion.div>
+  );
+};
 
 const WhyChoose = () => {
+  const features = [
+    {
+      name: "Job Opportunities",
+      description: "Offer/Apply for jobs through SIGA's portal. Find great talent fast.",
+      href: "/",
+      cta: "View",
+      Icon: Heart,
+  
+      className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2",
+      background: (
+        <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-red-100 blur-xl"></div>
+      )
+    },
+    {
+      name: "Latest News",
+      description: "Stay updated with MSME news, events, GST & policy updates",
+      href: "/",
+      cta: "View",
+      Icon: Users,
+     
+      className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
+      background: (
+        <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-blue-100 blur-xl"></div>
+      )
+    },
+    {
+      name: "Coming Soon",
+      description: "Exciting new features are on their way!",
+      href: "/",
+      cta: "Learn more",
+      className: cn(
+        "lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3",
+        "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+      ),
+      background: (
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent to-gray-200/50 dark:to-gray-800/50"></div>
+      )
+    },
+    {
+      name: "Payment Mediation",
+      description: "Resolve payment issues with our dedicated support system",
+      href: "/",
+      cta: "View",
+      Icon: Mail,
+  
+      className: "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
+      background: (
+        <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-green-100 blur-xl"></div>
+      )
+    },
+    {
+      name: "Business Opportunities",
+      description: "Propose or request business opportunities for expansion",
+      href: "/",
+      cta: "View",
+      Icon: Trophy,
+      className: "lg:col-start-3 lg:col-end-4 lg:row-start-2 lg:row-end-3",
+  
+      background: (
+        <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-yellow-100 blur-xl"></div>
+      )
+    },
+  ];
+
   return (
-    <div className="py-12 px-4 relative overflow-hidden  ">
+    <div className="py-12 px-4 relative overflow-hidden bg-gradient-to-r from-yellow-50 via-transparent to-purple-50">
       {/* Refined SVG Pattern Background */}
       <div className="absolute inset-0 z-10 opacity-10">
         <svg 
@@ -28,7 +185,6 @@ const WhyChoose = () => {
           <path d="M120 0V240M0 120H240" stroke="#4B558D" strokeWidth="2" strokeDasharray="6 3"/>
           <rect x="80" y="80" width="80" height="80" rx="10" stroke="#E84E53" strokeWidth="2"/>
         </svg>
-        {/* Additional patterns for better coverage */}
         <svg 
           className="absolute left-1/4 bottom-0"
           width="180" 
@@ -53,7 +209,13 @@ const WhyChoose = () => {
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-10">
+        <motion.div 
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             WHY CHOOSE SIGA?
           </h2>
@@ -64,89 +226,24 @@ const WhyChoose = () => {
           <p className="text-gray-600 text-md max-w-2xl mx-auto">
             Empowering MSMEs with comprehensive solutions for growth and success
           </p>
-        </div>
+        </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 bg-gray-200  overflow-hidden">
-        
-            <div 
-     
-              className="bg-white hover:bg-gray-50 p-6 text-center group relative transition-all duration-200  border-r border-gray-300"
-            >
-              <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
-              <Heart size={32} className="text-gray-700 group-hover:text-red-500 transition-colors" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-500 transition-colors">
-              Job Opportunities
-              </h3>
-              <p className="text-gray-600 text-sm mb-4 leading-snug">
-              Offer/Apply for jobs through SIGA's portal. Find great talent fast.
-              </p>
-              <button className="text-sm px-4 py-1.5 bg-transparent border border-gray-200 text-gray-600 rounded-full group-hover:bg-red-500 group-hover:text-white group-hover:border-red-500 transition-all flex items-center mx-auto gap-1">
-                View
-                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-
-
-
-
-            <div 
-           
-              className="bg-white bg-gray-50 p-6 text-center group relative transition-all duration-200  "
-            >
-              <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
-              <Users size={32} className="text-gray-700 group-hover:text-red-500 transition-colors" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-500 transition-colors">
-              Latest News
-              </h3>
-              <p className="text-gray-600 text-sm mb-4 leading-snug">
-              Stay updated with MSME news, events, GST & policy updates
-              </p>
-              <button className="text-sm px-4 py-1.5 bg-transparent border border-gray-200 text-gray-600 rounded-full group-hover:bg-red-500 group-hover:text-white group-hover:border-red-500 transition-all flex items-center mx-auto gap-1">
-                View
-                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-            <div 
-             
-              className="bg-white hover:bg-gray-50 p-6 text-center group relative transition-all duration-200  border-t border-r border-gray-300"
-            >
-              <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
-              <Mail size={32} className="text-gray-700 group-hover:text-red-500 transition-colors" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-500 transition-colors">
-              Payment Mediation
-              </h3>
-              <p className="text-gray-600 text-sm mb-4 leading-snug">
-              Resolve payment issues with our dedicated support system
-              </p>
-              <button className="text-sm px-4 py-1.5 bg-transparent border border-gray-200 text-gray-600 rounded-full group-hover:bg-red-500 group-hover:text-white group-hover:border-red-500 transition-all flex items-center mx-auto gap-1">
-                View
-                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-            <div 
-            
-              className="bg-white hover:bg-gray-50 p-6 text-center group relative transition-all duration-200  border-t border-gray-300"
-            >
-              <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
-              <Trophy size={32} className="text-gray-700 group-hover:text-red-500 transition-colors" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-red-500 transition-colors">
-              Business Opportunities
-              </h3>
-              <p className="text-gray-600 text-sm mb-4 leading-snug">
-              Propose or request business opportunities for expansion
-              </p>
-              <button className="text-sm px-4 py-1.5 bg-transparent border border-gray-200 text-gray-600 rounded-full group-hover:bg-red-500 group-hover:text-white group-hover:border-red-500 transition-all flex items-center mx-auto gap-1">
-                View
-                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-              </button>
-            </div>
-        
-        </div>
+        {/* Bento Grid Layout */}
+        <BentoGrid className="lg:grid-rows-2">
+          {features.map((feature, index) => (
+            <BentoCard 
+              key={index}
+              name={feature.name}
+              description={feature.description}
+              href={feature.href}
+              cta={feature.cta}
+              className={feature.className}
+              Icon={feature.Icon}
+              background={feature.background}
+              cardBackground={feature.cardBackground}
+            />
+          ))}
+        </BentoGrid>
       </div>
     </div>
   );

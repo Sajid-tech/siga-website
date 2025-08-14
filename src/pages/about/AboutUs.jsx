@@ -7,7 +7,7 @@ import FeaturedAbout from './FeaturedAbout'
 
 const AboutUs = () => {
   return (
-    <div className="  w-full mt-38 ">
+    <div className="  w-full pt-38 ">
   
 
 

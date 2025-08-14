@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
 
-
+import {motion} from "framer-motion"
 
 
 
@@ -12,19 +12,20 @@ import { TextEffect } from "@/components/ui/text-effect";
 import BecomeMember from "@/components/becomeMember/BecomeMember";
 import ImageMaskOne from "@/components/imageMask/ImageMaskOne";
 import ImageMaskTwo from "@/components/imageMask/ImageMaskTwo";
+import { CardSwipe } from "@/components/ui/card-swipe";
 
 
 const images = [
   {
-    src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg",
+    src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG",
     alt: "Image 1",
   },
   {
-    src: "https://southindiagarmentsassociation.com/assets/images/brand/101.jpg",
+    src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2466.JPG",
     alt: "Image 2",
   },
   {
-    src: "https://southindiagarmentsassociation.com/assets/images/brand/102.jpg",
+    src: "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2480.JPG",
     alt: "Image 3",
   },
 ];
@@ -52,16 +53,9 @@ const transitionVariants = {
 export function HeroSection() {
   return (
     <>
-      <main className="overflow-hidden">
-        <div
-          aria-hidden
-          className="z-[2] absolute inset-0 pointer-events-none isolate opacity-50 contain-strict hidden lg:block"
-        >
-          <div className="w-[35rem] h-[80rem] -translate-y-[350px] absolute left-0 top-0 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,hsla(0,0%,85%,.08)_0,hsla(0,0%,55%,.02)_50%,hsla(0,0%,45%,0)_80%)]" />
-          <div className="h-[80rem] absolute left-0 top-0 w-56 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.06)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)] [translate:5%_-50%]" />
-          <div className="h-[80rem] -translate-y-[350px] absolute left-0 top-0 w-56 -rotate-45 bg-[radial-gradient(50%_50%_at_50%_50%,hsla(0,0%,85%,.04)_0,hsla(0,0%,45%,.02)_80%,transparent_100%)]" />
-        </div>
-        <section className="relative">
+      <main className="overflow-hidden  ">
+       
+        <section className="relative  ">
           <div className="relative pt-24 md:pt-36">
             <div
               aria-hidden
@@ -69,7 +63,7 @@ export function HeroSection() {
             />
 
             <BackgroundBeamsWithCollision>
-              <div className="mx-auto max-w-7xl px-6">
+              <div className="mx-auto max-w-[85rem] px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row items-center gap-8">
                   {/* Content - takes 65% on large screens */}
                   <div className="lg:w-[60%] w-full">
@@ -80,7 +74,7 @@ export function HeroSection() {
                           className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto lg:mx-0 flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
                         >
                           <span className="text-foreground text-sm">
-                            Welcome to the 30th Siga Fair
+                            Welcome to the  Siga, Bengaluru 
                           </span>
                           <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
                           <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
@@ -160,7 +154,7 @@ OF SIGA’s LEGACY
 
 
                         <TextEffect
-                          className="mx-auto lg:mx-0 mt-8 max-w-2xl text-balance text-lg"
+                          className="lg:mx-0 mt-8 mx-6  max-w-2xl text-balance text-lg"
                           preset="fade"
                           per="line"
                           delay={0.8}
@@ -193,7 +187,7 @@ OF SIGA’s LEGACY
                               <span className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 via-yellow-500/40 to-yellow-400/30 opacity-100 transition-opacity duration-300 -skew-x-12" />
                             </Link>
                           </Button> */}
-                          <BecomeMember/>
+                        
                         </div>
                       </div>
                     </div>
@@ -224,12 +218,65 @@ OF SIGA’s LEGACY
           }}
         ></div>
       </div>
+    
+                  
+                  <CardSwipe
+                      images={images}
+                      autoplayDelay={2000}
+                      slideShadows={false}
+                    />
+                   
+
+
+                <motion.div 
+    className="relative p-8 rounded-xl border border-white/20 backdrop-blur-lg text-center text-white mb-16 overflow-hidden"
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.2, duration: 0.5 }}
+    viewport={{ once: true }}
+    style={{
+        background: 'linear-gradient(135deg, rgba(255, 193, 7, 1) 0%, rgba(245, 158, 11, 1) 100%)',
+        boxShadow: '0 8px 32px rgba(251, 191, 36, 0.3)'
+    }}
+>
+  
+    {/* Glass overlay */}
+    <div className="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
+    
+    {/* Shining elements */}
+    <div className="absolute inset-0 overflow-hidden">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-500/15"></div>
+        
+        {/* Animated shine effect */}
+        <motion.div 
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
+            initial={{ x: '-100%' }}
+            animate={{ x: '100%' }}
+            transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: 'easeInOut'
+            }}
+        />
+        
+        {/* Subtle bubbles */}
+        <div className="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-yellow-400/10 blur-xl"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-24 h-24 rounded-full bg-amber-500/15 blur-xl"></div>
+    </div>
+
+    {/* Content */}
+    <div className="relative z-10">
+        <h3 className="text-2xl font-medium mb-3 text-white drop-shadow-md">Join SIGA Membership</h3>
       
-                 
-                
+        
+      
+          <BecomeMember/>
+    </div>
+</motion.div>
                      {/* <ImageMaskOne /> */}
       
-         <ImageMaskTwo/>
+         {/* <ImageMaskTwo/> */}
        
                   </div>
                 </div>
@@ -242,3 +289,5 @@ OF SIGA’s LEGACY
     </>
   );
 }
+
+

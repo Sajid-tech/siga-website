@@ -25,12 +25,12 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
     return () => clearTimeout(visibilityTimer);
   }, [animationDelay]);
 
-  // ✅ Fix passive listener warning by re-binding wheel event
+
   useEffect(() => {
     if (swiperRef.current?.el) {
       const swiperEl = swiperRef.current.el;
       const handleWheel = (e) => {
-        e.preventDefault(); // Keep swiper scroll control
+        e.preventDefault(); 
         swiperRef.current.mousewheel.on(e);
       };
       swiperEl.addEventListener("wheel", handleWheel, { passive: true });
@@ -65,9 +65,9 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
             A Journey Through Visual Stories
           </p>
           <h3 className="z-20 mx-auto max-w-2xl justify-center bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text py-3 text-center text-4xl text-transparent dark:bg-gradient-to-r dark:from-slate-100 dark:via-slate-200 dark:to-slate-100 dark:bg-clip-text md:text-7xl">
-            Welcome to the{" "}
+          Glimpse of the 30ᵗʰ{" "}
             <span className="text-red-500">
-              <FlipLink>SIGA FAIR</FlipLink>
+              <FlipLink>SIGA</FlipLink>
             </span>
           </h3>
 
@@ -126,7 +126,7 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
           </div>
 
           <div className="flex w-full justify-center">
-            <Button></Button>
+           
             <Button
               asChild
               size="lg"
