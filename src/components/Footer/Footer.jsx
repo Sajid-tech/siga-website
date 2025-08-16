@@ -42,7 +42,7 @@ const data = {
     name: 'SIGA-FAIR',
     description:
       'SIGA has been acting as a catalyst, interacting with the government in matters of development of the garment trade and industry and various policies.',
-    logo: 'https://southindiagarmentsassociation.com/assets/images/logo.png',
+    logo: '/siga-fav.png',
   },
 };
 
@@ -57,8 +57,8 @@ const socialLinks = [
 const aboutLinks = [
   { text: 'Siga Event', href: data.about.history },
   { text: 'Meet the Team', href: data.about.team },
-  { text: 'Employee', href: data.about.handbook },
-  { text: 'Careers', href: data.about.careers },
+  { text: 'Efforts', href: data.about.handbook },
+  { text: 'Services', href: data.about.careers },
 ];
 
 const serviceLinks = [
