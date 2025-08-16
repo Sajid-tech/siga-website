@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronRight, Briefcase, CreditCard, Newspaper, TrendingUp, Users, MapPin } from 'lucide-react';
-import JobOppurtunities from './JobOppurtunities';
+
 import PaymentMediation from './PaymentMediation';
 import LatestNews from './LatestNews';
 import BuisnessExpansion from './BuisnessExpansion';
 import EffortService from './EffortService';
 import Directory from './Directory';
+import JobOpportunities from './JobOppurtunities';
 
 const Service = () => {
   const [activeMenu, setActiveMenu] = useState('job-opportunities');
@@ -35,12 +36,7 @@ const Service = () => {
       icon: TrendingUp,
       description: 'Growth solutions'
     },
-    {
-      id: 'efforts',
-      title: 'Efforts',
-      icon: Users,
-      description: 'Community initiatives'
-    },
+   
     {
       id: 'directory',
       title: 'Directory',
@@ -52,19 +48,18 @@ const Service = () => {
   const renderContent = () => {
     switch(activeMenu) {
       case 'job-opportunities':
-        return <JobOppurtunities />;
+        return <JobOpportunities />;
       case 'payment-mediation':
         return <PaymentMediation />;
       case 'latest-news':
         return <LatestNews />;
       case 'business-expansion':
         return <BuisnessExpansion />;
-      case 'efforts':
-        return <EffortService />;
+    
       case 'directory':
         return <Directory />;
       default:
-        return <JobOppurtunities />;
+        return <JobOpportunities />;
     }
   };
 

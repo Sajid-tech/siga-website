@@ -113,7 +113,8 @@ const BecomeMember = () => {
         >
           <span className="relative z-10">
             <TextEffect preset="scale" per="word">
-            Apply for Membership
+            {/* Apply for Membership */}
+            Click Here
             </TextEffect>
           </span>
           <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
