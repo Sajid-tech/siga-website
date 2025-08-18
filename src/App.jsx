@@ -6,6 +6,11 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop.jsx";
 import Newsletter from "./components/newsletter/Newsletter.jsx";
 import VerticalDottedText from "./components/verticalText/VerticalDottedText.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
+import Gallery from "./pages/gallery/Gallery.jsx";
+import Directory from "./pages/service/Directory.jsx";
+import Efforts from "./pages/efforts/Efforts.jsx";
+import MemberShip from "./pages/membership/MemberShip.jsx";
+import ManagingCommitte from "./pages/committe/ManagingCommitte.jsx";
 
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -33,7 +38,7 @@ function App() {
     <Route
       path="/"
       element={
-        <Suspense fallback={<div className="min-h-screen  bg-yellow-500" />}>
+        <Suspense fallback={<div className="min-h-screen  bg-yellow-500 " />}>
           <Home />
         </Suspense>
       }
@@ -67,6 +72,46 @@ function App() {
       element={
         <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
           <Service />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/gallery"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <Gallery />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/directory"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <Directory />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/efforts"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <Efforts />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/become-member"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <MemberShip />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/committee"
+      element={
+        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+          <ManagingCommitte />
         </Suspense>
       }
     />

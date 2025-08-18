@@ -1,50 +1,68 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronRight, Briefcase, CreditCard, Newspaper, TrendingUp, Users, MapPin } from 'lucide-react';
 
 import PaymentMediation from './PaymentMediation';
 import LatestNews from './LatestNews';
 import BuisnessExpansion from './BuisnessExpansion';
-import EffortService from './EffortService';
-import Directory from './Directory';
+
 import JobOpportunities from './JobOppurtunities';
+import { useSearchParams } from 'react-router-dom';
 
 const Service = () => {
   const [activeMenu, setActiveMenu] = useState('job-opportunities');
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const menuItems = [
     {
       id: 'job-opportunities',
       title: 'Job Opportunities',
+      param: 'job_opportunities',
       icon: Briefcase,
       description: 'Explore career opportunities'
     },
     {
       id: 'payment-mediation',
       title: 'Payment Mediation',
+      param: 'payment_mediation',
       icon: CreditCard,
       description: 'Secure payment processing'
     },
     {
       id: 'latest-news',
       title: 'Latest News',
+      param: 'latest_news',
       icon: Newspaper,
       description: 'Industry news and updates'
     },
     {
       id: 'business-expansion',
       title: 'Business Expansion',
+      param: 'business_expansion',
       icon: TrendingUp,
       description: 'Growth solutions'
     },
    
-    {
-      id: 'directory',
-      title: 'Directory',
-      icon: MapPin,
-      description: 'Business network'
-    }
+   
   ];
 
+  // Sync URL with active menu
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam) {
+      const matchingItem = menuItems.find(item => item.param === tabParam);
+      if (matchingItem) {
+        setActiveMenu(matchingItem.id);
+      }
+    }
+  }, [searchParams]);
+
+  // Update URL when menu changes
+  const handleMenuClick = (menuId) => {
+    const menuItem = menuItems.find(item => item.id === menuId);
+    if (menuItem) {
+      setSearchParams({ tab: menuItem.param });
+      setActiveMenu(menuId);
+    }
+  };
   const renderContent = () => {
     switch(activeMenu) {
       case 'job-opportunities':
@@ -56,8 +74,6 @@ const Service = () => {
       case 'business-expansion':
         return <BuisnessExpansion />;
     
-      case 'directory':
-        return <Directory />;
       default:
         return <JobOpportunities />;
     }
@@ -86,7 +102,7 @@ const Service = () => {
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setActiveMenu(item.id)}
+                      onClick={() => handleMenuClick(item.id)}
                       className={`w-full text-left p-3 rounded-md transition-all duration-200 flex items-center gap-3 ${
                         isActive 
                           ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-500' 

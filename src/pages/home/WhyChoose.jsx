@@ -8,7 +8,8 @@ const BentoGrid = ({ children, className }) => {
   return (
     <div
       className={cn(
-        "grid w-full auto-rows-[22rem] grid-cols-3 gap-4",
+        "grid w-full auto-rows-[12rem] grid-cols-3 gap-4",
+        "md:auto-rows-[14rem] lg:auto-rows-[16rem]",
         className
       )}
     >
@@ -34,7 +35,8 @@ const BentoCard = ({
   description,
   href,
   cta,
-  cardBackground
+  cardBackground,
+  buttonColor
 }) => {
   const [active, setActive] = useState(false);
 
@@ -42,7 +44,7 @@ const BentoCard = ({
     <motion.div
       key={name}
       className={cn(
-        `group relative col-span-3  flex flex-col justify-between overflow-hidden`,
+        `group relative col-span-3 flex flex-col justify-between overflow-hidden`,
         "bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)]",
         "transform-gpu dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
         className
@@ -52,23 +54,40 @@ const BentoCard = ({
       onClick={() => setActive(!active)}
     >
       <CardDecorator />
-      <div>{background}</div>
+      {background}
+      
+      {/* Animated hover overlay */}
+      <motion.div 
+        className="absolute top-0 right-0 w-0 h-0 bg-gradient-to-br opacity-0 group-hover:opacity-100"
+        initial={{ width: 0, height: 0 }}
+        whileHover={{ 
+          width: "150%", 
+          height: "150%",
+          opacity: 0.1,
+          transition: { duration: 0.4, ease: "easeOut" }
+        }}
+        style={{ 
+          background: `linear-gradient(135deg, ${buttonColor}-400/50, transparent)`
+        }}
+      />
  
-      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-6 transition-all duration-300">
+      <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-4 transition-all duration-300 md:p-6">
         {Icon && (
-          <div className="w-14 h-14 mb-4 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-red-50 transition-colors">
-            <Icon className="h-6 w-6 text-gray-700 group-hover:text-red-500 transition-colors" />
+          <div className={`w-6 h-6 mb-3 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-${buttonColor}-50 transition-colors`}>
+            <Icon className={`h-5 w-5 text-gray-700 group-hover:text-${buttonColor}-500 transition-colors`} />
           </div>
         )}
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-neutral-300">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-neutral-300 md:text-xl">
           {name}
         </h3>
-        <p className="max-w-lg text-gray-600 dark:text-neutral-400">{description}</p>
+        <p className="max-w-lg text-sm text-gray-600 dark:text-neutral-400 md:text-sm">
+          {description}
+        </p>
       </div>
 
       <div
         className={cn(
-          "pointer-events-none absolute right-0 flex items-center transition-all duration-300",
+          "pointer-events-none absolute right-0 bottom-0 flex items-center transition-all duration-300 p-4 md:p-6",
           (active ? "opacity-100" : "opacity-0"),
           "group-hover:opacity-100"
         )}
@@ -84,12 +103,10 @@ const BentoCard = ({
               size={14}
               className="group-hover:translate-x-0.5 transition-transform"
             />
-            <span className="absolute inset-0 -z-10 bg-gradient-to-r from-green-400/70 via-green-500/60 to-green-400/70 opacity-100 transition-opacity duration-300 -skew-x-12" />
+            <span className={`absolute inset-0 -z-10 bg-gradient-to-r from-${buttonColor}-400/70 via-${buttonColor}-500/60 to-${buttonColor}-400/70 opacity-100 transition-opacity duration-300 -skew-x-12`} />
           </a>
         </Button>
       </div>
-
-      <div className="pointer-events-none absolute inset-0 transform-gpu transition-all duration-300 group-hover:bg-black/[.03] group-hover:dark:bg-neutral-800/10" />
     </motion.div>
   );
 };
@@ -99,10 +116,10 @@ const WhyChoose = () => {
     {
       name: "Job Opportunities",
       description: "Offer/Apply for jobs through SIGA's portal. Find great talent fast.",
-      href: "/",
+      href: "/service?tab=job_opportunities",
       cta: "View",
       Icon: Heart,
-  
+      buttonColor: "red",
       className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2",
       background: (
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-red-100 blur-xl"></div>
@@ -111,10 +128,10 @@ const WhyChoose = () => {
     {
       name: "Latest News",
       description: "Stay updated with MSME news, events, GST & policy updates",
-      href: "/",
+      href: "/service?tab=latest_news",
       cta: "View",
       Icon: Users,
-     
+      buttonColor: "blue",
       className: "lg:col-start-1 lg:col-end-2 lg:row-start-2 lg:row-end-3",
       background: (
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-blue-100 blur-xl"></div>
@@ -123,8 +140,9 @@ const WhyChoose = () => {
     {
       name: "Coming Soon",
       description: "Exciting new features are on their way!",
-      href: "/",
+      href: "/service?tab=job_opportunities",
       cta: "Learn more",
+      buttonColor: "purple",
       className: cn(
         "lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3",
         "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
@@ -136,10 +154,10 @@ const WhyChoose = () => {
     {
       name: "Payment Mediation",
       description: "Resolve payment issues with our dedicated support system",
-      href: "/",
+      href: "/service?tab=payment_mediation",
       cta: "View",
       Icon: Mail,
-  
+      buttonColor: "green",
       className: "lg:col-start-3 lg:col-end-4 lg:row-start-1 lg:row-end-2",
       background: (
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-green-100 blur-xl"></div>
@@ -148,11 +166,11 @@ const WhyChoose = () => {
     {
       name: "Business Opportunities",
       description: "Propose or request business opportunities for expansion",
-      href: "/",
+      href: "/service?tab=business_expansion",
       cta: "View",
       Icon: Trophy,
+      buttonColor: "yellow",
       className: "lg:col-start-3 lg:col-end-4 lg:row-start-2 lg:row-end-3",
-  
       background: (
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-yellow-100 blur-xl"></div>
       )
@@ -241,6 +259,7 @@ const WhyChoose = () => {
               Icon={feature.Icon}
               background={feature.background}
               cardBackground={feature.cardBackground}
+              buttonColor={feature.buttonColor}
             />
           ))}
         </BentoGrid>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/event-card';
 import { cn } from '@/lib/utils';
@@ -71,7 +71,7 @@ const JobRequireForm = () => {
         console.log('Form submitted:', formData);
     };
 
-    const CardHeading = ({ icon: Icon, title, description }) => (
+    const CardHeading = useCallback(({ icon: Icon, title, description }) => (
         <div className="px-2">
             <span className="text-muted-foreground flex items-center gap-2">
                 <Icon className="size-3 sm:size-4" />
@@ -79,27 +79,27 @@ const JobRequireForm = () => {
             </span>
             <p className="mt-2 text-xl sm:text-2xl font-semibold">{description}</p>
         </div>
-    );
+    ),[]);
 
-    const FeatureCard = ({ children, className }) => (
+    const FeatureCard = useCallback(({ children, className }) => (
         <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
             <CardDecorator />
             {children}
         </Card>
-    );
+    ),[]);
 
-    const CardDecorator = () => (
+    const CardDecorator = useCallback(() => (
         <>
             <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
             <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
             <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
             <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
         </>
-    );
+    ),[]);
 
     return (
         <div className="relative w-full bg-white overflow-hidden">
-            <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+            <div className="relative z-10 max-w-4xl mx-auto  py-4 sm:py-8">
                 <motion.div 
                     className="text-center mb-8 sm:mb-12"
                     initial={{ opacity: 0, y: 20 }}
@@ -134,7 +134,7 @@ const JobRequireForm = () => {
                                     <User className="w-4 sm:w-5 h-4 sm:h-5 text-purple-600 mr-2" />
                                     Personal Details
                                 </h3>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 {/* Full Name */}
                                 <div>
                                     <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
@@ -192,7 +192,8 @@ const JobRequireForm = () => {
                                         />
                                     </div>
                                 </div>
-
+                                </div>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Mobile */}
                                 <div>
                                     <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">
@@ -229,7 +230,7 @@ const JobRequireForm = () => {
                                         required
                                     />
                                 </div>
-
+                                </div>
                                 {/* House Address */}
                                 <div>
                                     <label htmlFor="houseAddress" className="block text-sm font-medium text-gray-700 mb-1">
@@ -312,7 +313,7 @@ const JobRequireForm = () => {
                                     <Briefcase className="w-4 sm:w-5 h-4 sm:h-5 text-purple-600 mr-2" />
                                     Employment History
                                 </h3>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Last Employed By */}
                                 <div>
                                     <label htmlFor="lastEmployedBy" className="block text-sm font-medium text-gray-700 mb-1">
@@ -342,7 +343,8 @@ const JobRequireForm = () => {
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
                                 </div>
-
+                              </div>
+                              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Designation */}
                                 <div>
                                     <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
@@ -372,7 +374,7 @@ const JobRequireForm = () => {
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
                                 </div>
-
+                   </div>
                                 {/* Company Address */}
                                 <div>
                                     <label htmlFor="companyAddress" className="block text-sm font-medium text-gray-700 mb-1">
@@ -387,7 +389,7 @@ const JobRequireForm = () => {
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
                                     />
                                 </div>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 {/* Last Salary */}
                                 <div>
                                     <label htmlFor="lastSalary" className="block text-sm font-medium text-gray-700 mb-1">
@@ -437,6 +439,8 @@ const JobRequireForm = () => {
                                         />
                                     </div>
                                 </div>
+                                </div>
+                                
                             </div>
 
                             {/* Family Information Section */}
@@ -509,7 +513,7 @@ const JobRequireForm = () => {
                                         ))}
                                     </div>
                                 </div>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Driving License */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -639,14 +643,14 @@ const JobRequireForm = () => {
                                         </div>
                                     </div>
                                 </div>
-
+            </div>
                                 {/* Vehicle Owned */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Do you have a vehicle
                                     </label>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center">
+                                    <div className="space-y-2 flex flex-col  lg:flex-row  justify-between">
+                                        <div className="flex  items-center">
                                             <input
                                                 id="vehicle-two-wheeler"
                                                 name="vehicleOwned"

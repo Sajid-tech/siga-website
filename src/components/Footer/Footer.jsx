@@ -17,21 +17,22 @@ const data = {
   githubLink: 'https://github.com/mvpblocks',
   dribbbleLink: 'https://dribbble.com/mvpblocks',
   services: {
-    webdev: '/web-development',
-    webdesign: '/web-design',
-    marketing: '/marketing',
-    googleads: '/google-ads',
+    jobOppurnites: '/service?tab=job_opportunities',
+    payment: '/service?tab=payment_mediation',
+    news: '/service?tab=latest_news',
+    news: '/service?tab=business_expansion',
   },
   about: {
-    history: '/company-history',
-    team: '/meet-the-team',
-    handbook: '/employee-handbook',
-    careers: '/careers',
+    history: '/event',
+    team: '/about',
+    handbook: '/efforts',
+    careers: '/service',
   },
   help: {
-    faqs: '/faqs',
-    support: '/support',
-    livechat: '/live-chat',
+    event: '/event',
+    join: '/become-member',
+    directory: '/directory',
+    gallery: '/gallery',
   },
   contact: {
     email: 'sigabengluru@gmail.com',
@@ -62,17 +63,17 @@ const aboutLinks = [
 ];
 
 const serviceLinks = [
-  { text: 'Job Oppurtunities', href: data.services.webdev },
-  { text: 'Payment Mediation', href: data.services.webdesign },
-  { text: 'Latest News', href: data.services.marketing },
-  { text: 'Buisness Expansion', href: data.services.googleads },
+  { text: 'Job Oppurtunities', href: data.services.jobOppurnites },
+  { text: 'Payment Mediation', href: data.services.payment },
+  { text: 'Latest News', href: data.services.news },
+  { text: 'Buisness Expansion', href: data.services.business },
 ];
 
 const helpfulLinks = [
-  { text: 'Events', href: data.help.faqs },
-  { text: 'Join Us', href: data.help.support },
-  { text: 'Gallery', href: data.help.support },
-  { text: 'Directory', href: data.help.livechat, hasIndicator: true },
+  { text: 'Events', href: data.help.event },
+  { text: 'Join Us', href: data.help.join },
+  { text: 'Gallery', href: data.help.gallery },
+  { text: 'Directory', href: data.help.directory, hasIndicator: true },
 ];
 
 const contactInfo = [
