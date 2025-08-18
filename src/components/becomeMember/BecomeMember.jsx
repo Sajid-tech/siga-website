@@ -57,7 +57,7 @@ const BecomeMember = () => {
       features: ["Lifetime Access"]
     },
     "ordinary": {
-      title: "Ordinary Member",
+      title: "Ordinary\u00A0 Member",
       price: "₹2,000",
       priceNote: "/year",
       description: "Annual membership with comprehensive standard benefits",

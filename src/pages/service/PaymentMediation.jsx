@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/event-card';
 import { cn } from '@/lib/utils';
@@ -45,7 +45,7 @@ const PaymentMediation = () => {
         console.log('Form submitted:', formData);
     };
 
-    const CardHeading = ({ icon: Icon, title, description }) => (
+    const CardHeading = useCallback(({ icon: Icon, title, description }) => (
         <div className="px-2">
             <span className="text-muted-foreground flex items-center gap-2">
                 <Icon className="size-4" />
@@ -53,27 +53,27 @@ const PaymentMediation = () => {
             </span>
             <p className="mt-2 sm:mt-4 text-xl sm:text-2xl font-semibold">{description}</p>
         </div>
-    );
+    ),[]);
 
-    const FeatureCard = ({ children, className }) => (
+    const FeatureCard = useCallback(({ children, className }) => (
         <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
             <CardDecorator />
             {children}
         </Card>
-    );
+    ),[]);
 
-    const CardDecorator = () => (
+    const CardDecorator = useCallback(() => (
         <>
             <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
             <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
             <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
             <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
         </>
-    );
+    ),[]);
 
     return (
         <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
-            <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 max-w-[85rem] mx-auto ">
                 {/* Hero Section */}
                 <motion.div 
                     className="text-center mb-8 sm:mb-12 md:mb-16"
@@ -107,10 +107,10 @@ const PaymentMediation = () => {
                                     <Building className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-2" />
                                     Supplier's Details
                                 </h3>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Company Name */}
                                 <div>
-                                    <label htmlFor="supplierCompanyName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="supplierCompanyName" className="block text-sm font-medium text-gray-700 mb-1">
                                         Company/Firm Name *
                                     </label>
                                     <div className="relative">
@@ -123,36 +123,16 @@ const PaymentMediation = () => {
                                             name="supplierCompanyName"
                                             value={formData.supplierCompanyName}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
                                 </div>
 
-                                {/* Address */}
-                                <div>
-                                    <label htmlFor="supplierAddress" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                                        Address *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <textarea
-                                            id="supplierAddress"
-                                            name="supplierAddress"
-                                            rows={2}
-                                            value={formData.supplierAddress}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm border p-1 sm:p-2"
-                                            required
-                                        />
-                                    </div>
-                                </div>
 
                                 {/* Contact Name */}
                                 <div>
-                                    <label htmlFor="supplierContactName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="supplierContactName" className="block text-sm font-medium text-gray-700 mb-1">
                                         Contact Name *
                                     </label>
                                     <div className="relative">
@@ -165,15 +145,16 @@ const PaymentMediation = () => {
                                             name="supplierContactName"
                                             value={formData.supplierContactName}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
                                 </div>
-
+                               </div>
+                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Mobile */}
                                 <div>
-                                    <label htmlFor="supplierMobile" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="supplierMobile" className="block text-sm font-medium text-gray-700 mb-1">
                                         Mobile No *
                                     </label>
                                     <div className="relative">
@@ -186,7 +167,7 @@ const PaymentMediation = () => {
                                             name="supplierMobile"
                                             value={formData.supplierMobile}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
@@ -194,7 +175,7 @@ const PaymentMediation = () => {
 
                                 {/* Email */}
                                 <div>
-                                    <label htmlFor="supplierEmail" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="supplierEmail" className="block text-sm font-medium text-gray-700 mb-1">
                                         Email Id *
                                     </label>
                                     <div className="relative">
@@ -207,7 +188,30 @@ const PaymentMediation = () => {
                                             name="supplierEmail"
                                             value={formData.supplierEmail}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                           </div>
+
+                                {/* Address */}
+                                <div>
+                                    <label htmlFor="supplierAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Address *
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                        </div>
+                                        <textarea
+                                            id="supplierAddress"
+                                            name="supplierAddress"
+                                            rows={3}
+                                            value={formData.supplierAddress}
+                                            onChange={handleChange}
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2 "
                                             required
                                         />
                                     </div>
@@ -220,10 +224,10 @@ const PaymentMediation = () => {
                                     <Building className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-2" />
                                     Buyer's Details
                                 </h3>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Company Name */}
                                 <div>
-                                    <label htmlFor="buyerCompanyName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="buyerCompanyName" className="block text-sm font-medium text-gray-700 mb-1">
                                         Company/Firm Name *
                                     </label>
                                     <div className="relative">
@@ -236,36 +240,14 @@ const PaymentMediation = () => {
                                             name="buyerCompanyName"
                                             value={formData.buyerCompanyName}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
                                 </div>
-
-                                {/* Address */}
-                                <div>
-                                    <label htmlFor="buyerAddress" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                                        Address *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <textarea
-                                            id="buyerAddress"
-                                            name="buyerAddress"
-                                            rows={2}
-                                            value={formData.buyerAddress}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm border p-1 sm:p-2"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Contact Name */}
-                                <div>
-                                    <label htmlFor="buyerContactName" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+   {/* Contact Name */}
+   <div>
+                                    <label htmlFor="buyerContactName" className="block text-sm font-medium text-gray-700 mb-1">
                                         Contact Name *
                                     </label>
                                     <div className="relative">
@@ -278,15 +260,19 @@ const PaymentMediation = () => {
                                             name="buyerContactName"
                                             value={formData.buyerContactName}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
                                 </div>
+                              
+                   </div>
+                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                             
 
                                 {/* Mobile */}
                                 <div>
-                                    <label htmlFor="buyerMobile" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="buyerMobile" className="block text-sm font-medium text-gray-700 mb-1">
                                         Mobile No *
                                     </label>
                                     <div className="relative">
@@ -299,15 +285,14 @@ const PaymentMediation = () => {
                                             name="buyerMobile"
                                             value={formData.buyerMobile}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
                                 </div>
-
-                                {/* Email */}
-                                <div>
-                                    <label htmlFor="buyerEmail" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                  {/* Email */}
+                                  <div>
+                                    <label htmlFor="buyerEmail" className="block text-sm font-medium text-gray-700 mb-1">
                                         Email Id *
                                     </label>
                                     <div className="relative">
@@ -320,7 +305,29 @@ const PaymentMediation = () => {
                                             name="buyerEmail"
                                             value={formData.buyerEmail}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                              </div>
+                              
+                                  {/* Address */}
+                                  <div>
+                                    <label htmlFor="buyerAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Address *
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                                        </div>
+                                        <textarea
+                                            id="buyerAddress"
+                                            name="buyerAddress"
+                                            rows={3}
+                                            value={formData.buyerAddress}
+                                            onChange={handleChange}
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2"
                                             required
                                         />
                                     </div>
@@ -333,10 +340,10 @@ const PaymentMediation = () => {
                                     <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600 mr-2" />
                                     Due Reconciliation
                                 </h3>
-
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Due Amount */}
                                 <div>
-                                    <label htmlFor="dueAmount" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="dueAmount" className="block text-sm font-medium text-gray-700 mb-1">
                                         Due Amount *
                                     </label>
                                     <div className="relative">
@@ -349,7 +356,7 @@ const PaymentMediation = () => {
                                             name="dueAmount"
                                             value={formData.dueAmount}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
@@ -357,7 +364,7 @@ const PaymentMediation = () => {
 
                                 {/* Pending From */}
                                 <div>
-                                    <label htmlFor="pendingFrom" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="pendingFrom" className="block text-sm font-medium text-gray-700 mb-1">
                                         Pending From *
                                     </label>
                                     <div className="relative">
@@ -370,7 +377,7 @@ const PaymentMediation = () => {
                                             name="pendingFrom"
                                             value={formData.pendingFrom}
                                             onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
                                             required
                                         />
                                     </div>
@@ -378,8 +385,8 @@ const PaymentMediation = () => {
 
                                 {/* Ledger File */}
                                 <div>
-                                    <label htmlFor="ledgerFile" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                                        Ledger (Minimum 3 Years) *
+                                    <label htmlFor="ledgerFile" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Ledger (Min. 3 Years) *
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -398,7 +405,7 @@ const PaymentMediation = () => {
 
                                 {/* Authorization Letter */}
                                 <div>
-                                    <label htmlFor="authorizationLetter" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="authorizationLetter" className="block text-sm font-medium text-gray-700 mb-1">
                                         Authorisation Letter *
                                     </label>
                                     <div className="relative">
@@ -414,6 +421,7 @@ const PaymentMediation = () => {
                                             required
                                         />
                                     </div>
+                                </div>
                                 </div>
                             </div>
 
@@ -464,7 +472,7 @@ const Highlight = ({ children, className }) => {
     return (
         <span className={`relative inline-block ${className}`}>
             <span className="relative z-10">{children}</span>
-            <span className="absolute bottom-0 left-0 w-full h-2 bg-yellow-300/70 -rotate-1 -z-0"></span>
+            <span className="absolute bottom-0 left-0 w-full h-2 bg-red-300/70 -rotate-1 -z-0"></span>
         </span>
     );
 };

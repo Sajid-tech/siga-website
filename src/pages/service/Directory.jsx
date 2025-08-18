@@ -1,101 +1,59 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useCallback, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { Card, CardContent, CardHeader } from '@/components/ui/event-card';
 import { cn } from '@/lib/utils';
 import { Building, User, Mail, Phone, Globe, Briefcase, MapPin } from 'lucide-react';
+
+const fetchDirectoryData = async () => {
+  const response = await fetch('https://southindiagarmentsassociation.com/public/api/getDirectory');
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
 
 const Directory = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('all');
 
-    // Directory data
-    const directoryData = [
-        {
-            id: 1,
-            name: 'ARU ENTERPRISES',
-            contactPerson: 'Paresh Chandan',
-            address: '#917/44, 2nd Cross, snd Stage, Kirloskar Colony, W.O.C Road, Bangalore - 560 079',
-            email: 'aruenterprises@yahoo.com / info@hardcurrencyjeans.com',
-            website: 'www.hardcurrencyjeans.com',
-            phone: '+9180 23221083',
-            mobile: '09450 36022',
-            fax: '080 2322 3260',
-            businessType: 'Jeans & Casuals',
-            isManufacturer: true,
-            brands: 'Hard Currency',
-            isDistributor: false,
-            specialization: '',
-            category: 'manufacturer'
-        },
-        {
-            id: 2,
-            name: 'BAFNA CLOTHING COMPANY',
-            contactPerson: 'Praveen Mutha',
-            address: '#5, 1st Cross, Sudhamanagar, Lalbagh Road Bangalore - 560 027',
-            email: 'praveen@coolcolors.in',
-            website: 'www.coolcolors.in',
-            phone: '+9180 22128266',
-            mobile: '094484 85725',
-            fax: '080 22128267',
-            businessType: 'Mens Shirts & Trousers',
-            isManufacturer: true,
-            brands: 'Cool Color, Walker, I Blue',
-            isDistributor: false,
-            specialization: 'All types of Garments',
-            category: 'manufacturer'
-        },
-        {
-            id: 3,
-            name: 'BAJAJ CLOTHING PVT. LTD',
-            contactPerson: 'Vijay Bajaj',
-            address: '#194, 4th Cross, K.S. Garden, Lalbagh Road, Bangalore - 560 027',
-            email: 'bajajclothings3@yahoo.com',
-            website: '',
-            phone: '+9180 41130598',
-            mobile: '98864 01966',
-            fax: '080 41130599',
-            businessType: 'Mens-Women Kids Garments & Under Garments',
-            isManufacturer: false,
-            brands: '',
-            isDistributor: true,
-            specialization: 'All types of Garments',
-            category: 'distributor'
-        },
-        {
-            id: 4,
-            name: 'CHAMAN APPARELS',
-            contactPerson: 'R. Hukmi Chand',
-            address: '#893/896, 3rd Floor, Shanti Complex, Nagrathpet Main Road, Bangalore - 560 002',
-            email: 'chamanapparels@yahoo.co.in',
-            website: '',
-            phone: '+9180 22213830, 3297',
-            mobile: '98452 85110',
-            fax: '',
-            businessType: 'Mens - Women - Kids Garments',
-            isManufacturer: false,
-            brands: '',
-            isDistributor: true,
-            specialization: 'Designer kidswear, Bottoms, Babyset, Designer Lounge Wear',
-            category: 'distributor'
-        },
-        {
-            id: 5,
-            name: 'CREATIVE GARMENTS',
-            contactPerson: 'Parijat Manju',
-            address: 'NO. 18B, 2nd Floor, SGN Layout, 1st Cross Lalabag Road, Bangalore - 560027',
-            email: 'creativegarments@outlook.com',
-            website: '',
-            phone: '080-41146718, 4127 3',
-            mobile: '98860 39030',
-            fax: '',
-            businessType: 'Manufacturers/Wholesale Distributors/Agents',
-            isManufacturer: true,
-            brands: '',
-            isDistributor: true,
-            specialization: 'Mens wedding wears, Sherwanies, Tunics, Suits, Kurta sets, Fenct Outfits, Zoop, Cartel, Blue Stag, Suitsmith, Creaseline, Rajwada, Samrat, Dollar, Tuxido, Davik',
-            category: 'both'
-        }
-    ];
+    // Use Tanstack Query to fetch data
+    const { data, isLoading, isError, error } = useQuery({
+        queryKey: ['directory'],
+        queryFn: fetchDirectoryData,
+    });
+
+    // Transform API data to match our UI structure
+    const transformData = (apiData) => {
+        if (!apiData || !apiData.data) return [];
+        
+        return apiData.data.map(item => ({
+            id: item.id,
+            name: item.name_of_firm,
+            contactPerson: item.contact_person,
+            address: item.contact_address,
+            email: item.mail_id,
+            website: item.website,
+            phone: item.office_ph_no,
+            mobile: item.cell_no,
+            fax: item.fax_no,
+            businessType: item.nature_of_business,
+            isManufacturer: item.manufacturers === "Yes",
+            brands: item.brands,
+            isDistributor: item.agents !== null,
+            specialization: item.specialization,
+            category: item.manufacturers === "Yes" && item.agents !== null 
+                ? 'both' 
+                : item.manufacturers === "Yes" 
+                    ? 'manufacturer' 
+                    : 'distributor'
+        }));
+    };
+
+    // Get transformed data or empty array if loading/error
+    const directoryData = data ? transformData(data) : [];
 
     // Filter and search functionality
     const filteredData = directoryData.filter(item => {
@@ -111,48 +69,145 @@ const Directory = () => {
         return matchesSearch && matchesFilter;
     });
 
+    const FeatureCard = useCallback(({ children, className }) => (
+        <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
+            <CardDecorator />
+            {children}
+        </Card>
+    ),[]);
+
+    const CardDecorator = useCallback(() => (
+        <>
+            <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
+            <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
+            <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
+            <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
+        </>
+    ),[]);
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="relative w-full pt-28 bg-white overflow-hidden">
+                <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+                    {/* Hero Section Skeleton */}
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
+                        <Skeleton height={40} width={300} className="mx-auto mb-4" />
+                        <Skeleton height={20} width={500} className="mx-auto" />
+                    </div>
+
+                    {/* Search and Filter Section Skeleton */}
+                    <div className="mb-6 sm:mb-8">
+                        <FeatureCard>
+                            <CardContent className="p-4 sm:p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                                    <div>
+                                        <Skeleton height={20} width={120} className="mb-2" />
+                                        <Skeleton height={36} />
+                                    </div>
+                                    <div>
+                                        <Skeleton height={20} width={150} className="mb-2" />
+                                        <div className="flex gap-2">
+                                            <Skeleton height={32} width={100} />
+                                            <Skeleton height={32} width={120} />
+                                            <Skeleton height={32} width={110} />
+                                            <Skeleton height={32} width={80} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </FeatureCard>
+                    </div>
+
+                    {/* Results Count Skeleton */}
+                    <Skeleton height={20} width={150} className="mb-4" />
+
+                    {/* Directory List Skeleton */}
+                    <div className="space-y-4 sm:space-y-6">
+                        {[...Array(3)].map((_, i) => (
+                            <FeatureCard key={i}>
+                                <CardContent className="p-4 sm:p-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                                        <div className="space-y-2">
+                                            <Skeleton height={24} width={200} />
+                                            <Skeleton height={16} width={150} />
+                                            <Skeleton height={16} width={250} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Skeleton height={20} width={180} />
+                                            <Skeleton height={16} width={250} />
+                                            <Skeleton height={16} width={200} />
+                                            <Skeleton height={16} width={180} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Skeleton height={16} width={180} />
+                                            <Skeleton height={16} width={180} />
+                                            <Skeleton height={16} width={180} />
+                                            <Skeleton height={24} width={120} className="mt-2" />
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </FeatureCard>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
    
-   
-       const FeatureCard = ({ children, className }) => (
-           <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
-               <CardDecorator />
-               {children}
-           </Card>
-       );
-   
-       const CardDecorator = () => (
-           <>
-               <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
-               <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
-               <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
-               <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
-           </>
-       );
- return (
-        <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
+    if (isError) {
+        return (
+            <div className="relative w-full pt-28 bg-white overflow-hidden">
+                <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+              
+                    <div className="text-center mb-8 sm:mb-12 md:mb-16">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+                            SIGA <Highlight>Directory</Highlight>
+                        </h1>
+                    </div>
+
+                  
+                    <FeatureCard>
+                        <CardContent className="p-4 sm:p-6 text-center">
+                            <div className="text-red-600 font-medium mb-2">
+                                Failed to load directory data
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                { 'Please try again later.'}
+                            </p>
+                            <button 
+                                onClick={() => window.location.reload()}
+                                className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium"
+                            >
+                                Retry
+                            </button>
+                        </CardContent>
+                    </FeatureCard>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="relative w-full pt-28 bg-white overflow-hidden">
             <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Hero Section */}
-                <motion.div 
-                    className="text-center mb-8 sm:mb-12 md:mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
-                >
+     
+                <div className="text-center mb-8 sm:mb-12 md:mb-16">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
                         SIGA <Highlight>Directory</Highlight>
                     </h1>
                     <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
                         Explore the SIGA Directory to connect members and discover opportunities in the apparel industry.
                     </p>
-                </motion.div>
+                </div>
 
-                {/* Search and Filter Section */}
+              
                 <div className="mb-6 sm:mb-8">
                     <FeatureCard>
                         <CardContent className="p-4 sm:p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                                {/* Search Input */}
+                              
                                 <div>
                                     <label htmlFor="search" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                         Search Members
@@ -167,14 +222,14 @@ const Directory = () => {
                                             type="text"
                                             id="search"
                                             placeholder="Search by name, contact or business type..."
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-xs sm:text-sm py-1 sm:py-2 border"
+                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 text-sm py-2 border"
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
                                         />
                                     </div>
                                 </div>
 
-                                {/* Filter Buttons */}
+                             
                                 <div>
                                     <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                                         Filter by Business Type
@@ -220,13 +275,7 @@ const Directory = () => {
                 <div className="space-y-4 sm:space-y-6">
                     {filteredData.length > 0 ? (
                         filteredData.map((company) => (
-                            <motion.div
-                                key={company.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3 }}
-                                viewport={{ once: true }}
-                            >
+                            <div key={company.id}>
                                 <FeatureCard>
                                     <CardContent className="p-4 sm:p-6">
                                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -262,14 +311,21 @@ const Directory = () => {
                                                     <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 mt-0.5 text-gray-400 flex-shrink-0" />
                                                     <span>{company.address}</span>
                                                 </div>
-                                                <div className="text-xs sm:text-sm text-gray-600 flex items-center">
-                                                    <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-400" />
-                                                    {company.email}
-                                                </div>
+                                                {company.email && (
+                                                    <div className="text-xs sm:text-sm text-gray-600 flex items-center">
+                                                        <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-400" />
+                                                        {company.email}
+                                                    </div>
+                                                )}
                                                 {company.website && (
                                                     <div className="text-xs sm:text-sm text-gray-600 flex items-center">
                                                         <Globe className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-400" />
-                                                        <a href={`https://${company.website}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline break-all">
+                                                        <a 
+                                                            href={`https://${company.website.replace(/^https?:\/\//, '')}`} 
+                                                            target="_blank" 
+                                                            rel="noopener noreferrer" 
+                                                            className="text-green-600 hover:underline break-all"
+                                                        >
                                                             {company.website}
                                                         </a>
                                                     </div>
@@ -297,7 +353,7 @@ const Directory = () => {
                                                     </div>
                                                 )}
                                                 <div className="pt-1 sm:pt-2">
-                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-2xs sm:text-xs font-medium ${
+                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-lg text-2xs sm:text-xs font-medium ${
                                                         company.category === 'manufacturer' ? 'bg-blue-100 text-blue-800' :
                                                         company.category === 'distributor' ? 'bg-purple-100 text-purple-800' :
                                                         'bg-green-100 text-green-800'
@@ -311,7 +367,7 @@ const Directory = () => {
                                         </div>
                                     </CardContent>
                                 </FeatureCard>
-                            </motion.div>
+                            </div>
                         ))
                     ) : (
                         <FeatureCard>

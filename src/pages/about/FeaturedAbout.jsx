@@ -93,7 +93,7 @@ const FeaturedAbout = () => {
 
           
             <div className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10">
-              <svg className='h-[10rem] w-[10rem] md:w-[20rem] md:h-[20rem] lg:h-[30rem] lg:w-[25rem] mt-0 md:mt-20' viewBox="0 0 542 632" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg className='h-[8rem] w-[6rem] md:w-[16rem] md:h-[20rem] lg:h-[30rem] lg:w-[25rem] mt-0 md:mt-20' viewBox="0 0 542 632" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M32 0H510C527.673 0 542 14.3268 542 32V298.261C542 315.934 527.673 330.261 510 330.261H228.864C211.191 330.261 196.623 344.683 198.472 362.259C211.096 482.222 298.249 538.277 466.957 544.371C484.619 545.008 499.014 559.258 499.014 576.931V600C499.014 617.673 484.397 632.016 466.725 631.892C13.3912 628.726 0.34845 553.042 0.00854492 32.3339C-0.00299072 14.6608 14.3269 0 32 0Z" fill="url(#paint0_linear_756_17898)"></path>
                 <defs>
                   <linearGradient id="paint0_linear_756_17898" x1="542.008" y1="631.996" x2="-82.609" y2="96.326" gradientUnits="userSpaceOnUse">

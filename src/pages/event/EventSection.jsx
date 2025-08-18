@@ -93,50 +93,51 @@ const Firework = ({ x, y, id }) => {
 };
 
 const EventSection = () => {
-  const [fireworks, setFireworks] = useState([]);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const containerRef = useRef(null);
+  // const [fireworks, setFireworks] = useState([]);
+  // const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  // const containerRef = useRef(null);
 
-  useEffect(() => {
-    const updateDimensions = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
+  // useEffect(() => {
+  //   const updateDimensions = () => {
+  //     setDimensions({
+  //       width: window.innerWidth,
+  //       height: window.innerHeight
+  //     });
+  //   };
 
-    updateDimensions();
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, []);
+  //   updateDimensions();
+  //   window.addEventListener('resize', updateDimensions);
+  //   return () => window.removeEventListener('resize', updateDimensions);
+  // }, []);
 
-  useEffect(() => {
-    const fireworkInterval = setInterval(() => {
-      if (dimensions.width > 0) {
-        const newFirework = {
-          id: Date.now(),
-          x: Math.random() * dimensions.width,
-          y: Math.random() * (dimensions.height * 0.5)
-        };
+  // useEffect(() => {
+  //   const fireworkInterval = setInterval(() => {
+  //     if (dimensions.width > 0) {
+  //       const newFirework = {
+  //         id: Date.now(),
+  //         x: Math.random() * dimensions.width,
+  //         y: Math.random() * (dimensions.height * 0.5)
+  //       };
         
-        setFireworks(prev => [
-          ...prev.slice(-4), 
-          newFirework
-        ]);
-      }
-    }, 2500);
+  //       setFireworks(prev => [
+  //         ...prev.slice(-4), 
+  //         newFirework
+  //       ]);
+  //     }
+  //   }, 2500);
 
-    return () => clearInterval(fireworkInterval);
-  }, [dimensions]);
+  //   return () => clearInterval(fireworkInterval);
+  // }, [dimensions]);
 
-  const rayCount = 24;
-  const centerX = dimensions.width / 2;
-  const centerY = dimensions.height / 2;
+  // const rayCount = 24;
+  // const centerX = dimensions.width / 2;
+  // const centerY = dimensions.height / 2;
 
   return (
-    <div className="relative w-full py-24 bg-white overflow-hidden" ref={containerRef}>
+    // ref={containerRef}
+    <div className="relative w-full py-24 bg-white overflow-hidden" >
   
-      <svg 
+      {/* <svg 
         className="absolute inset-0 z-0 opacity-50 pointer-events-none"
         width="100%"
         height="100%"
@@ -161,7 +162,7 @@ const EventSection = () => {
           </linearGradient>
         </defs>
         
-        {/* Static rays (no rotation) */}
+    
         {Array.from({ length: rayCount }).map((_, i) => {
           const rayAngle = (360 / rayCount) * i;
           return (
@@ -182,7 +183,7 @@ const EventSection = () => {
         {fireworks.map(fw => (
           <Firework key={fw.id} x={fw.x} y={fw.y} id={fw.id} />
         ))}
-      </svg>
+      </svg> */}
 
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
         <SectionWithMockup

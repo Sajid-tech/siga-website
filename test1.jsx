@@ -514,3 +514,443 @@ const Highlight = ({ children, className }) => {
         </span>
     );
 };
+
+
+
+/////////////////////////////////////////////////
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/opacity.css';
+import Masonry from 'react-masonry-css';
+import { motion } from 'framer-motion';
+
+const fetchGallery = async () => {
+  const response = await fetch('https://southindiagarmentsassociation.com/public/api/getGallery');
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
+
+const GallerySection = ({ title, images }) => {
+  // Get year from title
+  const year = title.match(/\d{4}/)?.[0] || '';
+  const venue = title.split('_').pop().replace(/_/g, ' ');
+
+  // Masonry breakpoints
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 3,
+    700: 2,
+    500: 1
+  };
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="mb-16"
+    >
+      <div className="flex items-center mb-8">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold mr-4">
+          {year}
+        </div>
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {title.replace(/_/g, ' ').replace('autum', 'Autumn')}
+          </h2>
+        </div>
+      </div>
+      
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className="flex w-auto -ml-4"
+        columnClassName="pl-4"
+      >
+        {images.map((image, index) => (
+          <motion.div
+            key={`${title}-${index}`}
+            whileHover={{ scale: 1.02 }}
+            className="mb-4 relative group overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+          >
+            <LazyLoadImage
+              src={image}
+              alt={`Gallery image ${index + 1}`}
+              effect="opacity"
+              className="w-full h-auto object-cover"
+              width="100%"
+              height="auto"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span className="text-white font-medium text-sm bg-black/50 px-2 py-1 rounded">
+                Image #{index + 1}
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </Masonry>
+    </motion.div>
+  );
+};
+
+const Gallery = () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['gallery'],
+    queryFn: fetchGallery,
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-700">Loading gallery...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg max-w-md">
+          <h3 className="font-bold mb-2">Error loading gallery</h3>
+          <p>{error.message}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-100 hover:bg-red-200 rounded text-red-700 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Filter out the "code" property and get gallery sections in reverse chronological order
+  const gallerySections = Object.entries(data)
+    .filter(([key]) => key !== 'code')
+    .sort(([a], [b]) => {
+      const yearA = a.match(/\d{4}/)?.[0] || 0;
+      const yearB = b.match(/\d{4}/)?.[0] || 0;
+      return yearB - yearA;
+    });
+
+  return (
+    <div className="min-h-screen bg-white pt-28 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            SIGA <span className="relative inline-block">
+              <span className="relative z-10">Gallery</span>
+              <span className="absolute bottom-0 left-0 w-full h-3 bg-yellow-300 -rotate-1 -z-0"></span>
+            </span>
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            A visual journey through our events and exhibitions
+          </p>
+        </motion.div>
+
+        <div className="space-y-20">
+          {gallerySections.map(([title, images]) => (
+            <GallerySection key={title} title={title} images={images} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Gallery;
+
+import { cn } from "@/lib/utils"
+import React from "react"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { Link, useNavigate } from 'react-router-dom'
+import { ArrowRight, ChevronRight, Menu, X } from 'lucide-react'
+import { Button } from "../ui/button"
+const menuItems = [
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Event', href: '/event' },
+
+    { name: 'Service', href: '/service' },
+    { name: 'Others', href: '/other' },
+]
+const HeroHeader = () => {
+    const [menuState, setMenuState] = React.useState(false)
+    const [isScrolled, setIsScrolled] = React.useState(false)
+const navigate = useNavigate()
+    React.useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 50)
+        }
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
+    return (
+        <header>
+            <nav
+                data-state={menuState && 'active'}
+                className="fixed z-999 w-full px-2 group">
+                <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-white max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
+                    <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
+                        <div className="flex w-full justify-between lg:w-auto">
+                            <Link
+                                href="/"
+                                aria-label="home"
+                                className="flex items-center space-x-2">
+                                <Logo />
+                            </Link>
+
+                            <button
+                                onClick={() => setMenuState(!menuState)}
+                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
+                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
+                                <Menu className="in-data-[state=active]:rotate-180 group-data-[state=active]:scale-0 group-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
+                                <X className="group-data-[state=active]:rotate-0 group-data-[state=active]:scale-100 group-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
+                            </button>
+                        </div>
+
+                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
+                            <ul className="flex gap-8 text-sm">
+                                {menuItems.map((item, index) => (
+                                    <li key={index}>
+                                        <button
+                                            onClick={()=>navigate(item.href)}
+                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                            <span>{item.name}</span>
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="bg-white group-data-[state=active]:block lg:group-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
+                            <div className="lg:hidden">
+                                <ul className="space-y-6 text-base">
+                                    {menuItems.map((item, index) => (
+                                        <li key={index}>
+                                            <Link
+                                                to={item.href}
+                                                className="text-muted-foreground hover:text-accent-foreground block duration-150">
+                                                <span>{item.name}</span>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link to="#">
+                                        <span>Become Member</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled && 'lg:hidden')}>
+                                    <Link to="/contact">
+                                        <span>Contact</span>
+                                    </Link>
+                                </Button>
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
+                                    <Link to="#">
+                                        <span>Become Member</span>
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    )
+}
+
+export default HeroHeader
+
+const Logo = ({ className }) => {
+    return (
+        // <img
+        //     src="https://southindiagarmentsassociation.com/assets/images/logo.png"
+        //     alt="Company Logo"
+        //     className={cn('h-10 w-auto', className)}
+        // />
+        <LazyLoadImage
+   alt="Company Logo"
+effect="blur"
+  src="https://southindiagarmentsassociation.com/assets/images/logo.png"
+  className={cn('h-12 w-auto', className)}
+  />
+    )
+}
+
+
+// ------------------------------------------------
+
+// sticky-scroll-card-section.jsx
+
+import React, { useState, useEffect, useRef } from 'react';
+
+// --- Data for the feature cards ---
+const features = [
+  {
+    title: "Managing Committee 2022-24",
+    description:
+      " Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit accusantium consequatur sunt voluptate iusto distinctio. Dolor quisquam voluptatibus distinctio eligendi labore eius optio nobis, in ipsa odio illo, accusamus veritatis.",
+    imageUrl:
+      "https://southindiagarmentsassociation.com/assets/images/committee/ANURAG_SINGHLA_.jpg",
+    bgColor: "bg-yellow-200 dark:bg-yellow-800",
+    textColor: "text-gray-700 dark:text-gray-200",
+  },
+  {
+    title: "Managing Committee 2022-24",
+    description:
+      "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit accusantium consequatur sunt voluptate iusto distinctio. Dolor quisquam voluptatibus distinctio eligendi labore eius optio nobis, in ipsa odio illo, accusamus veritatis.",
+    imageUrl:
+      "https://southindiagarmentsassociation.com/assets/images/committee/ANURAG_SINGHLA_.jpg",
+    bgColor: "bg-red-200 dark:bg-red-800",
+    textColor: "text-gray-700 dark:text-gray-200",
+  },
+  {
+    title: "Managing Committee 2022-24",
+    description:
+      " Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit accusantium consequatur sunt voluptate iusto distinctio. Dolor quisquam voluptatibus distinctio eligendi labore eius optio nobis, in ipsa odio illo, accusamus veritatis.",
+    imageUrl:
+      "https://southindiagarmentsassociation.com/assets/images/committee/ANURAG_SINGHLA_.jpg",
+    bgColor: "bg-green-200 dark:bg-green-800",
+    textColor: "text-gray-700 dark:text-gray-200",
+  },
+  {
+    title: "Managing Committee 2022-24",
+    description:
+      " Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sit accusantium consequatur sunt voluptate iusto distinctio. Dolor quisquam voluptatibus distinctio eligendi labore eius optio nobis, in ipsa odio illo, accusamus veritatis.",
+    imageUrl:
+      "https://southindiagarmentsassociation.com/assets/images/committee/ANURAG_SINGHLA_.jpg",
+    bgColor: "bg-yellow-200 dark:bg-yellow-800",
+    textColor: "text-gray-700 dark:text-gray-200",
+  },
+  
+  
+];
+
+
+const useScrollAnimation = () => {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, inView];
+};
+
+// --- Header Component ---
+// const AnimatedHeader = () => {
+//   const [headerRef, headerInView] = useScrollAnimation();
+//   const [pRef, pInView] = useScrollAnimation();
+
+//   return (
+//     <div className="text-center max-w-3xl mx-auto mb-16">
+//       <h2
+//         ref={headerRef}
+//         className={`text-4xl md:text-5xl font-bold transition-all duration-700 ease-out text-gray-900 dark:text-white ${
+//           headerInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+//         }`}
+//         style={{ transformStyle: "preserve-3d" }}
+//       >
+//         Uncover Insights, Expose Nothing
+//       </h2>
+//       <p
+//         ref={pRef}
+//         className={`text-lg text-gray-600 dark:text-gray-300 mt-4 transition-all duration-700 ease-out delay-200 ${
+//           pInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+//         }`}
+//         style={{ transformStyle: "preserve-3d" }}
+//       >
+//         We aim to make on-device AI friction-free and production-ready
+//       </p>
+//     </div>
+//   );
+// };
+
+// --- Main Component ---
+export default function StickyFeatureSection() {
+  return (
+    <div className=" font-sans">
+     
+        <div className="max-w-[85rem] mx-auto">
+          <section className=" flex flex-col items-center">
+            {/* <AnimatedHeader /> */}
+
+            <div className="w-full">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className={`${feature.bgColor} grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky`}
+                  style={{ top: "100px" }}
+                >
+                  {/* Card Content */}
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-2xl md:text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+                      {feature.title} 
+                    </h3>
+                    <p className={feature.textColor}>{feature.description}</p>
+                  </div>
+
+                  {/* Card Image */}
+                  <div className="image-wrapper mt-8 md:mt-0">
+                    <img
+                      src={feature.imageUrl}
+                      alt={feature.title}
+                      loading="lazy"
+                      className="w-auto h-auto rounded-lg shadow-lg object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src =
+                          "https://placehold.co/600x400/cccccc/ffffff?text=Image+Not+Found";
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+    
+    </div>
+  );
+}
