@@ -954,3 +954,372 @@ export default function StickyFeatureSection() {
     </div>
   );
 }
+// --------------------------------------------------------------------------------------------------------------
+
+import React from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/css/effect-cards"
+import { EffectCards } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/effect-coverflow"
+import { Autoplay, Navigation, Pagination } from "swiper/modules"
+
+export const CardSwipe = ({
+  images,
+  autoplayDelay = 1500,
+  slideShadows = false,
+}) => {
+  const css = `
+    .card-swipe .swiper {
+ 
+   
+      padding: 30px;
+      margin: 0 auto;
+    }
+    
+    .card-swipe .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+    }
+    
+    .card-swipe .swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    @media (max-width: 768px) {
+      .card-swipe .swiper {
+        height: 300px;
+        max-width: 500px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .card-swipe .swiper {
+        height: 250px;
+        max-width: 350px;
+      }
+    }
+  `
+  
+  return (
+    <section className="card-swipe w-full  ">
+      <style>{css}</style>
+      <div className="flex w-full items-center  justify-center">
+        <div className="w-full ">
+          <Swiper
+            autoplay={{
+              delay: autoplayDelay,
+              disableOnInteraction: false,
+            }}
+            effect="cards"
+            grabCursor={true}
+            loop={true}
+            slidesPerView="auto"
+            rewind={true}
+            cardsEffect={{
+              slideShadows: slideShadows,
+            }}
+            modules={[EffectCards, Autoplay, Pagination, Navigation]}
+          >
+            {images.map((image, index) => (
+              <SwiperSlide key={index}>
+                <div className="size-full  rounded-3xl">
+                  <img
+                    src={image.src}
+                    className="size-full  rounded-xl object-cover"
+                    alt={image.alt}
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+
+// ---------------------------------------------------------------
+import React from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
+import { TextEffect } from "@/components/ui/text-effect";
+import BecomeMember from "@/components/becomeMember/BecomeMember";
+
+const images = [
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2466.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2480.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2466.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2480.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2466.JPG",
+  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2480.JPG",
+];
+
+const duplicatedImages = [...images, ...images];
+
+export function HeroSection() {
+  return (
+    <>
+      <style>{`
+        html, body {
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        @keyframes scroll-right {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .infinite-scroll {
+          animation: scroll-right 50s linear infinite;
+        }
+
+       
+
+        .image-item {
+          transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .image-item:hover {
+          transform: scale(1.05);
+          filter: brightness(1.1);
+        }
+      `}</style>
+      <main className="overflow-hidden  ">
+        <section className="relative  ">
+          <div className="relative pt-24 md:pt-36">
+            <div
+              aria-hidden
+              className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--background)_75%)]"
+            />
+
+            <BackgroundBeamsWithCollision>
+              <div className="mx-auto max-w-[85rem] px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row items-center gap-8">
+                  <div className="lg:w-[40%] w-full">
+                    <div className="text-center lg:text-left">
+                      <Link
+                        href="#link"
+                        className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto lg:mx-0 flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-black/5 transition-all duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
+                      >
+                        <span className="text-foreground text-sm">
+                          Welcome to the Siga, Bengaluru
+                        </span>
+                        <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
+                        <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
+                          <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
+                            <span className="flex size-6">
+                              <ArrowRight className="m-auto size-3" />
+                            </span>
+                            <span className="flex size-6">
+                              <ArrowRight className="m-auto size-3" />
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+
+                      <div className="mt-8 max-w-5xl mx-auto lg:mx-0 lg:mt-16 flex flex-col lg:flex-row items-center gap-6">
+                        {/* Right side - Three rows */}
+                        <div className="flex flex-col justify-center text-center lg:text-left order-1 lg:order-2">
+                          {/* Celebrating */}
+                          <TextEffect
+                            className=" text-6xl md:text-7xl  xl:text-[5.25rem] text-balance "
+                            preset="slide"
+                            per="word"
+                            delay={0.4}
+                          >
+                            Celebrating
+                          </TextEffect>
+
+                          {/* 30 Years */}
+                          <div className="flex items-center justify-center lg:justify-start mt-2">
+                            <TextEffect
+                              className="text-6xl md:text-8xl font-semibold leading-none bg-gradient-to-b from-red-400 to-indigo-500 bg-clip-text text-transparent"
+                              preset="slide"
+                              per="char"
+                              delay={0.6}
+                            >
+                              30
+                            </TextEffect>
+
+                            <TextEffect
+                              className="text-6xl md:text-7xl  xl:text-[5.25rem] ml-2"
+                              preset="slide"
+                              per="word"
+                              delay={0.7}
+                            >
+                              Years
+                            </TextEffect>
+                          </div>
+
+                          {/* of SIGA */}
+                          <TextEffect
+                            className="text-6xl md:text-7xl  xl:text-[5.25rem] mt-2 "
+                            preset="slide"
+                            per="word"
+                            delay={0.8}
+                          >
+                            of SIGA
+                          </TextEffect>
+                        </div>
+                        
+                      </div>
+                   <div>
+                   <TextEffect
+                                              className="lg:mx-0 mt-4 md:mt-6 max-w-xl mx-auto line-clamp-5 text-balance text-sm md:text-base description-text px-2 sm:px-0"
+                                              preset="fade"
+                                              per="line"
+                                              delay={0.8}
+                                            >
+                                              In the history of modern astronomy, there is probably
+                                              no one greater leap forward than the building and
+                                              launch of the space telescope known as the Hubble.
+                                            </TextEffect>
+                     
+                   </div>
+
+                     
+                    </div>
+                  </div>
+
+                  <div className="lg:w-[60%]   relative w-full mt-12 lg:mt-0 p-2">
+                    <div className="absolute inset-0 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-white/90 to-indigo-50/20"></div>
+                      <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-indigo-300/25 blur-[100px]"></div>
+                      <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-white/25 blur-[100px]"></div>
+                      <div
+                        className="absolute inset-0 opacity-10"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(to right, #888 1px, transparent 1px), linear-gradient(to bottom, #888 1px, transparent 1px)",
+                          backgroundSize: "50px 50px",
+                        }}
+                      ></div>
+                      <div
+                        className="absolute inset-0 opacity-20"
+                        style={{
+                          backgroundImage:
+                            "radial-gradient(circle at 70% 30%, #7c3aed 1px, transparent 1.5px), radial-gradient(circle at 30% 70%, #db2777 1px, transparent 1.5px)",
+                          backgroundSize: "60px 60px",
+                          animation: "moveBackground 20s infinite alternate",
+                        }}
+                      ></div>
+                    </div>
+
+                    <div className="w-full  relative overflow-hidden flex items-center justify-center">
+                      {/* Scrolling images container */}
+                      <div className=" z-10 w-full  flex items-center justify-center py-8">
+                        <div className="scroll-container w-full max-w-6xl">
+                          <div className="infinite-scroll flex gap-6 w-max">
+                            {duplicatedImages.map((image, index) => (
+                              <div
+                                key={index}
+                                className="image-item flex-shrink-0 w-48 h-48 md:w-64 md:h-64 lg:w-96 lg:h-80 rounded-xl overflow-hidden shadow-2xl"
+                              >
+                                <img
+                                  src={image}
+                                  alt={`Gallery image ${
+                                    (index % images.length) + 1
+                                  }`}
+                                  className="w-full h-full object-cover"
+                                  loading="lazy"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <motion.div
+                      className="relative p-4 mt-2 rounded-xl border border-white/20 backdrop-blur-lg text-center text-white mb-16 overflow-hidden"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2, duration: 0.5 }}
+                      viewport={{ once: true }}
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(255, 193, 7, 1) 0%, rgba(245, 158, 11, 1) 100%)",
+                        boxShadow: "0 8px 32px rgba(251, 191, 36, 0.3)",
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
+
+                      <div className="absolute inset-0 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-500/15"></div>
+
+                        <motion.div
+                          className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                          initial={{ x: "-100%" }}
+                          animate={{ x: "100%" }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        />
+
+                        <div className="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-yellow-400/10 blur-xl"></div>
+                        <div className="absolute bottom-1/3 right-1/3 w-24 h-24 rounded-full bg-amber-500/15 blur-xl"></div>
+                      </div>
+
+                      <div className="relative z-10">
+                        <div className="flex flex-row items-center justify-between">
+                          <h3 className="text-2xl font-medium mb-3 text-yellow-900 drop-shadow-md">
+                            Join SIGA Membership
+                          </h3>
+
+                          <BecomeMember />
+                        </div>
+
+                        <p className="text-yellow-950">
+                          Lorem ipsum dolor sit, amet consectetur adipisicing
+                          elit. Error iusto totam nesciunt voluptas, quam
+                          inventore ducimus accusantium
+                        </p>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            </BackgroundBeamsWithCollision>
+          </div>
+        </section>
+      </main>
+    </>
+  );
+}
+
+
+// -------------------------------------------------------------------
+<div className=" flex items-center justify-center">
+           
+           <img
+           src='https://i.postimg.cc/9MhQnP8Y/commingson.png'
+           alt='Comming soon pic'
+
+           
+           />
+          
+      </div>

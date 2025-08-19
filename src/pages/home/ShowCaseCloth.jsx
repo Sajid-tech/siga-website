@@ -10,12 +10,12 @@ const ShowCaseCloth = () => {
   ], []);
 
   return (
-    <div className="relative w-full py-8">
+    <div className="relative w-full bg-gradient-to-br from-red-50 via-transparent to-indigo-300/25 py-8">
       {/* Background elements - no z-index needed here */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-white/90 to-indigo-50/20"></div>
-        <div className="absolute -top-20 -right-20 w-96 h-96 rounded-full bg-indigo-300/25 blur-[100px]"></div>
-        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-red-300/25 blur-[100px]"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-tr from-white/90 to-indigo-50/20"></div>
+        <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full bg-indigo-300/25 blur-[100px]"></div>
+        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-red-50 blur-[100px]"></div> */}
         <div 
           className="absolute inset-0 opacity-10"
           style={{

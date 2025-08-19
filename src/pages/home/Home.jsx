@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 
-import { HeroSection } from "./HeroSection";
+import  HeroSection  from "./HeroSection";
 
 
 

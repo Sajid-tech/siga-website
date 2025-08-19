@@ -39,15 +39,15 @@ const Newsletter = () => {
           : 'translate-y-0 opacity-100 rotate-0 scale-100'
       }`}
     >
-      {/* Backdrop glow effect */}
+  
       <div className="absolute -inset-4 bg-yellow-500 rounded-2xl blur-xl opacity-20 animate-pulse"></div>
       
-      {/* Main newsletter card */}
+   
       <div className={`relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 w-80 transform transition-all duration-700 ${
         isClosing ? '' : ''
       }`}>
         
-        {/* Close button */}
+      
         <button
           onClick={handleClose}
           className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors duration-200 hover:rotate-90 transform"
@@ -55,7 +55,7 @@ const Newsletter = () => {
           <X size={20} />
         </button>
 
-        {/* Animated icon */}
+       
         <div className="flex justify-center mb-4">
           <div className="relative">
             <div className="absolute inset-0 bg-red-500 rounded-full blur-md opacity-50 animate-ping"></div>
@@ -65,7 +65,7 @@ const Newsletter = () => {
           </div>
         </div>
 
-        {/* Header with sparkles */}
+      
         <div className="text-center mb-4">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Sparkles className="text-yellow-500 animate-spin" size={16} />
@@ -79,7 +79,7 @@ const Newsletter = () => {
           </p>
         </div>
 
-        {/* Subscription form */}
+      
         <div className="space-y-3">
           <div className="relative">
             <input
@@ -98,13 +98,13 @@ const Newsletter = () => {
           </button>
         </div>
 
-        {/* Decorative elements */}
+   
         <div className="absolute -top-2 -left-2 w-4 h-4 bg-yellow-400 rounded-full animate-pulse"></div>
         <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-red-400 rounded-full animate-pulse delay-300"></div>
         <div className="absolute top-1/2 -left-1 w-2 h-2 bg-indigo-400 rounded-full animate-ping delay-500"></div>
       </div>
 
-      {/* Floating particles effect */}
+    
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
           <div
@@ -120,7 +120,7 @@ const Newsletter = () => {
         ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes float-0 {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-10px) rotate(180deg); }

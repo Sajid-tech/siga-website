@@ -55,7 +55,6 @@ const GalleryItem = ({ question, answer, index, galleryData }) => {
       className="group rounded-lg bg-gradient-to-br from-background via-muted/50 to-background  overflow-hidden"
     >
 
-
 <div className="relative px-5 py-6 border rounded-xl border-border/20 overflow-hidden group bg-gradient-to-br from-background/80 to-muted/20">
 
   <div className="absolute inset-0 overflow-hidden  transition-opacity duration-300 pointer-events-none">

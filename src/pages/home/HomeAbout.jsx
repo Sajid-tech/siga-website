@@ -68,7 +68,7 @@ export default function HomeAbout() {
   return (
     <section
       id="about-section"
-      className="w-full py-24 px-4 bg-gradient-to-b from-white to-blue-50 text-gray-800 relative"
+      className="w-full py-24 px-4 bg-gradient-to-bl from-blue-50 via-transparent to-red-50 text-gray-800 relative"
     >
       <div className="container mx-auto max-w-6xl relative z-10">
         <div className="flex flex-col items-center mb-6">

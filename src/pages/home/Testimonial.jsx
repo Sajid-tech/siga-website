@@ -68,9 +68,9 @@ const thirdColumn = testimonials.slice(6, 9);
 
 const Testimonial = () => {
   return (
-   <section className="bg-background my-20 relative">
+   <section className="bg-gradient-to-bl from-indigo-300/25 via-transparent to-transparent  relative">
    
-         <div className="mx-auto max-w-[85rem] z-10 ">
+         <div className="mx-auto pt-20 max-w-[85rem] z-10 ">
            <div
            
              className="flex flex-col items-center justify-center max-w-[540px] mx-auto"
@@ -91,6 +91,8 @@ const Testimonial = () => {
              <TestimonialsColumn testimonials={firstColumn} duration={15} />
              <TestimonialsColumn testimonials={secondColumn} className="hidden md:block" duration={19} />
              <TestimonialsColumn testimonials={thirdColumn} className="hidden lg:block" duration={17} />
+            
+
            </div>
          </div>
        </section>
