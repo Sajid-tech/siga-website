@@ -3,7 +3,34 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Heart, Users, Mail, Trophy, ChevronRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-
+import { useNavigate } from "react-router-dom";
+const buttonColorMap = {
+  red: {
+    gradient: "from-red-400/70 via-red-500/60 to-red-400/70",
+    iconBg: "group-hover:bg-red-50",
+    iconText: "group-hover:text-red-500",
+  },
+  blue: {
+    gradient: "from-blue-400/70 via-blue-500/60 to-blue-400/70",
+    iconBg: "group-hover:bg-blue-50",
+    iconText: "group-hover:text-blue-500",
+  },
+  green: {
+    gradient: "from-green-400/70 via-green-500/60 to-green-400/70",
+    iconBg: "group-hover:bg-green-50",
+    iconText: "group-hover:text-green-500",
+  },
+  yellow: {
+    gradient: "from-yellow-400/70 via-yellow-500/60 to-yellow-400/70",
+    iconBg: "group-hover:bg-yellow-50",
+    iconText: "group-hover:text-yellow-500",
+  },
+  purple: {
+    gradient: "from-purple-400/70 via-purple-500/60 to-purple-400/70",
+    iconBg: "group-hover:bg-purple-50",
+    iconText: "group-hover:text-purple-500",
+  },
+};
 const BentoGrid = ({ children, className }) => {
   return (
     <div
@@ -26,7 +53,6 @@ const CardDecorator = () => (
     <span className="absolute -bottom-px -right-px block size-2 border-b-2 border-r-2 border-red-500"></span>
   </>
 );
-
 const BentoCard = ({
   name,
   className,
@@ -35,11 +61,11 @@ const BentoCard = ({
   description,
   href,
   cta,
-  cardBackground,
-  buttonColor
+  buttonColor,
 }) => {
   const [active, setActive] = useState(false);
-
+  const colorClasses = buttonColorMap[buttonColor] || buttonColorMap.red;
+  const navigate = useNavigate()
   return (
     <motion.div
       key={name}
@@ -55,26 +81,29 @@ const BentoCard = ({
     >
       <CardDecorator />
       {background}
-      
-      {/* Animated hover overlay */}
-      <motion.div 
-        className="absolute top-0 right-0 w-0 h-0 bg-gradient-to-br opacity-0 group-hover:opacity-100"
-        initial={{ width: 0, height: 0 }}
-        whileHover={{ 
-          width: "150%", 
-          height: "150%",
-          opacity: 0.1,
-          transition: { duration: 0.4, ease: "easeOut" }
-        }}
-        style={{ 
-          background: `linear-gradient(135deg, ${buttonColor}-400/50, transparent)`
-        }}
+
+      {/* 🔥 Full-card hover overlay */}
+      <motion.div
+        className={cn(
+          "absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-10 transition-opacity duration-300 bg-gradient-to-br",
+          colorClasses.gradient
+        )}
       />
- 
+
       <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1 p-4 transition-all duration-300 md:p-6">
         {Icon && (
-          <div className={`w-6 h-6 mb-3 flex items-center justify-center rounded-full bg-gray-50 group-hover:bg-${buttonColor}-50 transition-colors`}>
-            <Icon className={`h-5 w-5 text-gray-700 group-hover:text-${buttonColor}-500 transition-colors`} />
+          <div
+            className={cn(
+              "w-6 h-6 mb-3 flex items-center justify-center rounded-full bg-gray-50 transition-colors",
+              colorClasses.iconBg
+            )}
+          >
+            <Icon
+              className={cn(
+                "h-5 w-5 text-gray-700 transition-colors",
+                colorClasses.iconText
+              )}
+            />
           </div>
         )}
         <h3 className="text-lg font-semibold text-gray-900 dark:text-neutral-300 md:text-xl">
@@ -88,7 +117,7 @@ const BentoCard = ({
       <div
         className={cn(
           "pointer-events-none absolute right-0 bottom-0 flex items-center transition-all duration-300 p-4 md:p-6",
-          (active ? "opacity-100" : "opacity-0"),
+          active ? "opacity-100" : "opacity-0",
           "group-hover:opacity-100"
         )}
       >
@@ -97,19 +126,25 @@ const BentoCard = ({
           size="sm"
           className="pointer-events-auto relative text-black overflow-hidden"
         >
-          <a href={href} className="flex items-center gap-1 relative z-10">
+          <button onClick={()=>navigate(href)}  className="flex items-center gap-1 relative z-10">
             {cta}
             <ArrowRight
               size={14}
               className="group-hover:translate-x-0.5 transition-transform"
             />
-            <span className={`absolute inset-0 -z-10 bg-gradient-to-r from-${buttonColor}-400/70 via-${buttonColor}-500/60 to-${buttonColor}-400/70 opacity-100 transition-opacity duration-300 -skew-x-12`} />
-          </a>
+            <span
+              className={cn(
+                "absolute inset-0 -z-10 bg-gradient-to-r opacity-100 transition-opacity duration-300 -skew-x-12",
+                colorClasses.gradient
+              )}
+            />
+          </button>
         </Button>
       </div>
     </motion.div>
   );
 };
+
 
 const WhyChoose = () => {
   const features = [
@@ -178,7 +213,7 @@ const WhyChoose = () => {
   ];
 
   return (
-    <div className="py-12 px-4 relative overflow-hidden bg-gradient-to-r from-yellow-50 via-transparent to-purple-50">
+    <div className="py-12 px-4 relative overflow-hidden  bg-gradient-to-br from-green-50/20 via-transparent to-blue-50">
       {/* Refined SVG Pattern Background */}
       <div className="absolute inset-0 z-10 opacity-10">
         <svg 
@@ -248,19 +283,8 @@ const WhyChoose = () => {
 
         {/* Bento Grid Layout */}
         <BentoGrid className="lg:grid-rows-2">
-          {features.map((feature, index) => (
-            <BentoCard 
-              key={index}
-              name={feature.name}
-              description={feature.description}
-              href={feature.href}
-              cta={feature.cta}
-              className={feature.className}
-              Icon={feature.Icon}
-              background={feature.background}
-              cardBackground={feature.cardBackground}
-              buttonColor={feature.buttonColor}
-            />
+        {features.map((feature, index) => (
+            <BentoCard key={index} {...feature} />
           ))}
         </BentoGrid>
       </div>

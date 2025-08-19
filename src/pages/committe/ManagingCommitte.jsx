@@ -4,6 +4,9 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Card, CardContent } from '@/components/ui/card';
 import { User } from 'lucide-react';
+import { BackgroundGradient } from './BackgroundGradient';
+import { motion } from "framer-motion";
+import { AnimatedTabs } from './AnimatedTabs';
 
 const fetchCommitteeByYear = async (year) => {
   const response = await fetch(`https://southindiagarmentsassociation.com/public/api/getCommitteeByYear/${year}`);
@@ -19,20 +22,16 @@ const fetchCommitteeYears = async () => {
 
 const ManagingCommitte = () => {
   const [selectedYear, setSelectedYear] = useState('2024-26');
-  const [selectedTabYear, setSelectedTabYear] = useState('2022-24'); 
-
-
+  const [selectedTabYear, setSelectedTabYear] = useState(null); 
   const { data: yearsData, isLoading: isYearsLoading, isError: isYearsError } = useQuery({
     queryKey: ['committeeYears'],
     queryFn: fetchCommitteeYears,
   });
 
-
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['committeeData', selectedYear],
     queryFn: () => fetchCommitteeByYear(selectedYear),
   });
-
 
   const { data: tabData, isLoading: isTabLoading } = useQuery({
     queryKey: ['tabCommitteeData', selectedTabYear],
@@ -40,17 +39,144 @@ const ManagingCommitte = () => {
     enabled: !!selectedTabYear 
   });
 
+  
+  React.useEffect(() => {
+    if (yearsData?.data && !selectedTabYear) {
+      const firstPastYear = yearsData.data.find(year => year.year !== selectedYear);
+      if (firstPastYear) {
+        setSelectedTabYear(firstPastYear.year);
+      }
+    }
+  }, [yearsData, selectedYear, selectedTabYear]);
+
+  const pastCommitteeTabs = yearsData?.data
+    ?.filter((year) => year.year !== selectedYear)
+    ?.map((yearData) => ({
+      id: yearData.year,
+      label: yearData.tag_line.split(" ")[2],
+      content: isTabLoading && selectedTabYear === yearData.year ? (
+        <Skeleton
+          height={200}
+          count={4}
+          containerClassName="grid grid-cols-2 gap-4 w-full"
+        />
+      ) : (
+        <div className="flex flex-col gap-6">
+          <div className="w-full">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Office Berres {yearData.year}
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
+              {tabData?.office_berres?.map((member) => (
+                <MemberCardSmall
+                  key={member.name}
+                  name={member.name}
+                  designation={member.designation}
+                  image={`${tabData.image_url}${member.image}`}
+                  small
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">
+              Committee Members
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4 ">
+              {tabData?.committee_members?.map((member) => (
+                <MemberCardSmall
+                  key={member.name}
+                  name={member.name}
+                  image={`${tabData.image_url}${member.image}`}
+                  small
+                />
+              ))}
+            </div>
+          </div>
+
+          {(tabData?.committee_regional_invitiees?.length > 0 ||tabData?.committee_special_invitiees?.length > 0 ) && (
+            <div className="w-full">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                 Invitees
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4  ">
+                {tabData.committee_regional_invitiees.map((member) => (
+                  <MemberCardSmall
+                    key={member.name}
+                    name={member.name}
+                    image={member.image ? `${tabData.image_url}${member.image}` : null}
+                    small
+                    inviteType="regional"
+                  />
+                ))}
+                 {tabData.committee_special_invitiees.map((member) => (
+                  <MemberCardSmall
+                    key={member.name}
+                    name={member.name}
+                    image={member.image ? `${tabData.image_url}${member.image}` : null}
+                    small
+                    inviteType="special"
+                    
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* {tabData?.committee_special_invitiees?.length > 0 && (
+            <div className="w-full">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Special Invitees
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
+                {tabData.committee_special_invitiees.map((member) => (
+                  <MemberCardSmall
+                    key={member.name}
+                    name={member.name}
+                    image={member.image ? `${tabData.image_url}${member.image}` : null}
+                    small
+                  />
+                ))}
+              </div>
+            </div>
+          )} */}
+
+          {tabData?.committee_past_president?.length > 0 && (
+            <div className="w-full">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Past Presidents</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
+                {tabData.committee_past_president.map((president) => (
+                  <div
+                    key={president.name}
+                    className="bg-white p-3 rounded-lg shadow-sm"
+                  >
+                    <div className="text-center">
+                      <div className="mx-auto bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center mb-2">
+                        <User className="h-6 w-6 text-gray-500" />
+                      </div>
+                      <h3 className="font-medium text-gray-900 text-sm">
+                        {president.name}
+                      </h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      ),
+    }));
+
   if (isYearsLoading || isLoading) {
     return (
       <div className="relative w-full pt-28 bg-white overflow-hidden">
         <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-       
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <Skeleton height={40} width={300} className="mx-auto mb-4" />
             <Skeleton height={20} width={500} className="mx-auto" />
           </div>
 
-       
           <div className="w-full">
             <div className="bg-green-200 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky">
               <Skeleton height={200} count={6} containerClassName="grid grid-cols-2 md:grid-cols-3 gap-4" />
@@ -101,7 +227,6 @@ const ManagingCommitte = () => {
   return (
     <div className="relative w-full pt-28 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Managing Committee</Highlight>
@@ -111,14 +236,12 @@ const ManagingCommitte = () => {
           </p>
         </div>
 
-  
         <div className="w-full">
-      
-          <div className="bg-green-50 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 " >
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center col-span-full">
-            Managing Committee {selectedYear} test
+          <div className="bg-green-50 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16">
+            <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
+              Managing Committee {selectedYear} 
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
               {data?.office_berres?.map((member) => (
                 <MemberCard 
                   key={member.name}
@@ -130,11 +253,11 @@ const ManagingCommitte = () => {
             </div>
           </div>
 
-          <div className="bg-yellow-50 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky" style={{ top: "100px" }}>
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center col-span-full">
+          <div className="bg-yellow-50/80 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky" style={{ top: "100px" }}>
+            <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
               Committee Members {selectedYear}
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
               {data?.committee_members?.map((member) => (
                 <MemberCard 
                   key={member.name}
@@ -159,228 +282,97 @@ const ManagingCommitte = () => {
             </div>
           </div>
 
-        
-          <div className="bg-blue-50 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky" style={{ top: "100px" }}>
-           
-            <div className="flex flex-wrap gap-2 mb-6 justify-center col-span-full">
-              {yearsData?.data?.filter(year => year.year !== selectedYear).map((yearData) => (
-                <button
-                  key={yearData.year}
-                  onClick={() => setSelectedTabYear(yearData.year)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    selectedTabYear === yearData.year
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {yearData.tag_line}
-                </button>
-              ))}
-            </div>
-
-           
-            {isTabLoading ? (
-              <Skeleton height={200} count={4} containerClassName="grid grid-cols-2 gap-4 w-full" />
-            ) : (
-              <>
-             
-                <div className="w-full">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Managing Committee  {selectedTabYear}</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {tabData?.office_berres?.map((member) => (
-                      <MemberCardSmall 
-                        key={member.name}
-                        name={member.name}
-                        designation={member.designation || member.designation}
-                        image={`${tabData.image_url}${member.image}`}
-                        small
-                      />
-                    ))}
-                  </div>
-                </div>
-
-          
-                <div className="w-full mt-6">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Committee Members</h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {tabData?.committee_members?.map((member) => (
-                      <MemberCardSmall 
-                        key={member.name}
-                        name={member.name}
-                        image={`${tabData.image_url}${member.image}`}
-                        small
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {tabData?.committee_regional_invitiees?.length > 0 && (
-                  <div className="w-full mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Regional Invitees</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {tabData.committee_regional_invitiees.map((member) => (
-                        <MemberCardSmall 
-                          key={member.name}
-                          name={member.name}
-                          image={member.image ? `${tabData.image_url}${member.image}` : null}
-                          small
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-     
-                
-                {tabData?.committee_special_invitiees?.length > 0 && (
-                  <div className="w-full mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Special Invitees</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {tabData.committee_special_invitiees.map((member) => (
-                        <MemberCardSmall 
-                          key={member.name}
-                          name={member.name}
-                          image={member.image ? `${tabData.image_url}${member.image}` : null}
-                          small
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-              
-                {tabData?.committee_past_president?.length > 0 && (
-                  <div className="w-full mt-6">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-4">Past Presidents</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                      {tabData.committee_past_president.map((president) => (
-                        <div key={president.name} className="bg-white p-3 rounded-lg shadow-sm">
-                          <div className="text-center">
-                            <div className="mx-auto bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center mb-2">
-                              <User className="h-6 w-6 text-gray-500" />
-                            </div>
-                            <h3 className="font-medium text-gray-900 text-sm">{president.name}</h3>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+          {/* Past committee member */}
+          <div className="bg-blue-50 p-8 md:p-12 rounded-3xl mb-16">
+          <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
+          Past   Managing Committee
+            </h2>
+            <AnimatedTabs
+              tabs={pastCommitteeTabs}
+              defaultTab={selectedTabYear}
+              onTabChange={(newTabId) => setSelectedTabYear(newTabId)}
+              className="w-full"
+            />
           </div>
         </div>
       </div>
     </div>
   );
 };
-const MemberCard = ({ name, designation, image, small = false }) => {
-    const sizeClass = small ? "h-16 w-16" : "h-24 w-24";
-    const textSizeClass = small ? "text-sm" : "text-base";
-  
-    return (
-      <div
-        className={`relative 
-        transition-all duration-300 ease-out ${small ? "" : "h-full"}`}
-      >
-        <div className="flex flex-col items-center text-center">
-          {image ? (
-            <div
-              className={`relative  rounded-md overflow-hidden 
-              ring-2 ring-transparent hover:ring-indigo-400 transition-all duration-300`}
-            >
-              <img
-                src={image}
-                alt={name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22%23f3f4f6%22/%3E%3Ctext%20x%3D%2235%22%20y%3D%2255%22%20fill%3D%22%239ca3af%22%20font-size%3D%2210%22%20font-family%3D%22Arial%22%3ENo%20Img%3C/text%3E%3C/svg%3E";
-                }}
-              />
-            </div>
-          ) : (
-            <div
-              className={`rounded-full ${sizeClass} bg-gray-100 flex items-center justify-center 
-              ring-1 ring-gray-200`}
-            >
-              <User
-                className={`${small ? "h-6 w-6" : "h-8 w-8"} text-gray-500`}
-              />
-            </div>
-          )}
-  
-          <h3
-            className={`mt-3 font-semibold text-gray-900 ${textSizeClass} tracking-tight`}
-          >
-            {name}
-          </h3>
-  
-          {designation && (
-            <p
-              className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}
-            >
-              {designation}
-            </p>
-          )}
-        </div>
+
+const MemberCard = ({ name, designation, image }) => {
+  return (
+    <BackgroundGradient className="rounded-md max-w-sm p-1 cursor-pointer bg-white">
+      <img
+        src={image}
+        alt="member_committe_pic"
+        height="400"
+        width="400"
+        className="object-contain rounded-md hover:scale-105 hover:-translate-y-4 hover:transition-transform"
+      />
+      <p className="text-[15px] text-center text-black mt-2 mb-1">
+        {name}
+      </p>
+      <p className="text-sm text-center text-neutral-600">
+        {designation}
+      </p>
+    </BackgroundGradient>
+  );
+};
+
+const MemberCardSmall = ({ name, designation, image, small = false ,inviteType}) => {
+  const sizeClass = small ? "h-16 w-16" : "h-24 w-24";
+  const textSizeClass = small ? "text-xs" : "text-base";
+
+  return (
+    <div className="relative bg-white transition-all duration-300 ease-out">
+      <div className="flex flex-col items-center text-center">
+        {image ? (
+          <div className={`relative rounded-md overflow-hidden ring-2 ring-transparent hover:ring-indigo-400 transition-all duration-300`}>
+            <img
+              src={image}
+              alt={name}
+              width='100px'
+              height='100px'
+              className="object-contain"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22%23f3f4f6%22/%3E%3Ctext%20x%3D%2235%22%20y%3D%2255%22%20fill%3D%22%239ca3af%22%20font-size%3D%2210%22%20font-family%3D%22Arial%22%3ENo%20Img%3C/text%3E%3C/svg%3E";
+              }}
+            />
+          </div>
+        ) : (
+          <div className={`rounded-full ${sizeClass} bg-gray-100 flex items-center justify-center ring-1 ring-gray-200`}>
+            <User className={`${small ? "h-6 w-6" : "h-8 w-8"} text-gray-500`} />
+          </div>
+        )}
+
+        <h3 className={`mt-1 font-semibold text-gray-900 ${textSizeClass} tracking-tight`}>
+          {name}
+        </h3>
+
+        {designation && (
+          <p className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}>
+            {designation}
+          </p>
+        )}   
+        {/* inviteType="special" */}
+                    {/* inviteType="regional" */}
+        {inviteType == 'regional' && (
+          <p className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}>
+            Regional Invitee
+          </p>
+        )}
+        {inviteType == 'special' && (
+          <p className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}>
+            Special Invitee
+          </p>
+        )}
       </div>
-    );
-  };
-const MemberCardSmall = ({ name, designation, image, small = false }) => {
-    const sizeClass = small ? "h-16 w-16" : "h-24 w-24";
-    const textSizeClass = small ? "text-sm" : "text-base";
-  
-    return (
-      <div
-        className={`relative  bg-white p-2
-        transition-all duration-300 ease-out ${small ? "" : "h-full"}`}
-      >
-        <div className="flex flex-col  items-center text-center">
-          {image ? (
-            <div
-              className={`relative  ${sizeClass} rounded-md overflow-hidden 
-              ring-2 ring-transparent hover:ring-indigo-400 transition-all duration-300`}
-            >
-              <img
-                src={image}
-                alt={name}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src =
-                    "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20xmlns%3D%22http://www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Crect%20width%3D%22100%22%20height%3D%22100%22%20fill%3D%22%23f3f4f6%22/%3E%3Ctext%20x%3D%2235%22%20y%3D%2255%22%20fill%3D%22%239ca3af%22%20font-size%3D%2210%22%20font-family%3D%22Arial%22%3ENo%20Img%3C/text%3E%3C/svg%3E";
-                }}
-              />
-            </div>
-          ) : (
-            <div
-              className={`rounded-full ${sizeClass} bg-gray-100 flex items-center justify-center 
-              ring-1 ring-gray-200`}
-            >
-              <User
-                className={`${small ? "h-6 w-6" : "h-8 w-8"} text-gray-500`}
-              />
-            </div>
-          )}
-  
-          <h3
-            className={`mt-3 font-semibold text-gray-900 ${textSizeClass} tracking-tight`}
-          >
-            {name}
-          </h3>
-  
-          {designation && (
-            <p
-              className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}
-            >
-              {designation}
-            </p>
-          )}
-        </div>
-      </div>
-    );
-  };
+    </div>
+  );
+};
+
 const Highlight = ({ children, className }) => {
   return (
     <span className={`relative inline-block font-semibold ${className}`}>

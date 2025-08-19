@@ -705,11 +705,21 @@ const MemberShip = () => {
   );
 };
 
+// const Highlight = ({ children, className }) => {
+//   return (
+//     <span className={`relative inline-block ${className}`}>
+//       <span className="relative z-10">{children}</span>
+//       <span className="absolute bottom-0 left-0 w-full h-2 bg-blue-300/70 -rotate-1 -z-0"></span>
+//     </span>
+//   );
+// };
+
 const Highlight = ({ children, className }) => {
   return (
-    <span className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block font-semibold ${className}`}>
       <span className="relative z-10">{children}</span>
-      <span className="absolute bottom-0 left-0 w-full h-2 bg-blue-300/70 -rotate-1 -z-0"></span>
+  
+      <span className="absolute inset-0 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 rounded-lg px-2 py-1 -z-0 blur-sm"></span>
     </span>
   );
 };

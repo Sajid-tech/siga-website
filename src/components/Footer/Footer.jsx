@@ -8,7 +8,7 @@ import {
   Phone,
   Twitter,
 } from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const data = {
   facebookLink: 'https://facebook.com/mvpblocks',
@@ -20,7 +20,7 @@ const data = {
     jobOppurnites: '/service?tab=job_opportunities',
     payment: '/service?tab=payment_mediation',
     news: '/service?tab=latest_news',
-    news: '/service?tab=business_expansion',
+    business: '/service?tab=business_expansion',
   },
   about: {
     history: '/event',
@@ -83,6 +83,7 @@ const contactInfo = [
 ];
 
 export default function Footer() {
+  const navigate = useNavigate()
   return (
     <footer className=" mt-16  w-full place-self-end rounded-t-xl">
       <div className="mx-auto max-w-[85rem] px-4 pt-5 pb-6 sm:px-6 lg:px-8 ">
@@ -124,12 +125,13 @@ export default function Footer() {
               <ul className="mt-8 space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <a
-                      className="text-secondary-foreground/70 transition"
-                      href={href}
+                    <button
+                      className="text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500"
+                    
+                      onClick={()=>navigate(href)} 
                     >
                       {text}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -140,12 +142,12 @@ export default function Footer() {
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <a
-                      className="text-secondary-foreground/70 transition"
-                      href={href}
+                    <button
+                      className="text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500"
+                      onClick={()=>navigate(href)} 
                     >
                       {text}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -156,12 +158,12 @@ export default function Footer() {
               <ul className="mt-8 space-y-4 text-sm">
                 {helpfulLinks.map(({ text, href, hasIndicator }) => (
                   <li key={text}>
-                    <a
-                      href={href}
+                    <button
+                  onClick={()=>navigate(href)} 
                       className={`${
                         hasIndicator
-                          ? 'group flex justify-center gap-1.5 sm:justify-start'
-                          : 'text-secondary-foreground/70 transition'
+                          ? 'group flex justify-center gap-1.5 sm:justify-start hover:cursor-pointer hover:text-red-500' 
+                          : 'text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500'
                       }`}
                     >
                       <span className="text-secondary-foreground/70 transition">
@@ -173,7 +175,7 @@ export default function Footer() {
                           <span className="bg-primary relative inline-flex size-2 rounded-full" />
                         </span>
                       )}
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>

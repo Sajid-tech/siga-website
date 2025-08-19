@@ -20,20 +20,26 @@ export const BackgroundBeamsWithCollision = ({ children, className }) => {
     <div
       ref={parentRef}
       className={cn(
-        "h-auto relative flex items-center w-full justify-center overflow-hidden",
+        "relative w-full", // Removed h-auto and flex properties that were interfering
         className
       )}
     >
-      {beams.map((beam, idx) => (
-        <CollisionMechanism
-          key={beam.initialX + "-beam-" + idx} // unique key
-          beamOptions={beam}
-          containerRef={containerRef}
-          parentRef={parentRef}
-        />
-      ))}
+      {/* Beams container - positioned absolutely to not affect layout */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {beams.map((beam, idx) => (
+          <CollisionMechanism
+            key={beam.initialX + "-beam-" + idx}
+            beamOptions={beam}
+            containerRef={containerRef}
+            parentRef={parentRef}
+          />
+        ))}
+      </div>
 
-      {children}
+      {/* Content wrapper - maintains original layout flow */}
+      <div className="relative z-10">
+        {children}
+      </div>
 
       <div
         ref={containerRef}
