@@ -1,644 +1,1093 @@
-import React, { useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader } from '@/components/ui/event-card';
-import { cn } from '@/lib/utils';
-import { User, Phone, Mail, MapPin, Package, Tag, Briefcase, Map } from 'lucide-react';
-
+import React, { useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader } from "@/components/ui/event-card";
+import { cn } from "@/lib/utils";
+import {
+  User,
+  Phone,
+  Mail,
+  MapPin,
+  Package,
+  Tag,
+  Briefcase,
+  Map,
+} from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
 
 const BusinessExpansion = () => {
-    const [activeTab, setActiveTab] = useState('products');
-    const [productsForm, setProductsForm] = useState({
-        fullName: '',
-        contactNo: '',
-        email: '',
-        address: '',
-        product: '',
-        aboutYou: '',
-        state: '',
-        area: '',
-        priceCategory: '',
-        offer: ''
-    });
+  const [activeTab, setActiveTab] = useState("products");
+  const [productsForm, setProductsForm] = useState({
+    full_name: "",
+    mobile_no: "",
+    email: "",
+    address: "",
+    product_type: "",
+    about_you: "",
+    which_state: "",
+    which_area: "",
+    investment_amount: "",
+    what_you_offer: "",
+  });
 
-    const [distributorForm, setDistributorForm] = useState({
-        fullName: '',
-        contactNo: '',
-        email: '',
-        address: '',
-        product: '',
-        brand: '',
-        aboutYou: '',
-        lookingFor: '',
-        state: '',
-        area: '',
-        priceCategory: '',
-        offer: ''
-    });
+  const [distributorForm, setDistributorForm] = useState({
+    full_name1: "",
+    mobile_no1: "",
+    email1: "",
+    address1: "",
+    product_type1: "",
+    brand_name1: "",
+    about_you1: "",
+    looking_for1: "",
+    which_state1: "",
+    which_area1: "",
+    investment_amount1: "",
+    what_you_offer1: "",
+  });
 
-    const aboutYouOptions = ['Agent', 'Distributor', 'Manufacturer', 'Retailer'];
-    const lookingForOptions = ['Agent', 'Distributor', 'Retailer'];
+  const [errors, setErrors] = useState({});
+  const [loader, setLoader] = useState(false);
 
-    const handleProductsChange = (e) => {
-        const { name, value } = e.target;
-        setProductsForm(prev => ({ ...prev, [name]: value }));
-    };
+  const aboutYouOptions = ["Agent", "Distributor", "Manufacturer", "Retailer"];
+  const lookingForOptions = ["Agent", "Distributor", "Retailer"];
 
-    const handleDistributorChange = (e) => {
-        const { name, value } = e.target;
-        setDistributorForm(prev => ({ ...prev, [name]: value }));
-    };
+  const validateProducts = useCallback(() => {
+    const newErrors = {};
+    if (!productsForm.full_name.trim()) {
+      newErrors.full_name = "Full Name is required";
+    }
+    if (!productsForm.mobile_no.trim()) {
+      newErrors.mobile_no = "Mobile No is required";
+    }
+    if (!productsForm.email.trim()) {
+      newErrors.email = "Email is required";
+    }
+    if (!productsForm.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+    if (!productsForm.product_type.trim()) {
+      newErrors.product_type = "Product is required";
+    }
+    if (!productsForm.about_you.trim()) {
+      newErrors.about_you = "About You is required";
+    }
+    if (!productsForm.which_state.trim()) {
+      newErrors.which_state = "State is required";
+    }
+    if (!productsForm.which_area.trim()) {
+      newErrors.which_area = "Area/Region is required";
+    }
+    if (!productsForm.investment_amount.trim()) {
+      newErrors.investment_amount = "Price Category is required";
+    }
+    if (!productsForm.what_you_offer.trim()) {
+      newErrors.what_you_offer = "What you Offer is required";
+    }
 
-    const handleProductsSubmit = (e) => {
-        e.preventDefault();
-        console.log('Products Form submitted:', productsForm);
-    };
+    return newErrors;
+  }, [productsForm]);
 
-    const handleDistributorSubmit = (e) => {
-        e.preventDefault();
-        console.log('Distributor Form submitted:', distributorForm);
-    };
+  const validateDistributor = useCallback(() => {
+    const newErrors = {};
+    if (!distributorForm.full_name1.trim()) {
+      newErrors.full_name1 = "Full Name is required";
+    }
+    if (!distributorForm.mobile_no1.trim()) {
+      newErrors.mobile_no1 = "Mobile No is required";
+    }
+    if (!distributorForm.email1.trim()) {
+      newErrors.email1 = "Email is required";
+    }
+    if (!distributorForm.address1.trim()) {
+      newErrors.address1 = "Address is required";
+    }
+    if (!distributorForm.product_type1.trim()) {
+      newErrors.product_type1 = "Product is required";
+    }
+    if (!distributorForm.brand_name1.trim()) {
+      newErrors.brand_name1 = "Brand is required";
+    }
+    if (!distributorForm.about_you1.trim()) {
+      newErrors.about_you1 = "About You is required";
+    }
+    if (!distributorForm.looking_for1.trim()) {
+      newErrors.looking_for1 = "Looking For is required";
+    }
+    if (!distributorForm.which_state1.trim()) {
+      newErrors.which_state1 = "State is required";
+    }
+    if (!distributorForm.which_area1.trim()) {
+      newErrors.which_area1 = "Area/Region is required";
+    }
+    if (!distributorForm.investment_amount1.trim()) {
+      newErrors.investment_amount1 = "Price Category is required";
+    }
+    if (!distributorForm.what_you_offer1.trim()) {
+      newErrors.what_you_offer1 = "What you Offer is required";
+    }
 
-    const CardHeading = useCallback(({ icon: Icon, title, description }) => (
-        <div className="px-2">
-            <span className="text-muted-foreground flex items-center gap-2">
-                <Icon className="size-4" />
-                {title}
-            </span>
-            <p className="mt-2 sm:mt-4 text-xl sm:text-2xl font-semibold">{description}</p>
-        </div>
-    ),[]);
+    return newErrors;
+  }, [distributorForm]);
 
-    const FeatureCard = useCallback(({ children, className }) => (
-        <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
-            <CardDecorator />
-            {children}
-        </Card>
-    ),[]);
+  const handleProductsChange = (e) => {
+    const { name, value } = e.target;
+    setProductsForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
 
-    const CardDecorator = useCallback(() => (
-        <>
-            <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
-            <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
-            <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
-            <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
-        </>
-    ),[]);
+  const handleDistributorChange = (e) => {
+    const { name, value } = e.target;
+    setDistributorForm((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
 
-    return (
-        <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
-            <div className="relative z-10 max-w-[85rem] mx-auto ">
-                {/* Hero Section */}
-                <motion.div 
-                    className="text-center mb-8 sm:mb-12 md:mb-16"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    viewport={{ once: true }}
+  const productsMutation = useMutation({
+    mutationFn: (payload) => {
+      return axios.post(
+        "https://southindiagarmentsassociation.com/public/api/create-business-product",
+        payload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+    },
+    onSuccess: (response) => {
+      console.log("Products form submitted successfully", response);
+
+      const res = response.data;
+
+      if (res.code === "201") {
+        setProductsForm({
+          full_name: "",
+          mobile_no: "",
+          email: "",
+          address: "",
+          product_type: "",
+          about_you: "",
+          which_state: "",
+          which_area: "",
+          investment_amount: "",
+          what_you_offer: "",
+        });
+        toast.success(
+          res.msg || "Looking Products request sent successfully! ✅"
+        );
+      } else if (res.code === "400") {
+        toast.error(res.msg || "Something went wrong ❌");
+      } else {
+        toast.error(res.msg || "Unknown error occurred ❌");
+      }
+    },
+    onError: (error) => {
+      console.error("Error submitting form:", error);
+      toast.error(error.response?.data?.message || "Error submitting form");
+      setLoader(false);
+    },
+  });
+
+  const distributorMutation = useMutation({
+    mutationFn: (payload) => {
+      return axios.post(
+        "https://southindiagarmentsassociation.com/public/api/create-business",
+        payload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+    },
+    onSuccess: (response) => {
+      console.log("Distributor form submitted successfully", response);
+
+      const res = response.data;
+
+      if (res.code === "201") {
+        setDistributorForm({
+          full_name1: "",
+          mobile_no1: "",
+          email1: "",
+          address1: "",
+          product_type1: "",
+          brand_name1: "",
+          about_you1: "",
+          looking_for1: "",
+          which_state1: "",
+          which_area1: "",
+          investment_amount1: "",
+          what_you_offer1: "",
+        });
+        toast.success(res.msg || "Distributor request sent successfully! ✅");
+      } else if (res.code === "400") {
+        toast.error(res.msg || "Something went wrong ❌");
+      } else {
+        toast.error(res.msg || "Unknown error occurred ❌");
+      }
+    },
+    onError: (error) => {
+      console.error("Error submitting form:", error);
+      toast.error(error.response?.data?.message || "Error submitting form");
+      setLoader(false);
+    },
+  });
+
+  const handleProductsSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateProducts();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoader(true);
+    const payload = new FormData();
+    payload.append("full_name", productsForm.full_name);
+    payload.append("mobile_no", productsForm.mobile_no);
+    payload.append("email", productsForm.email);
+    payload.append("address", productsForm.address);
+    payload.append("product_type", productsForm.product_type);
+    payload.append("about_you", productsForm.about_you);
+    payload.append("which_state", productsForm.which_state);
+    payload.append("which_area", productsForm.which_area);
+    payload.append("investment_amount", productsForm.investment_amount);
+    payload.append("what_you_offer", productsForm.what_you_offer);
+
+    await productsMutation.mutateAsync(payload);
+    setLoader(false);
+  };
+
+  const handleDistributorSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validateDistributor();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoader(true);
+    const payload = new FormData();
+    payload.append("full_name1", distributorForm.full_name1);
+    payload.append("mobile_no1", distributorForm.mobile_no1);
+    payload.append("email1", distributorForm.email1);
+    payload.append("address1", distributorForm.address1);
+    payload.append("product_type1", distributorForm.product_type1);
+    payload.append("brand_name1", distributorForm.brand_name1);
+    payload.append("about_you1", distributorForm.about_you1);
+    payload.append("looking_for1", distributorForm.looking_for1);
+    payload.append("which_state1", distributorForm.which_state1);
+    payload.append("which_area1", distributorForm.which_area1);
+    payload.append("investment_amount1", distributorForm.investment_amount1);
+    payload.append("what_you_offer1", distributorForm.what_you_offer1);
+
+    await distributorMutation.mutateAsync(payload);
+    setLoader(false);
+  };
+
+  const CardHeading = useCallback(
+    ({ icon: Icon, title, description }) => (
+      <div className="px-2">
+        <span className="text-muted-foreground flex items-center gap-2">
+          <Icon className="size-4" />
+          {title}
+        </span>
+        <p className="mt-2 sm:mt-4 text-xl sm:text-2xl font-semibold">
+          {description}
+        </p>
+      </div>
+    ),
+    []
+  );
+
+  const FeatureCard = useCallback(
+    ({ children, className }) => (
+      <Card
+        className={cn(
+          "group relative rounded-none shadow-zinc-950/5",
+          className
+        )}
+      >
+        <CardDecorator />
+        {children}
+      </Card>
+    ),
+    []
+  );
+
+  const CardDecorator = useCallback(
+    () => (
+      <>
+        <span className="border-primary absolute -left-px -top-px block size-2 border-l-2 border-t-2"></span>
+        <span className="border-primary absolute -right-px -top-px block size-2 border-r-2 border-t-2"></span>
+        <span className="border-primary absolute -bottom-px -left-px block size-2 border-b-2 border-l-2"></span>
+        <span className="border-primary absolute -bottom-px -right-px block size-2 border-b-2 border-r-2"></span>
+      </>
+    ),
+    []
+  );
+
+  return (
+    <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
+      <div className="relative z-10 max-w-[85rem] mx-auto ">
+        {/* Hero Section */}
+        <motion.div
+          className="text-center mb-8 sm:mb-12 md:mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
+        >
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+            SIGA <Highlight>Business Expansion</Highlight>
+          </h1>
+          <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
+            SIGA Members are given opportunity to find buyer or sellers. Please
+            fill the below form and let TEAM SIGA work for you
+          </p>
+        </motion.div>
+
+        {/* Tabs and Form Section */}
+        <FeatureCard>
+          <CardHeader className="pb-2 sm:pb-4">
+            <CardHeading
+              icon={Briefcase}
+              title="Business Expansion"
+              description="Connect with potential partners"
+            />
+          </CardHeader>
+          <CardContent>
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-0 w-full">
+                <button
+                  onClick={() => setActiveTab("products")}
+                  className={`flex-1 whitespace-nowrap py-3 px-4 text-center font-medium text-sm transition-all duration-200 ${
+                    activeTab === "products"
+                      ? "border-b-2 border-yellow-500 text-yellow-900 bg-yellow-50 shadow-sm"
+                      : "border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50"
+                  }`}
                 >
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
-                        SIGA <Highlight>Business Expansion</Highlight>
-                    </h1>
-                    <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
-                        SIGA Members are given opportunity to find buyer or sellers. Please fill the below form and let TEAM SIGA work for you
-                    </p>
-                </motion.div>
-
-                {/* Tabs and Form Section */}
-                <FeatureCard>
-                    <CardHeader className="pb-2 sm:pb-4">
-                        <CardHeading
-                            icon={Briefcase}
-                            title="Business Expansion"
-                            description="Connect with potential partners"
-                        />
-                    </CardHeader>
-                    <CardContent>
-                    <div className="border-b border-gray-200">
-  <nav className="-mb-px flex space-x-0 w-full">
-    <button
-      onClick={() => setActiveTab('products')}
-      className={`flex-1 whitespace-nowrap py-3 px-4 text-center font-medium text-sm transition-all duration-200 ${
-        activeTab === 'products' 
-          ? 'border-b-2 border-yellow-500 text-yellow-900 bg-yellow-50 shadow-sm' 
-          : 'border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50'
-      }`}
-    >
-      Looking Products
-    </button>
-    <button
-      onClick={() => setActiveTab('distributors')}
-      className={`flex-1 whitespace-nowrap py-3 px-4 text-center font-medium text-sm transition-all duration-200 ${
-        activeTab === 'distributors' 
-          ? 'border-b-2 border-yellow-500 text-yellow-900 bg-yellow-50 shadow-sm' 
-          : 'border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50'
-      }`}
-    >
-      Looking Distributor/Agent/Retailer
-    </button>
-  </nav>
-</div>
-                        {/* Tabs */}
-                        {/* <div className="border-b border-gray-200">
-                            <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto">
-                                <button
-                                    onClick={() => setActiveTab('products')}
-                                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-mediumtext-sm ${activeTab === 'products' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-                                >
-                                    Looking Products
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('distributors')}
-                                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'distributors' ? 'border-yellow-500 text-yellow-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
-                                >
-                                    Looking Distributor/Agent/Retailer
-                                </button>
-                            </nav>
-                        </div> */}
-
-                        {/* Looking Products Form */}
-                        {activeTab === 'products' && (
-                            <form onSubmit={handleProductsSubmit} className="space-y-4 sm:space-y-6 p-2 sm:p-4">
-                                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                {/* Full Name */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Full Name *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="fullName"
-                                            value={productsForm.fullName}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Contact No */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Contact No *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="tel"
-                                            name="contactNo"
-                                            value={productsForm.contactNo}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Email */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Email Id *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={productsForm.email}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                </div>
-                                {/* Address */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Address *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <textarea
-                                            name="address"
-                                            value={productsForm.address}
-                                            onChange={handleProductsChange}
-                                            rows={3}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Product */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Product *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Package className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="product"
-                                            value={productsForm.product}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* About You */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                                        About You *
-                                    </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
-                                        {aboutYouOptions.map(option => (
-                                            <div key={option} className="flex items-center">
-                                                <input
-                                                    id={`products-about-${option}`}
-                                                    name="aboutYou"
-                                                    type="radio"
-                                                    value={option}
-                                                    checked={productsForm.aboutYou === option}
-                                                    onChange={handleProductsChange}
-                                                    className="focus:ring-yellow-500 h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 border-gray-300"
-                                                    required
-                                                />
-                                                <label htmlFor={`products-about-${option}`} className="ml-2 sm:ml-3 block text-sm text-gray-700">
-                                                    {option}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                {/* State */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        State *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Map className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="state"
-                                            value={productsForm.state}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Area/Region */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Area/Region *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="area"
-                                        value={productsForm.area}
-                                        onChange={handleProductsChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 px-3 border"
-                                        required
-                                    />
-                                </div>
-
-                                {/* Price Category */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Price Category *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Tag className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="priceCategory"
-                                            value={productsForm.priceCategory}
-                                            onChange={handleProductsChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                </div>
-                                {/* What your Offer */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        What your Offer *
-                                    </label>
-                                    <textarea
-                                        name="offer"
-                                        value={productsForm.offer}
-                                        onChange={handleProductsChange}
-                                        rows={3}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2"
-                                        required
-                                    />
-                                </div>
-                          
-                                {/* Submit Button */}
-                                <div className="pt-2 sm:pt-4">
-                                    <motion.button
-                                        type="submit"
-                                        className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        Submit Looking Products Request
-                                    </motion.button>
-                                </div>
-                            </form>
-                        )}
-
-                        {/* Looking Distributor/Agent/Retailer Form */}
-                        {activeTab === 'distributors' && (
-                            <form onSubmit={handleDistributorSubmit} className="space-y-4 sm:space-y-6 p-2 sm:p-4">
-                                           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                {/* Full Name */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Full Name *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <User className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="fullName"
-                                            value={distributorForm.fullName}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Contact No */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Contact No *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Phone className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="tel"
-                                            name="contactNo"
-                                            value={distributorForm.contactNo}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Email */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Email Id *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={distributorForm.email}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                </div>
-
-                                {/* Address */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Address *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <textarea
-                                            name="address"
-                                            value={distributorForm.address}
-                                            onChange={handleDistributorChange}
-                                            rows={3}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Product */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Product *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Package className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="product"
-                                            value={distributorForm.product}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Brand */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Brand *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="brand"
-                                        value={distributorForm.brand}
-                                        onChange={handleDistributorChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 px-3 border"
-                                        required
-                                    />
-                                </div>
-
-                                {/* About You */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                                        About You *
-                                    </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
-                                        {aboutYouOptions.map(option => (
-                                            <div key={option} className="flex items-center">
-                                                <input
-                                                    id={`distributor-about-${option}`}
-                                                    name="aboutYou"
-                                                    type="radio"
-                                                    value={option}
-                                                    checked={distributorForm.aboutYou === option}
-                                                    onChange={handleDistributorChange}
-                                                    className="focus:ring-yellow-500 h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 border-gray-300"
-                                                    required
-                                                />
-                                                <label htmlFor={`distributor-about-${option}`} className="ml-2 sm:ml-3 block text-sm text-gray-700">
-                                                    {option}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Looking For */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
-                                        Looking For *
-                                    </label>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
-                                        {lookingForOptions.map(option => (
-                                            <div key={option} className="flex items-center">
-                                                <input
-                                                    id={`looking-for-${option}`}
-                                                    name="lookingFor"
-                                                    type="radio"
-                                                    value={option}
-                                                    checked={distributorForm.lookingFor === option}
-                                                    onChange={handleDistributorChange}
-                                                    className="focus:ring-yellow-500 h-3 w-3 sm:h-4 sm:w-4 text-yellow-600 border-gray-300"
-                                                    required
-                                                />
-                                                <label htmlFor={`looking-for-${option}`} className="ml-2 sm:ml-3 blocktext-sm text-gray-700">
-                                                    {option}
-                                                </label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                {/* State */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        State *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Map className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="state"
-                                            value={distributorForm.state}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Area/Region */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Area/Region *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="area"
-                                        value={distributorForm.area}
-                                        onChange={handleDistributorChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 px-3 border"
-                                        required
-                                    />
-                                </div>
-
-                                {/* Price Category */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Price Category *
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Tag className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            name="priceCategory"
-                                            value={distributorForm.priceCategory}
-                                            onChange={handleDistributorChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm py-2 border"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                </div>
-
-                                {/* What your Offer */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        What your Offer *
-                                    </label>
-                                    <textarea
-                                        name="offer"
-                                        value={distributorForm.offer}
-                                        onChange={handleDistributorChange}
-                                        rows={2}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500 text-sm border p-2"
-                                        required
-                                    />
-                                </div>
-
-                                {/* Submit Button */}
-                                <div className="pt-2 sm:pt-4">
-                                    <motion.button
-                                        type="submit"
-                                        className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                    >
-                                        Submit Distributor Request
-                                    </motion.button>
-                                </div>
-                            </form>
-                        )}
-                    </CardContent>
-                </FeatureCard>
+                  Looking Products
+                </button>
+                <button
+                  onClick={() => setActiveTab("distributors")}
+                  className={`flex-1 whitespace-nowrap py-3 px-4 text-center font-medium text-sm transition-all duration-200 ${
+                    activeTab === "distributors"
+                      ? "border-b-2 border-yellow-500 text-yellow-900 bg-yellow-50 shadow-sm"
+                      : "border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50"
+                  }`}
+                >
+                  Looking Distributor/Agent/Retailer
+                </button>
+              </nav>
             </div>
-        </div>
-    );
+
+            {/* Looking Products Form */}
+            {activeTab === "products" && (
+              <form
+                onSubmit={handleProductsSubmit}
+                className="space-y-4 sm:space-y-6 p-2 sm:p-4"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="full_name"
+                      value={productsForm.full_name}
+                      onChange={handleProductsChange}
+                      placeholder="Enter your full name"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.full_name
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.full_name && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.full_name}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Contact No */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Contact No *
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobile_no"
+                      value={productsForm.mobile_no}
+                      onChange={handleProductsChange}
+                      placeholder="9876543210"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.mobile_no
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.mobile_no && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.mobile_no}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Id *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={productsForm.email}
+                      onChange={handleProductsChange}
+                      placeholder="abc@gmail.com"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.email
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.email && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.email}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Address *
+                  </label>
+                  <textarea
+                    name="address"
+                    value={productsForm.address}
+                    onChange={handleProductsChange}
+                    rows={3}
+                    placeholder="Enter your complete address"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.address
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm border p-2`}
+                    
+                  />
+                  {errors.address && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.address}
+                    </p>
+                  )}
+                </div>
+
+                {/* Product */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Product *
+                  </label>
+                  <input
+                    type="text"
+                    name="product_type"
+                    value={productsForm.product_type}
+                    onChange={handleProductsChange}
+                    placeholder="Enter product name"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.product_type
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm py-2 border`}
+                    
+                  />
+                  {errors.product_type && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.product_type}
+                    </p>
+                  )}
+                </div>
+
+                {/* About You */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+                    About You *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
+                    {aboutYouOptions.map((option) => (
+                      <div key={option} className="flex items-center">
+                        <input
+                          id={`products-about-${option}`}
+                          name="about_you"
+                          type="radio"
+                          value={option}
+                          checked={productsForm.about_you === option}
+                          onChange={handleProductsChange}
+                          className={`focus:ring-1 h-3 w-3 sm:h-4 sm:w-4 
+                                                        ${
+                                                          errors.about_you
+                                                            ? "text-red-600 focus:ring-red-500"
+                                                            : "text-yellow-600 focus:ring-yellow-500"
+                                                        } 
+                                                        border-gray-300`}
+                          
+                        />
+                        <label
+                          htmlFor={`products-about-${option}`}
+                          className="ml-2 sm:ml-3 block text-sm text-gray-700"
+                        >
+                          {option}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {errors.about_you && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.about_you}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* State */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      State *
+                    </label>
+                    <input
+                      type="text"
+                      name="which_state"
+                      value={productsForm.which_state}
+                      onChange={handleProductsChange}
+                      placeholder="Enter state"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.which_state
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.which_state && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.which_state}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Area/Region */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Area/Region *
+                    </label>
+                    <input
+                      type="text"
+                      name="which_area"
+                      value={productsForm.which_area}
+                      onChange={handleProductsChange}
+                      placeholder="Enter area/region"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.which_area
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.which_area && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.which_area}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Price Category */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Investment Amount *
+                    </label>
+                    <input
+                      type="text"
+                      name="investment_amount"
+                      value={productsForm.investment_amount}
+                      onChange={handleProductsChange}
+                      placeholder="Enter investment amount"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.investment_amount
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.investment_amount && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.investment_amount}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* What your Offer */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    What your Offer *
+                  </label>
+                  <textarea
+                    name="what_you_offer"
+                    value={productsForm.what_you_offer}
+                    onChange={handleProductsChange}
+                    rows={3}
+                    placeholder="Describe what you offer"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.what_you_offer
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm border p-2`}
+                    
+                  />
+                  {errors.what_you_offer && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.what_you_offer}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2 sm:pt-4">
+                  <motion.button
+                    type="submit"
+                    className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={loader}
+                  >
+                    {loader
+                      ? "Submitting..."
+                      : "Submit Looking Products Request"}
+                  </motion.button>
+                </div>
+              </form>
+            )}
+
+            {/* Looking Distributor/Agent/Retailer Form */}
+            {activeTab === "distributors" && (
+              <form
+                onSubmit={handleDistributorSubmit}
+                className="space-y-4 sm:space-y-6 p-2 sm:p-4"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* Full Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="full_name1"
+                      value={distributorForm.full_name1}
+                      onChange={handleDistributorChange}
+                      placeholder="Enter your full name"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.full_name1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.full_name1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.full_name1}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Contact No */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Contact No *
+                    </label>
+                    <input
+                      type="tel"
+                      name="mobile_no1"
+                      value={distributorForm.mobile_no1}
+                      onChange={handleDistributorChange}
+                      placeholder="9876543210"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.mobile_no1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.mobile_no1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.mobile_no1}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Id *
+                    </label>
+                    <input
+                      type="email"
+                      name="email1"
+                      value={distributorForm.email1}
+                      onChange={handleDistributorChange}
+                      placeholder="abc@gmail.com"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.email1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.email1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.email1}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Address *
+                  </label>
+                  <textarea
+                    name="address1"
+                    value={distributorForm.address1}
+                    onChange={handleDistributorChange}
+                    rows={3}
+                    placeholder="Enter your complete address"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.address1
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm border p-2`}
+                    
+                  />
+                  {errors.address1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.address1}
+                    </p>
+                  )}
+                </div>
+
+                {/* Product */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Product *
+                  </label>
+                  <input
+                    type="text"
+                    name="product_type1"
+                    value={distributorForm.product_type1}
+                    onChange={handleDistributorChange}
+                    placeholder="Enter product name"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.product_type1
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm py-2 border`}
+                    
+                  />
+                  {errors.product_type1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.product_type1}
+                    </p>
+                  )}
+                </div>
+
+                {/* Brand */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Brand *
+                  </label>
+                  <input
+                    type="text"
+                    name="brand_name1"
+                    value={distributorForm.brand_name1}
+                    onChange={handleDistributorChange}
+                    placeholder="Enter brand name"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.brand_name1
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm py-2 border`}
+                    
+                  />
+                  {errors.brand_name1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.brand_name1}
+                    </p>
+                  )}
+                </div>
+
+                {/* About You */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+                    About You *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
+                    {aboutYouOptions.map((option) => (
+                      <div key={option} className="flex items-center">
+                        <input
+                          id={`distributor-about-${option}`}
+                          name="about_you1"
+                          type="radio"
+                          value={option}
+                          checked={distributorForm.about_you1 === option}
+                          onChange={handleDistributorChange}
+                          className={`focus:ring-1 h-3 w-3 sm:h-4 sm:w-4 
+                                                        ${
+                                                          errors.about_you1
+                                                            ? "text-red-600 focus:ring-red-500"
+                                                            : "text-yellow-600 focus:ring-yellow-500"
+                                                        } 
+                                                        border-gray-300`}
+                          
+                        />
+                        <label
+                          htmlFor={`distributor-about-${option}`}
+                          className="ml-2 sm:ml-3 block text-sm text-gray-700"
+                        >
+                          {option}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {errors.about_you1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.about_you1}
+                    </p>
+                  )}
+                </div>
+
+                {/* Looking For */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+                    Looking For *
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2">
+                    {lookingForOptions.map((option) => (
+                      <div key={option} className="flex items-center">
+                        <input
+                          id={`looking-for-${option}`}
+                          name="looking_for1"
+                          type="radio"
+                          value={option}
+                          checked={distributorForm.looking_for1 === option}
+                          onChange={handleDistributorChange}
+                          className={`focus:ring-1 h-3 w-3 sm:h-4 sm:w-4 
+                                                        ${
+                                                          errors.looking_for1
+                                                            ? "text-red-600 focus:ring-red-500"
+                                                            : "text-yellow-600 focus:ring-yellow-500"
+                                                        } 
+                                                        border-gray-300`}
+                          
+                        />
+                        <label
+                          htmlFor={`looking-for-${option}`}
+                          className="ml-2 sm:ml-3 block text-sm text-gray-700"
+                        >
+                          {option}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  {errors.looking_for1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.looking_for1}
+                    </p>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  {/* State */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      State *
+                    </label>
+                    <input
+                      type="text"
+                      name="which_state1"
+                      value={distributorForm.which_state1}
+                      onChange={handleDistributorChange}
+                      placeholder="Enter state"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.which_state1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.which_state1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.which_state1}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Area/Region */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Area/Region *
+                    </label>
+                    <input
+                      type="text"
+                      name="which_area1"
+                      value={distributorForm.which_area1}
+                      onChange={handleDistributorChange}
+                      placeholder="Enter area/region"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.which_area1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.which_area1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.which_area1}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Price Category */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Investment Amount *
+                    </label>
+                    <input
+                      type="text"
+                      name="investment_amount1"
+                      value={distributorForm.investment_amount1}
+                      onChange={handleDistributorChange}
+                      placeholder="Enter investment amount"
+                      className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.investment_amount1
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-yellow-500 focus:ring-yellow-500"
+                                                }
+                                                text-sm py-2 border`}
+                      
+                    />
+                    {errors.investment_amount1 && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.investment_amount1}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* What your Offer */}
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    What your Offer *
+                  </label>
+                  <textarea
+                    name="what_you_offer1"
+                    value={distributorForm.what_you_offer1}
+                    onChange={handleDistributorChange}
+                    rows={3}
+                    placeholder="Describe what you offer"
+                    className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.what_you_offer1
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-yellow-500 focus:ring-yellow-500"
+                                            }
+                                            text-sm border p-2`}
+                    
+                  />
+                  {errors.what_you_offer1 && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.what_you_offer1}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Button */}
+                <div className="pt-2 sm:pt-4">
+                  <motion.button
+                    type="submit"
+                    className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={loader}
+                  >
+                    {loader
+                      ? "Submitting..."
+                      : "Submit Looking Distributor Request"}
+                  </motion.button>
+                </div>
+              </form>
+            )}
+          </CardContent>
+        </FeatureCard>
+      </div>
+    </div>
+  );
 };
 
 export default BusinessExpansion;
 
 const Highlight = ({ children, className }) => {
-    return (
-        <span className={`relative inline-block ${className}`}>
-            <span className="relative z-10">{children}</span>
-            <span className="absolute bottom-0 left-0 w-full h-2 bg-yellow-300/70 -rotate-1 -z-0"></span>
-        </span>
-    );
+  return (
+    <span className={`relative inline-block ${className}`}>
+      <span className="relative z-10">{children}</span>
+      <span className="absolute bottom-0 left-0 w-full h-2 bg-yellow-300/70 -rotate-1 -z-0"></span>
+    </span>
+  );
 };

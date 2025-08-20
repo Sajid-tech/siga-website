@@ -1,6 +1,8 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 import  HeroSection  from "./HeroSection";
+import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -15,7 +17,33 @@ const PhotoGallery = React.lazy(() => import("@/components/ui/photo-gallery"));
 const ShuffleHero = React.lazy(() => import("@/components/ui/shuffle-grid"));
 
 
+const updateVisitorCount = async () => {
+  
+  const response = await axios.put(
+    "https://southindiagarmentsassociation.com/public/api/update-visitors/1",
+    {}, 
+    
+  );
+  return response.data;
+};
 const Home = () => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: updateVisitorCount,
+    onSuccess: (data) => {
+      console.log("Visitor count updated:", data);
+      queryClient.invalidateQueries(["visitorCount"]);
+    },
+    onError: (error) => {
+      console.error("Failed to update visitor count:", error);
+    },
+  });
+
+  
+  useEffect(() => {
+    mutation.mutate();
+  }, []);
+
   return (
     <>
       <HeroSection />

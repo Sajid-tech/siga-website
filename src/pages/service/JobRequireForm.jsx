@@ -3,33 +3,73 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader } from '@/components/ui/event-card';
 import { cn } from '@/lib/utils';
 import { User, Mail, Phone, Home, Briefcase, FileText, Car, Calendar } from 'lucide-react';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 const JobRequireForm = () => {
     const [formData, setFormData] = useState({
-        fullName: '',
-        fatherName: '',
-        email: '',
-        mobile: '',
-        education: '',
-        houseAddress: '',
-        currentCity: '',
-        willingToRelocate: '',
-        lastEmployedBy: '',
-        contactPerson: '',
+        full_name: '',
+        father_name: '',
+        person_email: '',
+        person_mobile: '',
+        person_education: '',
+        house_address: '',
+        residing_years: '',
+        re_locate: '',
+        last_employer: '',
+        contact_person: '',
         designation: '',
-        companyPhone: '',
-        companyAddress: '',
-        lastSalary: '',
-        expectedSalary: '',
-        jobLostDate: '',
-        dependents: '',
-        pandemicLoss: '',
-        preferredJobProfile: [],
-        drivingLicense: '',
-        drivingKnowledge: '',
-        vehicleOwned: '',
+        phone_number: '',
+        exp_address: '',
+        last_salary: '',
+        exp_salary: '',
+        lose_job: '',
+        dependants: '',
+        person: '',
+        jobProfiles: [],
+        other_job: '',
+        have_licence: '',
+        know_driving: '',
+        have_vehicle: '',
         agreeToTerms: false
     });
+
+    const [errors, setErrors] = useState({});
+    const [loader, setLoader] = useState(false);
+
+    const validate = useCallback(() => {
+        const newErrors = {};
+        if (!formData.full_name.trim()) {
+            newErrors.full_name = "Full name is required";
+        }
+        if (!formData.father_name.trim()) {
+            newErrors.father_name = "Father name is required";
+        }
+        if (!formData.person_email.trim()) {
+            newErrors.person_email = "Email is required";
+        }
+        if (!formData.person_mobile.trim()) {
+            newErrors.person_mobile = "Mobile number is required";
+        }
+        if (!formData.person_education.trim()) {
+            newErrors.person_education = "Education is required";
+        }
+        if (!formData.house_address.trim()) {
+            newErrors.house_address = "House address is required";
+        }
+        if (!formData.residing_years.trim()) {
+            newErrors.residing_years = "Current city is required";
+        }
+        if (!formData.re_locate.trim()) {
+            newErrors.re_locate = "Relocation preference is required";
+        }
+        if (!formData.agreeToTerms) {
+            newErrors.agreeToTerms = "Terms & Condition Required";
+        }
+
+        return newErrors;
+    }, [formData]);
 
     const jobProfiles = [
         'Salesman',
@@ -49,13 +89,12 @@ const JobRequireForm = () => {
         const { name, value, type, checked } = e.target;
         
         if (type === 'checkbox') {
-            // Handle checkbox for preferred job profile
-            if (name === 'preferredJobProfile') {
+            if (name === 'jobProfiles') {
                 setFormData(prev => {
                     const newProfiles = checked 
-                        ? [...prev.preferredJobProfile, value]
-                        : prev.preferredJobProfile.filter(item => item !== value);
-                    return { ...prev, preferredJobProfile: newProfiles };
+                        ? [...prev.jobProfiles, value]
+                        : prev.jobProfiles.filter(item => item !== value);
+                    return { ...prev, jobProfiles: newProfiles };
                 });
             } else {
                 setFormData(prev => ({ ...prev, [name]: checked }));
@@ -63,12 +102,108 @@ const JobRequireForm = () => {
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
+        
+        if (errors[name]) {
+            setErrors(prev => ({
+                ...prev,
+                [name]: "",
+            }));
+        }
     };
 
-    const handleSubmit = (e) => {
+    const jobRequireMutation = useMutation({
+        mutationFn: (payload) => {
+            return axios.post(
+                "https://southindiagarmentsassociation.com/public/api/create-job-required",
+                payload,
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                }
+            );
+        },
+        onSuccess: (response) => {
+            console.log("Job require form submitted successfully", response);
+
+            const res = response.data;
+
+            if (res.code === "201") {
+                setFormData({
+                    full_name: '',
+                    father_name: '',
+                    person_email: '',
+                    person_mobile: '',
+                    person_education: '',
+                    house_address: '',
+                    residing_years: '',
+                    re_locate: '',
+                    last_employer: '',
+                    contact_person: '',
+                    designation: '',
+                    phone_number: '',
+                    exp_address: '',
+                    last_salary: '',
+                    exp_salary: '',
+                    lose_job: '',
+                    dependants: '',
+                    person: '',
+                    jobProfiles: [],
+                    other_job: '',
+                    have_licence: '',
+                    know_driving: '',
+                    have_vehicle: '',
+                    agreeToTerms: false
+                });
+                toast.success(res.msg || "Job application submitted successfully! ✅");
+            } else if (res.code === "400") {
+                toast.error(res.heading || "Something went wrong ❌");
+            } else {
+                toast.error(res.msg || "Unknown error occurred ❌");
+            }
+            setLoader(false);
+        },
+        onError: (error) => {
+            console.error("Error submitting form:", error);
+            toast.error(error.response?.data?.message || "Failed to submit job application");
+            setLoader(false);
+        },
+    });
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', formData);
+
+        const validationErrors = validate();
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
+
+        setLoader(true);
+        const payload = new FormData();
+        payload.append("full_name", formData.full_name);
+        payload.append("father_name", formData.father_name);
+        payload.append("person_email", formData.person_email);
+        payload.append("person_mobile", formData.person_mobile);
+        payload.append("person_education", formData.person_education);
+        payload.append("house_address", formData.house_address);
+        payload.append("residing_years", formData.residing_years);
+        payload.append("re_locate", formData.re_locate);
+        payload.append("last_employer", formData.last_employer);
+        payload.append("contact_person", formData.contact_person);
+        payload.append("designation", formData.designation);
+        payload.append("phone_number", formData.phone_number);
+        payload.append("exp_address", formData.exp_address);
+        payload.append("last_salary", formData.last_salary);
+        payload.append("exp_salary", formData.exp_salary);
+        payload.append("lose_job", formData.lose_job);
+        payload.append("dependants", formData.dependants);
+        payload.append("person", formData.person);
+        payload.append("jobProfiles", formData.jobProfiles.join(','));
+        payload.append("other_job", formData.other_job);
+        payload.append("have_licence", formData.have_licence);
+        payload.append("know_driving", formData.know_driving);
+        payload.append("have_vehicle", formData.have_vehicle);
+
+        await jobRequireMutation.mutateAsync(payload);
     };
 
     const CardHeading = useCallback(({ icon: Icon, title, description }) => (
@@ -137,135 +272,178 @@ const JobRequireForm = () => {
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 {/* Full Name */}
                                 <div>
-                                    <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">
                                         Full Name *
                                     </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <User className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            id="fullName"
-                                            name="fullName"
-                                            value={formData.fullName}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 border"
-                                            required
-                                        />
-                                    </div>
+                                    <input
+                                        type="text"
+                                        id="full_name"
+                                        name="full_name"
+                                        value={formData.full_name}
+                                        onChange={handleChange}
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.full_name
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
+                                    />
+                                    {errors.full_name && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.full_name}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Father Name */}
                                 <div>
-                                    <label htmlFor="fatherName" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="father_name" className="block text-sm font-medium text-gray-700 mb-1">
                                         Father Name *
                                     </label>
                                     <input
                                         type="text"
-                                        id="fatherName"
-                                        name="fatherName"
-                                        value={formData.fatherName}
+                                        id="father_name"
+                                        name="father_name"
+                                        value={formData.father_name}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
-                                        required
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.father_name
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
                                     />
+                                    {errors.father_name && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.father_name}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Email */}
                                 <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="person_email" className="block text-sm font-medium text-gray-700 mb-1">
                                         Email *
                                     </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 border"
-                                            required
-                                        />
-                                    </div>
+                                    <input
+                                        type="email"
+                                        id="person_email"
+                                        name="person_email"
+                                        value={formData.person_email}
+                                        onChange={handleChange}
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.person_email
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
+                                    />
+                                    {errors.person_email && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.person_email}
+                                        </p>
+                                    )}
                                 </div>
                                 </div>
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Mobile */}
                                 <div>
-                                    <label htmlFor="mobile" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="person_mobile" className="block text-sm font-medium text-gray-700 mb-1">
                                         Mobile *
                                     </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Phone className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="tel"
-                                            id="mobile"
-                                            name="mobile"
-                                            value={formData.mobile}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 border"
-                                            required
-                                        />
-                                    </div>
+                                    <input
+                                        type="tel"
+                                        id="person_mobile"
+                                        name="person_mobile"
+                                        value={formData.person_mobile}
+                                        onChange={handleChange}
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.person_mobile
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
+                                    />
+                                    {errors.person_mobile && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.person_mobile}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Education */}
                                 <div>
-                                    <label htmlFor="education" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="person_education" className="block text-sm font-medium text-gray-700 mb-1">
                                         Education *
                                     </label>
                                     <input
                                         type="text"
-                                        id="education"
-                                        name="education"
-                                        value={formData.education}
+                                        id="person_education"
+                                        name="person_education"
+                                        value={formData.person_education}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
-                                        required
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.person_education
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
                                     />
+                                    {errors.person_education && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.person_education}
+                                        </p>
+                                    )}
                                 </div>
                                 </div>
                                 {/* House Address */}
                                 <div>
-                                    <label htmlFor="houseAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="house_address" className="block text-sm font-medium text-gray-700 mb-1">
                                         House Address *
                                     </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Home className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <textarea
-                                            id="houseAddress"
-                                            name="houseAddress"
-                                            rows={3}
-                                            value={formData.houseAddress}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
-                                            required
-                                        />
-                                    </div>
+                                    <textarea
+                                        id="house_address"
+                                        name="house_address"
+                                        rows={3}
+                                        value={formData.house_address}
+                                        onChange={handleChange}
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base border p-2
+                                            ${
+                                                errors.house_address
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
+                                    />
+                                    {errors.house_address && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.house_address}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Current City */}
                                 <div>
-                                    <label htmlFor="currentCity" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="residing_years" className="block text-sm font-medium text-gray-700 mb-1">
                                         Current City *
                                     </label>
                                     <input
                                         type="text"
-                                        id="currentCity"
-                                        name="currentCity"
-                                        value={formData.currentCity}
+                                        id="residing_years"
+                                        name="residing_years"
+                                        value={formData.residing_years}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
-                                        required
+                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                            ${
+                                                errors.residing_years
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            }`}
                                     />
+                                    {errors.residing_years && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.residing_years}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Willing to Relocate */}
@@ -277,13 +455,12 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="relocate-yes"
-                                                name="willingToRelocate"
+                                                name="re_locate"
                                                 type="radio"
                                                 value="Yes"
-                                                checked={formData.willingToRelocate === 'Yes'}
+                                                checked={formData.re_locate === 'Yes'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
-                                                required
                                             />
                                             <label htmlFor="relocate-yes" className="ml-2 sm:ml-3 block text-xs sm:text-sm text-gray-700">
                                                 Yes I am ready to re-locate
@@ -292,10 +469,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="relocate-no"
-                                                name="willingToRelocate"
+                                                name="re_locate"
                                                 type="radio"
                                                 value="No"
-                                                checked={formData.willingToRelocate === 'No'}
+                                                checked={formData.re_locate === 'No'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -304,6 +481,11 @@ const JobRequireForm = () => {
                                             </label>
                                         </div>
                                     </div>
+                                    {errors.re_locate && (
+                                        <p className="text-red-500 text-xs mt-1">
+                                            {errors.re_locate}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -316,14 +498,14 @@ const JobRequireForm = () => {
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Last Employed By */}
                                 <div>
-                                    <label htmlFor="lastEmployedBy" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="last_employer" className="block text-sm font-medium text-gray-700 mb-1">
                                         Last Employed by Company/Firm
                                     </label>
                                     <input
                                         type="text"
-                                        id="lastEmployedBy"
-                                        name="lastEmployedBy"
-                                        value={formData.lastEmployedBy}
+                                        id="last_employer"
+                                        name="last_employer"
+                                        value={formData.last_employer}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
@@ -331,14 +513,14 @@ const JobRequireForm = () => {
 
                                 {/* Contact Person */}
                                 <div>
-                                    <label htmlFor="contactPerson" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="contact_person" className="block text-sm font-medium text-gray-700 mb-1">
                                         Contact Person
                                     </label>
                                     <input
                                         type="text"
-                                        id="contactPerson"
-                                        name="contactPerson"
-                                        value={formData.contactPerson}
+                                        id="contact_person"
+                                        name="contact_person"
+                                        value={formData.contact_person}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
@@ -362,29 +544,29 @@ const JobRequireForm = () => {
 
                                 {/* Company Phone */}
                                 <div>
-                                    <label htmlFor="companyPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-1">
                                         Phone
                                     </label>
                                     <input
                                         type="tel"
-                                        id="companyPhone"
-                                        name="companyPhone"
-                                        value={formData.companyPhone}
+                                        id="phone_number"
+                                        name="phone_number"
+                                        value={formData.phone_number}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
                                 </div>
-                   </div>
+                    </div>
                                 {/* Company Address */}
                                 <div>
-                                    <label htmlFor="companyAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="exp_address" className="block text-sm font-medium text-gray-700 mb-1">
                                         Address
                                     </label>
                                     <textarea
-                                        id="companyAddress"
-                                        name="companyAddress"
+                                        id="exp_address"
+                                        name="exp_address"
                                         rows={3}
-                                        value={formData.companyAddress}
+                                        value={formData.exp_address}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
                                     />
@@ -392,14 +574,14 @@ const JobRequireForm = () => {
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 {/* Last Salary */}
                                 <div>
-                                    <label htmlFor="lastSalary" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="last_salary" className="block text-sm font-medium text-gray-700 mb-1">
                                         Last Salary Drawn (per Month)
                                     </label>
                                     <input
                                         type="text"
-                                        id="lastSalary"
-                                        name="lastSalary"
-                                        value={formData.lastSalary}
+                                        id="last_salary"
+                                        name="last_salary"
+                                        value={formData.last_salary}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
@@ -407,14 +589,14 @@ const JobRequireForm = () => {
 
                                 {/* Expected Salary */}
                                 <div>
-                                    <label htmlFor="expectedSalary" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="exp_salary" className="block text-sm font-medium text-gray-700 mb-1">
                                         Expected Salary (per Month)
                                     </label>
                                     <input
                                         type="text"
-                                        id="expectedSalary"
-                                        name="expectedSalary"
-                                        value={formData.expectedSalary}
+                                        id="exp_salary"
+                                        name="exp_salary"
+                                        value={formData.exp_salary}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
@@ -422,22 +604,17 @@ const JobRequireForm = () => {
 
                                 {/* Job Lost Date */}
                                 <div>
-                                    <label htmlFor="jobLostDate" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="lose_job" className="block text-sm font-medium text-gray-700 mb-1">
                                         When did you lose your job
                                     </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Calendar className="h-4 sm:h-5 w-4 sm:w-5 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type="date"
-                                            id="jobLostDate"
-                                            name="jobLostDate"
-                                            value={formData.jobLostDate}
-                                            onChange={handleChange}
-                                            className="pl-9 sm:pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 border"
-                                        />
-                                    </div>
+                                    <input
+                                        type="date"
+                                        id="lose_job"
+                                        name="lose_job"
+                                        value={formData.lose_job}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                    />
                                 </div>
                                 </div>
                                 
@@ -452,15 +629,15 @@ const JobRequireForm = () => {
 
                                 {/* Dependents */}
                                 <div>
-                                    <label htmlFor="dependents" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="dependants" className="block text-sm font-medium text-gray-700 mb-1">
                                         No of Dependants in Family
                                     </label>
                                     <input
                                         type="number"
-                                        id="dependents"
-                                        name="dependents"
+                                        id="dependants"
+                                        name="dependants"
                                         min="0"
-                                        value={formData.dependents}
+                                        value={formData.dependants}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
                                     />
@@ -468,14 +645,14 @@ const JobRequireForm = () => {
 
                                 {/* Pandemic Loss */}
                                 <div>
-                                    <label htmlFor="pandemicLoss" className="block text-sm font-medium text-gray-700 mb-1">
+                                    <label htmlFor="person" className="block text-sm font-medium text-gray-700 mb-1">
                                         Have you lost any person in this pandemic – Relationship with the deceased
                                     </label>
                                     <textarea
-                                        id="pandemicLoss"
-                                        name="pandemicLoss"
+                                        id="person"
+                                        name="person"
                                         rows={3}
-                                        value={formData.pandemicLoss}
+                                        value={formData.person}
                                         onChange={handleChange}
                                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
                                     />
@@ -499,10 +676,10 @@ const JobRequireForm = () => {
                                             <div key={profile} className="flex items-center">
                                                 <input
                                                     id={`profile-${profile}`}
-                                                    name="preferredJobProfile"
+                                                    name="jobProfiles"
                                                     type="checkbox"
                                                     value={profile}
-                                                    checked={formData.preferredJobProfile.includes(profile)}
+                                                    checked={formData.jobProfiles.includes(profile)}
                                                     onChange={handleChange}
                                                     className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
                                                 />
@@ -513,6 +690,24 @@ const JobRequireForm = () => {
                                         ))}
                                     </div>
                                 </div>
+
+                                {/* Other Job Field */}
+                                {formData.jobProfiles.includes('Other') && (
+                                    <div>
+                                        <label htmlFor="other_job" className="block text-sm font-medium text-gray-700 mb-1">
+                                            Specify Other Job Profile
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="other_job"
+                                            name="other_job"
+                                            value={formData.other_job}
+                                            onChange={handleChange}
+                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                            placeholder="Specify other job profile"
+                                        />
+                                    </div>
+                                )}
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 {/* Driving License */}
                                 <div>
@@ -523,10 +718,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="license-two-wheeler"
-                                                name="drivingLicense"
+                                                name="have_licence"
                                                 type="radio"
                                                 value="Two Wheeler"
-                                                checked={formData.drivingLicense === 'Two Wheeler'}
+                                                checked={formData.have_licence === 'Two Wheeler'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -537,10 +732,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="license-lmv"
-                                                name="drivingLicense"
+                                                name="have_licence"
                                                 type="radio"
                                                 value="LMV"
-                                                checked={formData.drivingLicense === 'LMV'}
+                                                checked={formData.have_licence === 'LMV'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -551,10 +746,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="license-hmv"
-                                                name="drivingLicense"
+                                                name="have_licence"
                                                 type="radio"
                                                 value="HMV"
-                                                checked={formData.drivingLicense === 'HMV'}
+                                                checked={formData.have_licence === 'HMV'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -565,10 +760,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="license-none"
-                                                name="drivingLicense"
+                                                name="have_licence"
                                                 type="radio"
                                                 value="No License"
-                                                checked={formData.drivingLicense === 'No License'}
+                                                checked={formData.have_licence === 'No License'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -588,10 +783,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="drive-two-wheeler"
-                                                name="drivingKnowledge"
+                                                name="know_driving"
                                                 type="radio"
                                                 value="Two Wheeler"
-                                                checked={formData.drivingKnowledge === 'Two Wheeler'}
+                                                checked={formData.know_driving === 'Two Wheeler'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -602,10 +797,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="drive-four-wheeler"
-                                                name="drivingKnowledge"
+                                                name="know_driving"
                                                 type="radio"
                                                 value="Four Wheeler"
-                                                checked={formData.drivingKnowledge === 'Four Wheeler'}
+                                                checked={formData.know_driving === 'Four Wheeler'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -616,10 +811,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="drive-both"
-                                                name="drivingKnowledge"
+                                                name="know_driving"
                                                 type="radio"
                                                 value="Both"
-                                                checked={formData.drivingKnowledge === 'Both'}
+                                                checked={formData.know_driving === 'Both'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -630,10 +825,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="drive-none"
-                                                name="drivingKnowledge"
+                                                name="know_driving"
                                                 type="radio"
                                                 value="None"
-                                                checked={formData.drivingKnowledge === 'None'}
+                                                checked={formData.know_driving === 'None'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -643,7 +838,7 @@ const JobRequireForm = () => {
                                         </div>
                                     </div>
                                 </div>
-            </div>
+             </div>
                                 {/* Vehicle Owned */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -653,10 +848,10 @@ const JobRequireForm = () => {
                                         <div className="flex  items-center">
                                             <input
                                                 id="vehicle-two-wheeler"
-                                                name="vehicleOwned"
+                                                name="have_vehicle"
                                                 type="radio"
                                                 value="Two Wheeler"
-                                                checked={formData.vehicleOwned === 'Two Wheeler'}
+                                                checked={formData.have_vehicle === 'Two Wheeler'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -667,10 +862,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="vehicle-four-wheeler"
-                                                name="vehicleOwned"
+                                                name="have_vehicle"
                                                 type="radio"
                                                 value="Four Wheeler"
-                                                checked={formData.vehicleOwned === 'Four Wheeler'}
+                                                checked={formData.have_vehicle === 'Four Wheeler'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -681,10 +876,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="vehicle-both"
-                                                name="vehicleOwned"
+                                                name="have_vehicle"
                                                 type="radio"
                                                 value="Both"
-                                                checked={formData.vehicleOwned === 'Both'}
+                                                checked={formData.have_vehicle === 'Both'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -695,10 +890,10 @@ const JobRequireForm = () => {
                                         <div className="flex items-center">
                                             <input
                                                 id="vehicle-none"
-                                                name="vehicleOwned"
+                                                name="have_vehicle"
                                                 type="radio"
                                                 value="None"
-                                                checked={formData.vehicleOwned === 'None'}
+                                                checked={formData.have_vehicle === 'None'}
                                                 onChange={handleChange}
                                                 className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300"
                                             />
@@ -720,35 +915,43 @@ const JobRequireForm = () => {
                                             type="checkbox"
                                             checked={formData.agreeToTerms}
                                             onChange={handleChange}
-                                            className="focus:ring-purple-500 h-4 w-4 text-purple-600 border-gray-300 rounded"
-                                            required
+                                            className={`h-3 w-3 sm:h-4 sm:w-4 rounded border-gray-300 
+                                                focus:ring-0 
+                                                ${errors.agreeToTerms ? "text-red-600 " : "text-purple-600"}`}
                                         />
                                     </div>
-                                    <div className="ml-3 text-xs sm:text-sm">
-                                        <label htmlFor="agreeToTerms" className="font-medium text-gray-700">
-                                            I have read, understood and agree to the disclaimer
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Submit Button */}
-                            <div className="pt-4 sm:pt-6">
-                                <motion.button
-                                    type="submit"
-                                    className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-sm sm:text-base font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                >
-                                    Submit Application
-                                </motion.button>
-                            </div>
-                        </form>
-                    </CardContent>
-                </FeatureCard>
-            </div>
-        </div>
-    );
-};
-
-export default JobRequireForm;
+                                    <div className="ml-2 sm:ml-3 text-xs sm:text-sm">
+                    <label
+                      htmlFor="agreeToTerms"
+                      className="font-medium text-gray-700"
+                    >
+                      I have read, understood and agree to the disclaimer
+                    </label>
+                    {errors.agreeToTerms && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.agreeToTerms}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+               {/* Submit Button */}
+                                          <div className="pt-4 sm:pt-6">
+                                              <motion.button
+                                                  type="submit"
+                                                  className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-sm sm:text-base font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                                                  whileHover={{ scale: 1.02 }}
+                                                  whileTap={{ scale: 0.98 }}
+                                              >
+                                                  Submit Application
+                                              </motion.button>
+                                          </div>
+                                      </form>
+                                  </CardContent>
+                              </FeatureCard>
+                          </div>
+                      </div>
+                  );
+              };
+              
+              export default JobRequireForm;
