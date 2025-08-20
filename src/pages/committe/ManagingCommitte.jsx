@@ -21,16 +21,22 @@ const fetchCommitteeYears = async () => {
 };
 
 const ManagingCommitte = () => {
-  const [selectedYear, setSelectedYear] = useState('2024-26');
   const [selectedTabYear, setSelectedTabYear] = useState(null); 
+  
   const { data: yearsData, isLoading: isYearsLoading, isError: isYearsError } = useQuery({
     queryKey: ['committeeYears'],
     queryFn: fetchCommitteeYears,
   });
 
+
+  const [selectedYear, setSelectedYear] = useState(
+    yearsData?.data?.[0]?.year || '2024-26'
+  );
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['committeeData', selectedYear],
     queryFn: () => fetchCommitteeByYear(selectedYear),
+    enabled: !!selectedYear
   });
 
   const { data: tabData, isLoading: isTabLoading } = useQuery({
@@ -40,6 +46,13 @@ const ManagingCommitte = () => {
   });
 
   
+  React.useEffect(() => {
+    if (yearsData?.data?.[0]?.year && !selectedYear) {
+      setSelectedYear(yearsData.data[0].year);
+    }
+  }, [yearsData, selectedYear]);
+
+
   React.useEffect(() => {
     if (yearsData?.data && !selectedTabYear) {
       const firstPastYear = yearsData.data.find(year => year.year !== selectedYear);
@@ -55,16 +68,37 @@ const ManagingCommitte = () => {
       id: yearData.year,
       label: yearData.tag_line.split(" ")[2],
       content: isTabLoading && selectedTabYear === yearData.year ? (
-        <Skeleton
-          height={200}
-          count={4}
-          containerClassName="grid grid-cols-2 gap-4 w-full"
-        />
+        <div className="flex flex-col gap-6">
+          <div className="w-full">
+            <Skeleton height={24} width={200} className="mb-4" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <Skeleton circle height={80} width={80} className="mb-2" />
+                  <Skeleton height={16} width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full">
+            <Skeleton height={24} width={200} className="mb-4" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
+              {[...Array(16)].map((_, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <Skeleton circle height={80} width={80} className="mb-2" />
+                  <Skeleton height={16} width={80} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="flex flex-col gap-6">
           <div className="w-full">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">
-            Office Berres {yearData.year}
+              Office Berres 
+              {/* {yearData.year} */}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
               {tabData?.office_berres?.map((member) => (
@@ -124,24 +158,6 @@ const ManagingCommitte = () => {
             </div>
           )}
 
-          {/* {tabData?.committee_special_invitiees?.length > 0 && (
-            <div className="w-full">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Special Invitees
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-8 gap-4">
-                {tabData.committee_special_invitiees.map((member) => (
-                  <MemberCardSmall
-                    key={member.name}
-                    name={member.name}
-                    image={member.image ? `${tabData.image_url}${member.image}` : null}
-                    small
-                  />
-                ))}
-              </div>
-            </div>
-          )} */}
-
           {tabData?.committee_past_president?.length > 0 && (
             <div className="w-full">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Past Presidents</h3>
@@ -168,7 +184,7 @@ const ManagingCommitte = () => {
       ),
     }));
 
-  if (isYearsLoading || isLoading) {
+  if (isYearsLoading) {
     return (
       <div className="relative w-full pt-28 bg-white overflow-hidden">
         <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,14 +194,29 @@ const ManagingCommitte = () => {
           </div>
 
           <div className="w-full">
-            <div className="bg-green-200 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky">
-              <Skeleton height={200} count={6} containerClassName="grid grid-cols-2 md:grid-cols-3 gap-4" />
+            <div className="bg-green-50 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16">
+              <Skeleton height={32} width={300} className="mx-auto mb-6" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <Skeleton height={200} width={200} className="rounded-md" />
+                    <Skeleton height={20} width={120} className="mt-2" />
+                    <Skeleton height={16} width={100} className="mt-1" />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="bg-yellow-200 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky">
-              <Skeleton height={200} count={5} containerClassName="grid grid-cols-2 md:grid-cols-3 gap-4" />
-            </div>
-            <div className="bg-blue-200 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky">
-              <Skeleton height={200} count={4} containerClassName="grid grid-cols-2 gap-4" />
+            
+            <div className="bg-yellow-50/80 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16">
+              <Skeleton height={32} width={300} className="mx-auto mb-6" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <Skeleton height={200} width={200} className="rounded-md" />
+                    <Skeleton height={20} width={120} className="mt-2" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -241,45 +272,68 @@ const ManagingCommitte = () => {
             <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
               Managing Committee {selectedYear} 
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
-              {data?.office_berres?.map((member) => (
-                <MemberCard 
-                  key={member.name}
-                  name={member.name}
-                  designation={member.designation || member.designation}
-                  image={`${data.image_url}${member.image}`}
-                />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <Skeleton height={200} width={200} className="rounded-md" />
+                    <Skeleton height={20} width={120} className="mt-2" />
+                    <Skeleton height={16} width={100} className="mt-1" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {data?.office_berres?.map((member) => (
+                  <MemberCard 
+                    key={member.name}
+                    name={member.name}
+                    designation={member.designation || member.designation}
+                    image={`${data.image_url}${member.image}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="bg-yellow-50/80 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky" style={{ top: "100px" }}>
             <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
               Committee Members {selectedYear}
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
-              {data?.committee_members?.map((member) => (
-                <MemberCard 
-                  key={member.name}
-                  name={member.name}
-                  image={`${data.image_url}${member.image}`}
-                />
-              ))}
-              {data?.committee_special_invitiees?.map((member) => (
-                <MemberCard 
-                  key={member.name}
-                  name={member.name}
-                  image={member.image ? `${data.image_url}${member.image}` : null}
-                />
-              ))}
-              {data?.committee_regional_invitiees?.map((member) => (
-                <MemberCard 
-                  key={member.name}
-                  name={member.name}
-                  image={member.image ? `${data.image_url}${member.image}` : null}
-                />
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {[...Array(12)].map((_, i) => (
+                  <div key={i} className="flex flex-col items-center">
+                    <Skeleton height={200} width={200} className="rounded-md" />
+                    <Skeleton height={20} width={120} className="mt-2" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+                {data?.committee_members?.map((member) => (
+                  <MemberCard 
+                    key={member.name}
+                    name={member.name}
+                    image={`${data.image_url}${member.image}`}
+                  />
+                ))}
+                {data?.committee_special_invitiees?.map((member) => (
+                  <MemberCard 
+                    key={member.name}
+                    name={member.name}
+                    image={member.image ? `${data.image_url}${member.image}` : null}
+                  />
+                ))}
+                {data?.committee_regional_invitiees?.map((member) => (
+                  <MemberCard 
+                    key={member.name}
+                    name={member.name}
+                    image={member.image ? `${data.image_url}${member.image}` : null}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Past committee member */}
@@ -356,8 +410,6 @@ const MemberCardSmall = ({ name, designation, image, small = false ,inviteType})
             {designation}
           </p>
         )}   
-        {/* inviteType="special" */}
-                    {/* inviteType="regional" */}
         {inviteType == 'regional' && (
           <p className={`text-gray-500 ${small ? "text-xs" : "text-sm"} font-medium`}>
             Regional Invitee

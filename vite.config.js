@@ -13,6 +13,16 @@ export default defineConfig({
       deleteOriginFile: false, 
     })
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://southindiagarmentsassociation.com',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
    resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

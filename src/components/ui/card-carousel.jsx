@@ -1,6 +1,5 @@
-import React, { useMemo } from "react"
+import React from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
-
 import "swiper/css"
 import "swiper/css/effect-coverflow"
 import "swiper/css/pagination"
@@ -12,57 +11,17 @@ import {
   Pagination,
 } from "swiper/modules"
 
-
 export const CardCarousel = ({
   images,
   autoplayDelay = 1500,
   showPagination = true,
   showNavigation = true,
+  className = "", 
 }) => {
-
- 
-
-
-  const css1 = `
-  .swiper {
-    width: 100%;
-    padding-bottom: 50px;
-  }
-  
-  .swiper-slide {
-    background-position: center;
-    background-size: cover;
-    width: 300px;
-    /* height: 300px; */
-    /* margin: 20px; */
-  }
-  
-  .swiper-slide img {
-    display: block;
-    width: 100%;
-  }
-  
-  
-  .swiper-3d .swiper-slide-shadow-left {
-    background-image: none;
-  }
-  .swiper-3d .swiper-slide-shadow-right{
-    background: none;
-  }
-    .swiper-pagination {
-    display: none !important;
-  }
-  `
   return (
-    <section className="w-ace-y-4 ">
-      <style>{css1}</style>
-      <div
-        className="mx-auto  p-2 ">
-        <div
-          className="relative mx-auto flex w-full flex-col ">
-         
-          
-
+    <section className={`w-ace-y-4 ${className}`}>
+      <div className="mx-auto p-2">
+        <div className="relative mx-auto flex w-full flex-col">
           <div className="flex w-full items-center justify-center gap-4">
             <div className="w-full">
               <Swiper
@@ -70,50 +29,47 @@ export const CardCarousel = ({
                 autoplay={{
                   delay: autoplayDelay,
                   disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
                 }}
                 effect={"coverflow"}
                 grabCursor={true}
                 centeredSlides={true}
                 loop={true}
                 slidesPerView={"auto"}
+                speed={800}
                 coverflowEffect={{
                   rotate: 0,
                   stretch: 0,
                   depth: 100,
                   modifier: 2.5,
+                  slideShadows: false,
                 }}
-             
-                pagination={showPagination}
+                pagination={showPagination ? { clickable: true } : false}
                 navigation={
                   showNavigation
                     ? {
-                        nextEl: ".swiper-button-next",
-                        prevEl: ".swiper-button-prev",
+                        nextEl: `.${className} .swiper-button-next`,
+                        prevEl: `.${className} .swiper-button-prev`,
                       }
-                    : undefined
+                    : false
                 }
-                modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}>
+                modules={[EffectCoverflow, Autoplay, Pagination, Navigation]}
+                watchSlidesProgress={true}
+                resistanceRatio={0.85}
+                threshold={15}
+                updateOnWindowResize={true}
+              >
                 {images.map((image, index) => (
                   <SwiperSlide key={index}>
-                    <div className="size-full rounded-3xl">
+                    <div className="size-full  rounded-lg">
                       <img
                         src={image.src}
                         width={500}
                         height={500}
-                        className="size-full rounded-xl"
-                        alt={image.alt} />
-                    </div>
-                  </SwiperSlide>
-                ))}
-                {images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="size-full rounded-3xl">
-                      <img
-                        src={image.src}
-                        width={200}
-                        height={200}
-                        className="size-full rounded-xl"
-                        alt={image.alt} />
+                        className="size-full border border-indigo-900 shadow-xl backdrop-blur-2xl shadow-indigo-500 rounded-lg"
+                        alt={image.alt}
+                        loading="lazy"
+                      />
                     </div>
                   </SwiperSlide>
                 ))}
@@ -123,5 +79,5 @@ export const CardCarousel = ({
         </div>
       </div>
     </section>
-  );
+  )
 }

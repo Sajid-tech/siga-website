@@ -126,7 +126,7 @@ const BentoCard = ({
           size="sm"
           className="pointer-events-auto relative text-black overflow-hidden"
         >
-          <button onClick={()=>navigate(href)}  className="flex items-center gap-1 relative z-10">
+          <button onClick={()=>navigate(href)}  className="flex items-center gap-1 relative z-10 hover:cursor-pointer">
             {cta}
             <ArrowRight
               size={14}
