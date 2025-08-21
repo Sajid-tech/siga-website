@@ -7,12 +7,13 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import BASE_URL from '@/config/BaseUrl';
 
 const LatestNews = () => {
     const { data: newsData = [], isLoading, isError } = useQuery({
         queryKey: ['news'],
         queryFn: async () => {
-            const response = await axios.get('https://southindiagarmentsassociation.com/public/api/getNews');
+            const response = await axios.get(  `${BASE_URL}/api/getNews`);
             return response.data.data;
         }
     });
@@ -141,12 +142,12 @@ const LatestNews = () => {
                             </FeatureCard>
                         </motion.div>
                     ) : (
-                        <motion.div
+                        <div
                             key="list-view"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
+                            // initial={{ opacity: 0, y: 20 }}
+                            // animate={{ opacity: 1, y: 0 }}
+                            // exit={{ opacity: 0, y: -20 }}
+                            // transition={{ duration: 0.3 }}
                         >
                             <div className="text-center mb-8 md:mb-16">
                                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
@@ -256,7 +257,7 @@ const LatestNews = () => {
                                     <p className="text-gray-500 text-lg">No news available at the moment.</p>
                                 </div>
                             )}
-                        </motion.div>
+                        </div>
                     )}
                 </AnimatePresence>
             </div>

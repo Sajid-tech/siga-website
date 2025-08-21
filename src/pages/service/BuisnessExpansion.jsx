@@ -15,6 +15,7 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import BASE_URL from "@/config/BaseUrl";
 
 const BusinessExpansion = () => {
   const [activeTab, setActiveTab] = useState("products");
@@ -151,7 +152,7 @@ const BusinessExpansion = () => {
   const productsMutation = useMutation({
     mutationFn: (payload) => {
       return axios.post(
-        "https://southindiagarmentsassociation.com/public/api/create-business-product",
+         `${BASE_URL}/api/create-business-product`,
         payload,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -195,7 +196,7 @@ const BusinessExpansion = () => {
   const distributorMutation = useMutation({
     mutationFn: (payload) => {
       return axios.post(
-        "https://southindiagarmentsassociation.com/public/api/create-business",
+         `${BASE_URL}/api/create-business`,
         payload,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -257,9 +258,15 @@ const BusinessExpansion = () => {
     payload.append("which_area", productsForm.which_area);
     payload.append("investment_amount", productsForm.investment_amount);
     payload.append("what_you_offer", productsForm.what_you_offer);
+    try {
+      await productsMutation.mutateAsync(payload);
+    } catch (error) {
+      console.error("Error submitting product form:", error);
+    } finally {
+      setLoader(false);
+    }
+  
 
-    await productsMutation.mutateAsync(payload);
-    setLoader(false);
   };
 
   const handleDistributorSubmit = async (e) => {
@@ -285,9 +292,15 @@ const BusinessExpansion = () => {
     payload.append("which_area1", distributorForm.which_area1);
     payload.append("investment_amount1", distributorForm.investment_amount1);
     payload.append("what_you_offer1", distributorForm.what_you_offer1);
-
-    await distributorMutation.mutateAsync(payload);
-    setLoader(false);
+    try {
+      await distributorMutation.mutateAsync(payload);
+    } catch (error) {
+      console.error("Error submitting distributor form:", error);
+    } finally {
+      setLoader(false);
+    }
+   
+   
   };
 
   const CardHeading = useCallback(
@@ -336,12 +349,12 @@ const BusinessExpansion = () => {
     <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto ">
         {/* Hero Section */}
-        <motion.div
+        <div
           className="text-center mb-8 sm:mb-12 md:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+          // initial={{ opacity: 0, y: 20 }}
+          // whileInView={{ opacity: 1, y: 0 }}
+          // transition={{ duration: 0.5 }}
+          // viewport={{ once: true }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Business Expansion</Highlight>
@@ -350,7 +363,7 @@ const BusinessExpansion = () => {
             SIGA Members are given opportunity to find buyer or sellers. Please
             fill the below form and let TEAM SIGA work for you
           </p>
-        </motion.div>
+        </div>
 
         {/* Tabs and Form Section */}
         <FeatureCard>

@@ -9,7 +9,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, Star, Users, Check } from "lucide-react";
 import { Label } from "@/components/ui/label";
-
+import useNumericInput from "@/hooks/useNumericInput";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "sonner";
+import BASE_URL from "@/config/BaseUrl";
 const PatternSVG = ({ category }) => {
   return (
     <svg
@@ -44,15 +48,232 @@ const MemberShip = () => {
   const [photo, setPhoto] = useState(null);
   const [logo, setLogo] = useState(null);
 
-  const handleFileChange = (event, type) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      if (type === "photo") {
-        setPhoto(imageUrl);
-      } else if (type === "logo") {
-        setLogo(imageUrl);
+  const [formData, setFormData] = useState({
+    membership_category: "",
+    name_of_firm: "",
+    gst: "",
+    contact_person: "",
+    cell_no: "",
+    member_image: "",
+
+    contact_person2: "",
+    cell_no2: "",
+    member_image2: "",
+
+    contact_address: "",
+    mail_id: "",
+    office_ph_no: "",
+    manufacturers: "",
+    image: "",
+    brands: "",
+  });
+  const keyDown = useNumericInput();
+  const [errors, setErrors] = useState({});
+  const [loader, setLoader] = useState(false);
+
+  const validate = React.useCallback(() => {
+    const newErrors = {};
+    if (!formData.membership_category) {
+      newErrors.membership_category = "Membership Category  is required";
+    }
+    if (!formData.name_of_firm.trim()) {
+      newErrors.name_of_firm = "Company name is required";
+    }
+    if (!formData.gst.trim()) {
+      newErrors.gst = "GST is required";
+    }
+    if (!formData.contact_person.trim()) {
+      newErrors.contact_person = "Authorized Rep Name  is required";
+    }
+    if (!formData.cell_no.trim()) {
+      newErrors.cell_no = "Mobile no is required";
+    }
+
+    if (!formData.member_image) {
+      newErrors.member_image = "Photo is required";
+    }
+
+    if (!formData.contact_address.trim()) {
+      newErrors.contact_address = "Address is required";
+    }
+    if (!formData.mail_id.trim()) {
+      newErrors.mail_id = "Email is required";
+    }
+    if (!formData.office_ph_no.trim()) {
+      newErrors.office_ph_no = "Office Phone is required";
+    }
+    if (!formData.manufacturers) {
+      newErrors.manufacturers = "Business Type is required";
+    }
+
+    return newErrors;
+  }, [formData]);
+
+  const handleChange = (e) => {
+    const { name, value, type, files } = e.target;
+
+    if (type === "file") {
+      const file = files[0];
+      if (file) {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: file,
+        }));
+
+        const imageUrl = URL.createObjectURL(file);
+        if (name === "member_image") {
+          setPhoto(imageUrl);
+        } else if (name === "image") {
+          setLogo(imageUrl);
+        }
       }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+  // const handleCategorySelect = (value) => {
+  //   setMembershipCategory(value);
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     membership_category: value
+  //   }));
+  //   setStep(2);
+  // };
+
+  const handleCategorySelect = (value) => {
+    setMembershipCategory(value);
+
+    let categoryText = "";
+    if (value === "life-patron") categoryText = "Life Patron Members";
+    else if (value === "ordinary") categoryText = "Ordinary Members";
+    else if (value === "associate") categoryText = "Associate Members";
+
+    setFormData((prev) => ({
+      ...prev,
+      membership_category: categoryText,
+    }));
+    setStep(2);
+  };
+
+  const mapBusinessTypeToText = (value) => {
+    switch (value) {
+      case "manufacturer":
+        return "Manufacturers";
+      case "distributorwholesaler":
+        return "Distributors Wholesaler";
+      case "agent":
+        return "Agent";
+      case "consultant":
+        return "Consultant";
+      default:
+        return value;
+    }
+  };
+
+  const handleBusinessTypeChange = (value) => {
+    setBusinessType(value);
+    const mappedValue = mapBusinessTypeToText(value);
+    setFormData((prev) => ({
+      ...prev,
+      manufacturers: mappedValue,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      manufacturers: "",
+    }));
+  };
+  const membershipMutation = useMutation({
+    mutationFn: (payload) => {
+      return axios.post(
+         `${BASE_URL}/api/create-directory`,
+        payload,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+    },
+    onSuccess: (response) => {
+      const res = response.data;
+
+      if (res.code === "201") {
+        setFormData({
+          membership_category: "",
+          name_of_firm: "",
+          gst: "",
+          contact_person: "",
+          cell_no: "",
+          member_image: "",
+
+          contact_person2: "",
+          cell_no2: "",
+          member_image2: "",
+
+          contact_address: "",
+          mail_id: "",
+          office_ph_no: "",
+          manufacturers: "",
+          image: "",
+          brands: "",
+        });
+        setPhoto(null);
+        setLogo(null);
+        setStep(1);
+        toast.success(res.msg || "Membership request sent successfully! ✅");
+      } else if (res.code === "400") {
+        toast.error(res.msg || "Something went wrong ❌");
+      } else {
+        toast.error(res.msg || "Unknown error occurred ❌");
+      }
+    },
+    onError: (error) => {
+      console.error("Error submitting form:", error);
+      toast.error(error.response.data.message);
+      setLoader(false);
+    },
+  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoader(true);
+    const payload = new FormData();
+    payload.append("membership_category", formData.membership_category);
+    payload.append("name_of_firm", formData.name_of_firm);
+    payload.append("gst", formData.gst);
+    payload.append("contact_person", formData.contact_person);
+    payload.append("cell_no", formData.cell_no);
+
+    payload.append("member_image", formData.member_image);
+
+    payload.append("contact_person2", formData.contact_person2);
+    payload.append("cell_no2", formData.cell_no2);
+    payload.append("member_image2", formData.member_image2);
+    payload.append("contact_address", formData.contact_address);
+    payload.append("mail_id", formData.mail_id);
+    payload.append("office_ph_no", formData.office_ph_no);
+    payload.append("manufacturers", formData.manufacturers);
+    payload.append("image", formData.image);
+    payload.append("brands", formData.brands);
+    try {
+      await membershipMutation.mutateAsync(payload);
+      console.log("payload for membership", payload);
+    } catch (error) {
+      console.error("Error submitting payment mediation form:", error);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -73,8 +294,7 @@ const MemberShip = () => {
       features: ["Lifetime Access"],
     },
     ordinary: {
-        title: "Ordinary\u00A0 Member",
-
+      title: "Ordinary\u00A0 Member",
       price: "₹2,000",
       priceNote: "/year",
       description: "Annual membership with comprehensive standard benefits",
@@ -105,15 +325,9 @@ const MemberShip = () => {
 
   const businessTypeColors = {
     manufacturer: "bg-indigo-100 text-indigo-800",
-    distributor: "bg-blue-100 text-blue-800",
+    distributorwholesaler: "bg-blue-100 text-blue-800",
     agent: "bg-emerald-100 text-emerald-800",
     consultant: "bg-amber-100 text-amber-800",
-    wholesaler: "bg-purple-100 text-purple-800",
-  };
-
-  const handleCategorySelect = (value) => {
-    setMembershipCategory(value);
-    setStep(2);
   };
 
   const handleBack = () => {
@@ -121,7 +335,11 @@ const MemberShip = () => {
     setMembershipCategory("");
   };
 
+
   return (
+    <>
+     
+   
     <div className="relative w-full pt-28 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
@@ -162,7 +380,7 @@ const MemberShip = () => {
             ></div>
 
             {/* Radial pattern */}
-            <div
+            {/* <div
               className="absolute inset-0 opacity-25"
               style={{
                 backgroundImage:
@@ -170,7 +388,7 @@ const MemberShip = () => {
                 backgroundSize: "60px 60px",
                 animation: "moveBackground 20s infinite alternate",
               }}
-            ></div>
+            ></div> */}
           </div>
 
           <div className="flex-1 overflow-y-auto">
@@ -461,7 +679,11 @@ const MemberShip = () => {
                         </svg>
                         Change
                       </button>
-
+                      {errors.membership_category && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.membership_category}
+                        </p>
+                      )}
                       {/* Badge (small screen) */}
                       <div className="sm:hidden">
                         <div
@@ -500,177 +722,397 @@ const MemberShip = () => {
                   </div>
 
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="text-gray-900">Company Name *</Label>
-                        <Input className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200" />
-                      </div>
-
-                      <div>
-                        <Label className="text-gray-900">GST No *</Label>
-                        <Input className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200" />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="text-gray-900">
-                          Authorized Representative Name *
-                        </Label>
-                        <Input className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200" />
-                      </div>
-
-                      <div>
-                        <Label className="text-gray-900">Mobile No *</Label>
-                        <Input
-                          className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200"
-                          type="tel"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="text-gray-900">Email Id *</Label>
-                        <Input
-                          className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200"
-                          type="email"
-                        />
-                      </div>
-
-                      <div>
-                        <Label className="text-gray-900">Office Phone No</Label>
-                        <Input
-                          className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200"
-                          type="tel"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label className="text-gray-900">Address *</Label>
-                      <Input className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200" />
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {/* Photo Upload */}
-                      <div>
-                        <Label className="text-gray-900">Photo *</Label>
-                        <div className="flex items-center space-x-4 mt-2">
-                          <div className="relative">
-                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
-                              {photo ? (
-                                <img
-                                  src={photo}
-                                  alt="Preview"
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <svg
-                                  className="w-6 h-6 text-gray-400"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                  />
-                                </svg>
-                              )}
-                            </div>
-                          </div>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleFileChange(e, "photo")}
-                            className="flex-1 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Logo Upload */}
-                      <div>
-                        <Label className="text-gray-900">Logo</Label>
-                        <div className="flex items-center space-x-4 mt-2">
-                          <div className="w-16 h-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
-                            {logo ? (
-                              <img
-                                src={logo}
-                                alt="Preview"
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <svg
-                                className="w-6 h-6 text-gray-400"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth="1.5"
-                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleFileChange(e, "logo")}
-                            className="flex-1 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator className="my-4" />
-
-                    <div>
-                      <Label className="text-gray-900">Business Type *</Label>
-                      <Tabs
-                        value={businessType}
-                        onValueChange={setBusinessType}
-                        className="mt-3"
-                      >
-                        <TabsList className="w-full flex flex-wrap h-auto gap-2 p-1 bg-gray-100/50 rounded-lg">
-                          {Object.entries({
-                            manufacturer: "Manufacturer",
-                            distributor: "Distributor",
-                            agent: "Agent",
-                            consultant: "Consultant",
-                            wholesaler: "Wholesaler",
-                          }).map(([value, label]) => (
-                            <TabsTrigger
-                              key={value}
-                              value={value}
-                              className={`flex-1 min-w-[45%] sm:min-w-0 text-sm px-3 py-2 rounded-md transition-all ${
-                                businessType === value
-                                  ? `${businessTypeColors[value]} font-medium`
-                                  : "text-gray-600 hover:text-gray-900 hover:bg-white"
-                              }`}
-                            >
-                              {label}
-                            </TabsTrigger>
-                          ))}
-                        </TabsList>
-                      </Tabs>
-                    </div>
-
-                    <div>
-                      <Label className="text-gray-900">Brands (if any)</Label>
-                      <Input className="mt-2 bg-white/50 backdrop-blur-sm border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-indigo-200" />
-                    </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                         <div>
+                                           <label
+                                             htmlFor="name_of_firm"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Company Name *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="name_of_firm"
+                                             name="name_of_firm"
+                                             value={formData.name_of_firm}
+                                             onChange={handleChange}
+                                             placeholder="Company name"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                             
+                                             ${
+                                               errors.name_of_firm
+                                                 ? "border-red-500 focus:ring-red-500"
+                                                 : "focus:border-gray-300 focus:ring-indigo-500"
+                                             }
+                                              text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.name_of_firm && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.name_of_firm}
+                                             </p>
+                                           )}
+                                         </div>
+                   
+                                         <div>
+                                           <label
+                                             htmlFor="gst"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Gst No *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="gst"
+                                             name="gst"
+                                             value={formData.gst}
+                                             onChange={handleChange}
+                                             placeholder="22AAAAA0000A1Z5"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.gst
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.gst && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.gst}
+                                             </p>
+                                           )}
+                                         </div>
+                                       </div>
+                   
+                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                         <div>
+                                           <label
+                                             htmlFor="contact_person"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Authorized Representative Name *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="contact_person"
+                                             name="contact_person"
+                                             value={formData.contact_person}
+                                             onChange={handleChange}
+                                             placeholder="Representative name"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.contact_person
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.contact_person && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.contact_person}
+                                             </p>
+                                           )}
+                                         </div>
+                   
+                                         <div>
+                                           <label
+                                             htmlFor="cell_no"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Mobile No *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="cell_no"
+                                             name="cell_no"
+                                             value={formData.cell_no}
+                                             onChange={handleChange}
+                                             placeholder="9876543210"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.cell_no
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.cell_no && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.cell_no}
+                                             </p>
+                                           )}
+                                         </div>
+                                       </div>
+                   
+                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                         <div>
+                                           <label
+                                             htmlFor="mail_id"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Email Id *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="mail_id"
+                                             name="mail_id"
+                                             value={formData.mail_id}
+                                             onChange={handleChange}
+                                             placeholder="abc@gmail.com"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.mail_id
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.mail_id && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.mail_id}
+                                             </p>
+                                           )}
+                                         </div>
+                   
+                                         <div>
+                                           <label
+                                             htmlFor="office_ph_no"
+                                             className="block text-sm font-medium text-gray-900 mb-1"
+                                           >
+                                             Office Phone No *
+                                           </label>
+                                           <input
+                                             type="text"
+                                             id="office_ph_no"
+                                             name="office_ph_no"
+                                             value={formData.office_ph_no}
+                                             onChange={handleChange}
+                                             placeholder="9876543210"
+                                             className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.office_ph_no
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                           />
+                   
+                                           {errors.office_ph_no && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.office_ph_no}
+                                             </p>
+                                           )}
+                                         </div>
+                                       </div>
+                   
+                                       <div>
+                                         <label
+                                           htmlFor="contact_address"
+                                           className="block text-sm font-medium text-gray-900 mb-1"
+                                         >
+                                           Address *
+                                         </label>
+                                         <textarea
+                                           type="text"
+                                           rows={3}
+                                           id="contact_address"
+                                           name="contact_address"
+                                           value={formData.contact_address}
+                                           onChange={handleChange}
+                                           placeholder="Saint St. 128"
+                                           className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       ${
+                         errors.contact_address
+                           ? "border-red-500 focus:ring-red-500"
+                           : "focus:border-gray-300 focus:ring-indigo-500"
+                       }
+                        text-sm py-2 border`}
+                                         />
+                   
+                                         {errors.contact_address && (
+                                           <p className="text-red-500 text-xs mt-1">
+                                             {errors.contact_address}
+                                           </p>
+                                         )}
+                                       </div>
+                   
+                                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                         {/* Photo Upload */}
+                                         <div>
+                                           <Label className="text-gray-900">Photo *</Label>
+                                           <div className="flex items-center space-x-4 mt-2">
+                                             <div className="relative">
+                                               <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
+                                                 {photo ? (
+                                                   <img
+                                                     src={photo}
+                                                     alt="Preview"
+                                                     className="w-full h-full object-cover"
+                                                   />
+                                                 ) : (
+                                                   <svg
+                                                     className="w-6 h-6 text-gray-400"
+                                                     fill="none"
+                                                     stroke="currentColor"
+                                                     viewBox="0 0 24 24"
+                                                   >
+                                                     <path
+                                                       strokeLinecap="round"
+                                                       strokeLinejoin="round"
+                                                       strokeWidth="1.5"
+                                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                     />
+                                                   </svg>
+                                                 )}
+                                               </div>
+                                             </div>
+                   
+                                             <input
+                                               type="file"
+                                               accept="image/*"
+                                               onChange={handleChange}
+                                               id="member_image"
+                                               name="member_image"
+                                               className={` w-full text-xs sm:text-sm text-gray-500 
+                       file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
+                       file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
+                       file:bg-indigo-50 hover:file:bg-indigo-100
+                       ${errors.member_image ? "file:text-red-600" : "file:text-indigo-600"}`}
+                                             />
+                                           </div>
+                                           {errors.member_image && (
+                                             <p className="text-red-500 text-xs mt-1">
+                                               {errors.member_image}
+                                             </p>
+                                           )}
+                                         </div>
+                   
+                                         {/* Logo Upload */}
+                                         <div>
+                                           <Label className="text-gray-900">Logo</Label>
+                                           <div className="flex items-center space-x-4 mt-2">
+                                             <div className="w-16 h-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
+                                               {logo ? (
+                                                 <img
+                                                   src={logo}
+                                                   alt="Preview"
+                                                   className="w-full h-full object-cover"
+                                                 />
+                                               ) : (
+                                                 <svg
+                                                   className="w-6 h-6 text-gray-400"
+                                                   fill="none"
+                                                   stroke="currentColor"
+                                                   viewBox="0 0 24 24"
+                                                 >
+                                                   <path
+                                                     strokeLinecap="round"
+                                                     strokeLinejoin="round"
+                                                     strokeWidth="1.5"
+                                                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                   />
+                                                 </svg>
+                                               )}
+                                             </div>
+                   
+                                             <input
+                                               type="file"
+                                               accept="image/*"
+                                               onChange={handleChange}
+                                               id="image"
+                                               name="image"
+                                               className={` w-full text-xs sm:text-sm text-gray-500 
+                       file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
+                       file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
+                       file:bg-indigo-50 hover:file:bg-indigo-100
+                       file:text-indigo-600`}
+                                             />
+                                           </div>
+                                         </div>
+                                       </div>
+                   
+                                       <Separator className="my-4" />
+                   
+                                       <div>
+                                         <label
+                                           htmlFor="manufacturers"
+                                           className="block text-sm font-medium text-gray-900 mb-1"
+                                         >
+                                           Business Type *
+                                         </label>
+                                         <Tabs
+                                           id="manufacturers"
+                                           name="manufacturers"
+                                           value={businessType}
+                                           onValueChange={handleBusinessTypeChange}
+                                           className="mt-3"
+                                         >
+                                           <TabsList className="w-full flex flex-wrap h-auto gap-2 p-1 bg-gray-100/50 rounded-lg">
+                                             {Object.entries({
+                                               manufacturer: "Manufacturer",
+                                               distributorwholesaler: "Distributor/Wholesaler",
+                                               agent: "Agent",
+                                               consultant: "Consultant",
+                                             }).map(([value, label]) => (
+                                               <TabsTrigger
+                                                 key={value}
+                                                 value={value}
+                                                 className={`flex-1 min-w-[45%] sm:min-w-0 text-sm px-3 py-2 rounded-md transition-all ${
+                                                   businessType === value
+                                                     ? `${businessTypeColors[value]} font-medium`
+                                                     : "text-gray-600 hover:text-gray-900 hover:bg-white"
+                                                 }`}
+                                               >
+                                                 {label}
+                                               </TabsTrigger>
+                                             ))}
+                                           </TabsList>
+                                         </Tabs>
+                                         {errors.manufacturers && (
+                                           <p className="text-red-500 text-xs mt-1">
+                                             {errors.manufacturers}
+                                           </p>
+                                         )}
+                                       </div>
+                   
+                                       <div>
+                                         <label
+                                           htmlFor="brands"
+                                           className="block text-sm font-medium text-gray-900 mb-1"
+                                         >
+                                           Brands (if any)
+                                         </label>
+                   
+                                         <input
+                                           type="text"
+                                           id="brands"
+                                           name="brands"
+                                           value={formData.brands}
+                                           onChange={handleChange}
+                                           placeholder="Brand (if any)"
+                                           className={`px-3  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                   
+                       focus:border-gray-300 focus:ring-indigo-500
+                        text-sm py-2 border`}
+                                         />
+                                       </div>
 
                     <Separator className="my-6" />
 
                     <div className="flex items-center justify-end space-x-4">
                       <Button
                         type="button"
+                        onClick={handleBack}
                         variant="ghost"
                         className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50"
                       >
@@ -679,6 +1121,8 @@ const MemberShip = () => {
 
                       <Button
                         type="submit"
+                        onClick={handleSubmit}
+                        disabled={loader}
                         className={`relative overflow-hidden transition-all ${
                           membershipCategory === "life-patron"
                             ? "bg-indigo-600 hover:bg-indigo-700"
@@ -688,7 +1132,7 @@ const MemberShip = () => {
                         } text-white`}
                       >
                         <span className="relative z-10">
-                          Submit Application
+                        {loader ? "Submitting..." : " Submit MemberShip"}
                         </span>
                         <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </Button>
@@ -702,6 +1146,7 @@ const MemberShip = () => {
         
       </div>
     </div>
+    </>
   );
 };
 

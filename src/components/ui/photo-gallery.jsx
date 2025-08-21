@@ -11,13 +11,13 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/mousewheel";
 import { TextEffect } from "./text-effect";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const PhotoGallery = ({ animationDelay = 0.5 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [swiperInstance, setSwiperInstance] = useState(null);
   const swiperRef = useRef(null);
-
+  const navigate = useNavigate()
   useEffect(() => {
     const visibilityTimer = setTimeout(() => {
       setIsVisible(true);
@@ -67,7 +67,7 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
           <h3 className="z-20 mx-auto max-w-2xl justify-center bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text py-3 text-center text-4xl text-transparent dark:bg-gradient-to-r dark:from-slate-100 dark:via-slate-200 dark:to-slate-100 dark:bg-clip-text md:text-7xl">
           Glimpse of the 30ᵗʰ{" "}
             <span className="text-red-500">
-              <FlipLink>SIGA</FlipLink>
+              <FlipLink>SIGA FAIR</FlipLink>
             </span>
           </h3>
 
@@ -128,18 +128,19 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
           <div className="flex w-full justify-center">
            
             <Button
-              asChild
+              
               size="lg"
-              className="rounded-xl mb-4 px-5 text-base relative overflow-hidden group"
+              className="rounded-xl mb-4 hover:cursor-pointer px-5 text-base relative overflow-hidden group"
             >
-              <Link to="#link">
-                <span className="relative z-10">
+              <Link to={'/gallery'}>
+          
+                <span  className="relative z-10">
                   <TextEffect preset="scale" per="word">
                     View All Stories
                   </TextEffect>
                 </span>
                 <span className="absolute inset-0 bg-gradient-to-r from-red-400/30 via-red-500/40 to-red-400/30 opacity-100 transition-opacity duration-300 -skew-x-12" />
-              </Link>
+                </Link>
             </Button>
           </div>
         </div>

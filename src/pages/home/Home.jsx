@@ -3,6 +3,7 @@ import React, { Suspense, useEffect } from "react";
 import  HeroSection  from "./HeroSection";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import BASE_URL from "@/config/BaseUrl";
 
 
 
@@ -20,7 +21,7 @@ const ShuffleHero = React.lazy(() => import("@/components/ui/shuffle-grid"));
 const updateVisitorCount = async () => {
   
   const response = await axios.put(
-    "https://southindiagarmentsassociation.com/public/api/update-visitors/1",
+     `${BASE_URL}/api/update-visitors/1`,
     {}, 
     
   );

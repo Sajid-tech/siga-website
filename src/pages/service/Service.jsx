@@ -6,7 +6,7 @@ import LatestNews from './LatestNews';
 import BuisnessExpansion from './BuisnessExpansion';
 
 import JobOpportunities from './JobOppurtunities';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const Service = () => {
   const [activeMenu, setActiveMenu] = useState('job-opportunities');
@@ -44,7 +44,7 @@ const Service = () => {
    
   ];
 
-  // Sync URL with active menu
+ 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
     if (tabParam) {
@@ -55,12 +55,23 @@ const Service = () => {
     }
   }, [searchParams]);
 
-  // Update URL when menu changes
-  const handleMenuClick = (menuId) => {
-    const menuItem = menuItems.find(item => item.id === menuId);
-    if (menuItem) {
-      setSearchParams({ tab: menuItem.param });
-      setActiveMenu(menuId);
+ 
+  // const handleMenuClick = (menuId) => {
+  //   const menuItem = menuItems.find(item => item.id === menuId);
+  //   if (menuItem) {
+  //     setSearchParams({ tab: menuItem.param });
+  //     setActiveMenu(menuId);
+  //   }
+  // };
+  const handleMenuClick = (menuId, e) => {
+   
+    if (e.button === 0) { 
+      e.preventDefault();
+      const menuItem = menuItems.find(item => item.id === menuId);
+      if (menuItem) {
+        setSearchParams({ tab: menuItem.param });
+        setActiveMenu(menuId);
+      }
     }
   };
   const renderContent = () => {
@@ -100,9 +111,18 @@ const Service = () => {
                   const isActive = activeMenu === item.id;
                   
                   return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleMenuClick(item.id)}
+                    
+                    <Link
+                    key={item.id}
+                    to={`?tab=${item.param}`}
+                    onClick={(e) => handleMenuClick(item.id, e)}
+                    onAuxClick={(e) => {
+                      
+                      if (e.button === 1) {
+                       
+                      }
+                    }}
+            
                       className={`w-full text-left p-3 rounded-md transition-all duration-200 flex items-center gap-3 ${
                         isActive 
                           ? 'bg-indigo-50 text-indigo-700 border-l-4 border-indigo-500' 
@@ -129,9 +149,15 @@ const Service = () => {
                           isActive ? 'text-indigo-500' : 'text-gray-400'
                         }`} 
                       />
-                    </button>
+                    </Link>
                   );
                 })}
+              </nav>
+              <nav className=" hidden lg:block  space-y-5 mt-5 bg-white p-1 border border-red-200 ">
+              <img
+              src='https://southindiagarmentsassociation.com/assets/images/banner/about.jpg'
+              alt='event-ads'
+              />
               </nav>
             </div>
           </div>

@@ -2,12 +2,13 @@ import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import { Calendar, Users, Target, Award } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/event-card";
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import BASE_URL from "@/config/BaseUrl";
 
 const stats = [
   { icon: Users, value: "5000+", label: "Maufaturer Connected" },
@@ -22,7 +23,7 @@ const Efforts = () => {
   const { data: effortsData = [], isLoading, isError } = useQuery({
     queryKey: ['efforts'],
     queryFn: async () => {
-      const response = await axios.get('https://southindiagarmentsassociation.com/public/api/getEfforts');
+      const response = await axios.get(  `${BASE_URL}/api/getEfforts`);
       return response.data;
     }
   });
@@ -138,13 +139,13 @@ const Efforts = () => {
         {!isLoading && !isError && effortsData.data && (
           <div className="relative">
   
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-purple-300 transform -translate-x-1/2"></div>
+            <div className="absolute  left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-purple-300 transform -translate-x-1/2"></div>
             
             {effortsData.data.map((item, index) => (
               <motion.div 
                 key={index}
                 className={cn(
-                  "mb-5 md:mb-1 flex flex-col md:flex-row",
+                  "mb-5 md:mb-0  flex flex-col md:flex-row",
                   index % 2 === 0 ? "md:flex-row-reverse" : ""
                 )}
                 initial={{ opacity: 0, y: 20 }}
@@ -155,19 +156,20 @@ const Efforts = () => {
                 <div className="relative z-10 flex items-start justify-center md:justify-start md:w-1/2">
                   <div className={cn(
                     "absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-indigo-600 border-4 border-white shadow-lg transform -translate-x-1/2",
-                    index % 2 === 0 ? "md:left-1/2" : "md:left-1/2"
+                    index % 2 === 0 ? `md:left-1/2  ` : `md:left-1/2  `
                   )}></div>
                 </div>
 
             
                 <div className={cn(
                   "ml-10 md:ml-0 md:w-1/2 ",
-                  index % 2 === 0 ? "md:pr-12 md:pl-0 md:text-right  " : "md:pl-12  -translate-y-0 md:-translate-y-32 lg:-translate-y-48 "
+                  index % 2 === 0 ? `md:pr-12 md:pl-0 md:text-right    ` : "md:pl-12  -translate-y-0 md:-translate-y-32 lg:-translate-y-48 "
+                  
                 )}>
                   <FeatureCard className="p-2 border border-gray-100">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
                       <span className="text-xs font-medium px-2 py-1 bg-indigo-100 text-indigo-800 rounded-md">
-                        {item.efforts_heading || ''}
+                        {item.efforts_heading || ''} 
                       </span>
                     </div>
                     
@@ -222,9 +224,9 @@ const Efforts = () => {
             <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
               Become part of SIGA's mission to strengthen the garment industry through advocacy, networking, and development initiatives.
             </p>
-            <button onClick={()=>navigate('/become-member')} className="px-6 py-3 hover:cursor-pointer bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-colors duration-300">
+            <Link to={'/become-member'} className="px-6 py-3 hover:cursor-pointer bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-colors duration-300">
               Get Involved
-            </button>
+            </Link>
           </div>
         </motion.div>
       </div>
@@ -242,3 +244,5 @@ const Highlight = ({ children, className }) => {
 };
 
 export default Efforts;
+
+//

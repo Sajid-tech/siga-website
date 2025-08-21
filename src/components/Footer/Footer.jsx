@@ -14,19 +14,20 @@ import {
 import { Link, useNavigate } from 'react-router-dom'
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import BASE_URL from '@/config/BaseUrl';
 
 
 const fetchVisitorcount = async () => {
-  const response = await axios.get("https://southindiagarmentsassociation.com/public/api/getVisitorCount");
+  const response = await axios.get(  `${BASE_URL}/api/getVisitorCount`);
   return response.data; 
 };
 
 const data = {
-  facebookLink: 'https://facebook.com/mvpblocks',
-  instaLink: 'https://instagram.com/mvpblocks',
-  twitterLink: 'https://twitter.com/mvpblocks',
-  githubLink: 'https://github.com/mvpblocks',
-  dribbbleLink: 'https://dribbble.com/mvpblocks',
+  facebookLink: '#',
+  instaLink: '#',
+  twitterLink: '#',
+  githubLink: '#',
+  dribbbleLink: '#',
   services: {
     jobOppurnites: '/service?tab=job_opportunities',
     payment: '/service?tab=payment_mediation',
@@ -181,7 +182,7 @@ export default function Footer() {
               {socialLinks.map(({ icon: Icon, label, href }) => (
                 <li key={label}>
                   <Link
-                    href={href}
+                    to={href}
                     className="text-primary hover:text-primary/80 transition"
                   >
                     <span className="sr-only">{label}</span>
@@ -197,15 +198,21 @@ export default function Footer() {
               <p className="text-lg text-red-600 font-medium">About Us</p>
               <ul className="mt-8 space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
+                 
                   <li key={text}>
+                      <Link
+                 to={href}
+                 >
                     <button
                       className="text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500"
                     
-                      onClick={()=>navigate(href)} 
+                      
                     >
                       {text}
                     </button>
+                    </Link>
                   </li>
+                 
                 ))}
               </ul>
             </div>
@@ -215,13 +222,18 @@ export default function Footer() {
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
+                       <Link
+                 to={href}
+                 >
                     <button
                       className="text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500"
-                      onClick={()=>navigate(href)} 
+                     
                     >
                       {text}
                     </button>
+                    </Link>
                   </li>
+                 
                 ))}
               </ul>
             </div>
@@ -231,8 +243,11 @@ export default function Footer() {
               <ul className="mt-8 space-y-4 text-sm">
                 {helpfulLinks.map(({ text, href, hasIndicator }) => (
                   <li key={text}>
+                        <Link
+                 to={href}
+                 >
                     <button
-                  onClick={()=>navigate(href)} 
+           
                       className={`${
                         hasIndicator
                           ? 'group flex justify-center gap-1.5 sm:justify-start hover:cursor-pointer hover:text-red-500' 
@@ -249,6 +264,7 @@ export default function Footer() {
                         </span>
                       )}
                     </button>
+                    </Link>
                   </li>
                 ))}
               </ul>

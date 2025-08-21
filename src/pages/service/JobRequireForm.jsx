@@ -6,6 +6,8 @@ import { User, Mail, Phone, Home, Briefcase, FileText, Car, Calendar } from 'luc
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
+import BASE_URL from '@/config/BaseUrl';
+import Disclaimer from '@/components/disclaimer/Disclaimer';
 
 const JobRequireForm = () => {
     const [formData, setFormData] = useState({
@@ -61,9 +63,61 @@ const JobRequireForm = () => {
         if (!formData.residing_years.trim()) {
             newErrors.residing_years = "Current city is required";
         }
-        if (!formData.re_locate.trim()) {
-            newErrors.re_locate = "Relocation preference is required";
-        }
+        // if (!formData.re_locate.trim()) {
+        //     newErrors.re_locate = "Relocation preference is required";
+        // }
+
+
+        // if (!formData.last_employer.trim()) {
+        //     newErrors.last_employer = "Last Employed is required";
+        // }
+        // if (!formData.contact_person.trim()) {
+        //     newErrors.contact_person = "Contact person is required";
+        // }
+        // if (!formData.designation.trim()) {
+        //     newErrors.designation = "Designation is required";
+        // }
+        // if (!formData.phone_number.trim()) {
+        //     newErrors.phone_number = "Phone number is required";
+        // }
+        // if (!formData.exp_address.trim()) {
+        //     newErrors.exp_address = "Address is required";
+        // }
+        // if (!formData.last_salary.trim()) {
+        //     newErrors.last_salary = "Last Salary  is required";
+        // }
+        // if (!formData.exp_salary.trim()) {
+        //     newErrors.exp_salary = "Expected Salary is required";
+        // }
+        // if (!formData.lose_job.trim()) {
+        //     newErrors.lose_job = "Lose Job is required";
+        // }
+        // if (!formData.re_locate.trim()) {
+        //     newErrors.re_locate = "Relocation preference is required";
+        // }
+        // if (!formData.dependants.trim()) {
+        //     newErrors.dependants = "Family Dependent is required";
+        // }
+        // if (!formData.person.trim()) {
+        //     newErrors.person = "Lost any person required";
+        // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         if (!formData.agreeToTerms) {
             newErrors.agreeToTerms = "Terms & Condition Required";
         }
@@ -114,7 +168,7 @@ const JobRequireForm = () => {
     const jobRequireMutation = useMutation({
         mutationFn: (payload) => {
             return axios.post(
-                "https://southindiagarmentsassociation.com/public/api/create-job-required",
+                `${BASE_URL}/api/create-job-required`,
                 payload,
                 {
                     headers: { "Content-Type": "multipart/form-data" },
@@ -202,8 +256,14 @@ const JobRequireForm = () => {
         payload.append("have_licence", formData.have_licence);
         payload.append("know_driving", formData.know_driving);
         payload.append("have_vehicle", formData.have_vehicle);
-
-        await jobRequireMutation.mutateAsync(payload);
+        try {
+            await jobRequireMutation.mutateAsync(payload);
+          } catch (error) {
+            console.error("Error submitting job require form:", error);
+          } finally {
+            setLoader(false);
+          }
+     
     };
 
     const CardHeading = useCallback(({ icon: Icon, title, description }) => (
@@ -281,12 +341,12 @@ const JobRequireForm = () => {
                                         name="full_name"
                                         value={formData.full_name}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.full_name
+                                              errors.full_name
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.full_name && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -306,12 +366,12 @@ const JobRequireForm = () => {
                                         name="father_name"
                                         value={formData.father_name}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.father_name
+                                              errors.father_name
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.father_name && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -331,12 +391,12 @@ const JobRequireForm = () => {
                                         name="person_email"
                                         value={formData.person_email}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.person_email
+                                              errors.person_email
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.person_email && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -357,12 +417,12 @@ const JobRequireForm = () => {
                                         name="person_mobile"
                                         value={formData.person_mobile}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.person_mobile
+                                              errors.person_mobile
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.person_mobile && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -382,12 +442,12 @@ const JobRequireForm = () => {
                                         name="person_education"
                                         value={formData.person_education}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.person_education
+                                              errors.person_education
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.person_education && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -407,12 +467,12 @@ const JobRequireForm = () => {
                                         rows={3}
                                         value={formData.house_address}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base border p-2
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.house_address
+                                              errors.house_address
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.house_address && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -432,12 +492,12 @@ const JobRequireForm = () => {
                                         name="residing_years"
                                         value={formData.residing_years}
                                         onChange={handleChange}
-                                        className={`block w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm sm:text-base py-2 px-3 border
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
                                             ${
-                                                errors.residing_years
+                                              errors.residing_years
                                                 ? "border-red-500 focus:ring-red-500"
                                                 : "focus:border-purple-500 focus:ring-purple-500"
-                                            }`}
+                                            } text-sm py-2 border`}
                                     />
                                     {errors.residing_years && (
                                         <p className="text-red-500 text-xs mt-1">
@@ -507,8 +567,18 @@ const JobRequireForm = () => {
                                         name="last_employer"
                                         value={formData.last_employer}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.last_employer
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.last_employer && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.last_employer}
+                      </p>
+                    )}
                                 </div>
 
                                 {/* Contact Person */}
@@ -522,8 +592,18 @@ const JobRequireForm = () => {
                                         name="contact_person"
                                         value={formData.contact_person}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.contact_person
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.contact_person && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.contact_person}
+                      </p>
+                    )}
                                 </div>
                               </div>
                               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -538,8 +618,18 @@ const JobRequireForm = () => {
                                         name="designation"
                                         value={formData.designation}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.designation
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.designation && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.designation}
+                      </p>
+                    )}
                                 </div>
 
                                 {/* Company Phone */}
@@ -553,8 +643,18 @@ const JobRequireForm = () => {
                                         name="phone_number"
                                         value={formData.phone_number}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.phone_number
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.phone_number && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.phone_number}
+                      </p>
+                    )}
                                 </div>
                     </div>
                                 {/* Company Address */}
@@ -568,8 +668,18 @@ const JobRequireForm = () => {
                                         rows={3}
                                         value={formData.exp_address}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.exp_address
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.exp_address && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.exp_address}
+                      </p>
+                    )}
                                 </div>
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 {/* Last Salary */}
@@ -583,8 +693,18 @@ const JobRequireForm = () => {
                                         name="last_salary"
                                         value={formData.last_salary}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.last_salary
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.last_salary && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.last_salary}
+                      </p>
+                    )}
                                 </div>
 
                                 {/* Expected Salary */}
@@ -598,8 +718,18 @@ const JobRequireForm = () => {
                                         name="exp_salary"
                                         value={formData.exp_salary}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.exp_salary
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.exp_salary && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.exp_salary}
+                      </p>
+                    )}
                                 </div>
 
                                 {/* Job Lost Date */}
@@ -613,8 +743,18 @@ const JobRequireForm = () => {
                                         name="lose_job"
                                         value={formData.lose_job}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.lose_job
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.lose_job && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.lose_job}
+                      </p>
+                    )}
                                 </div>
                                 </div>
                                 
@@ -639,8 +779,18 @@ const JobRequireForm = () => {
                                         min="0"
                                         value={formData.dependants}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.dependants
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.dependants && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.dependants}
+                      </p>
+                    )}
                                 </div>
 
                                 {/* Pandemic Loss */}
@@ -654,8 +804,18 @@ const JobRequireForm = () => {
                                         rows={3}
                                         value={formData.person}
                                         onChange={handleChange}
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base border p-2"
+                                        className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                            ${
+                                              errors.person
+                                                ? "border-red-500 focus:ring-red-500"
+                                                : "focus:border-purple-500 focus:ring-purple-500"
+                                            } text-sm py-2 border`}
                                     />
+                                     {errors.person && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.person}
+                      </p>
+                    )}
                                 </div>
                             </div>
 
@@ -703,7 +863,12 @@ const JobRequireForm = () => {
                                             name="other_job"
                                             value={formData.other_job}
                                             onChange={handleChange}
-                                            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 text-sm sm:text-base py-2 px-3 border"
+                                            className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 
+                                                ${
+                                                  errors.other_job
+                                                    ? "border-red-500 focus:ring-red-500"
+                                                    : "focus:border-purple-500 focus:ring-purple-500"
+                                                } text-sm py-2 border`}
                                             placeholder="Specify other job profile"
                                         />
                                     </div>
@@ -925,7 +1090,7 @@ const JobRequireForm = () => {
                       htmlFor="agreeToTerms"
                       className="font-medium text-gray-700"
                     >
-                      I have read, understood and agree to the disclaimer
+                      I have read, understood and agree to the <Disclaimer title="disclaimer" />
                     </label>
                     {errors.agreeToTerms && (
                       <p className="text-red-500 text-xs mt-1">
@@ -938,13 +1103,14 @@ const JobRequireForm = () => {
                {/* Submit Button */}
                                           <div className="pt-4 sm:pt-6">
                                               <motion.button
-                                                  type="submit"
-                                                  className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-sm sm:text-base font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
-                                                  whileHover={{ scale: 1.02 }}
-                                                  whileTap={{ scale: 0.98 }}
-                                              >
-                                                  Submit Application
-                                              </motion.button>
+                                                             type="submit"
+                                                             disabled={loader}
+                                                             className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50"
+                                                             whileHover={{ scale: 1.02 }}
+                                                             whileTap={{ scale: 0.98 }}
+                                                           >
+                                                             {loader ? "Submitting..." : "Submit Job Require"}
+                                                           </motion.button>
                                           </div>
                                       </form>
                                   </CardContent>
