@@ -14,6 +14,7 @@ import ManagingCommitte from "./pages/committe/ManagingCommitte.jsx";
 import JobOpeningList from "./pages/jobs/JobOpeningList.jsx";
 import JobRequireList from "./pages/jobs/JobRequireList.jsx";
 import { Toaster } from "sonner";
+import SuspenseLoader from "./components/loader/SuspenseLoader.jsx";
 
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -41,7 +42,7 @@ function App() {
     <Route
       path="/"
       element={
-        <Suspense fallback={<div className="min-h-screen  bg-yellow-500 " />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Home />
         </Suspense>
       }
@@ -49,7 +50,7 @@ function App() {
     <Route
       path="/contact"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Contact />
         </Suspense>
       }
@@ -57,7 +58,7 @@ function App() {
     <Route
       path="/about"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <AboutUs />
         </Suspense>
       }
@@ -65,7 +66,7 @@ function App() {
     <Route
       path="/event"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <EventSection />
         </Suspense>
       }
@@ -73,7 +74,7 @@ function App() {
     <Route
       path="/service"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Service />
         </Suspense>
       }
@@ -81,7 +82,7 @@ function App() {
     <Route
       path="/gallery"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Gallery />
         </Suspense>
       }
@@ -89,7 +90,7 @@ function App() {
     <Route
       path="/directory"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Directory />
         </Suspense>
       }
@@ -97,7 +98,7 @@ function App() {
     <Route
       path="/efforts"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <Efforts />
         </Suspense>
       }
@@ -105,7 +106,7 @@ function App() {
     <Route
       path="/become-member"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <MemberShip />
         </Suspense>
       }
@@ -113,7 +114,7 @@ function App() {
     <Route
       path="/committee"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <ManagingCommitte />
         </Suspense>
       }
@@ -121,7 +122,7 @@ function App() {
     <Route
       path="/jobopening"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <JobOpeningList />
         </Suspense>
       }
@@ -129,7 +130,7 @@ function App() {
     <Route
       path="/jobrequire"
       element={
-        <Suspense fallback={<div className="min-h-screen bg-yellow-500" />}>
+        <Suspense fallback={<SuspenseLoader/>}>
           <JobRequireList />
         </Suspense>
       }

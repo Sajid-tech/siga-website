@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import BASE_URL from "@/config/BaseUrl";
+import SuspenseLoader from "@/components/loader/SuspenseLoader";
 const Contact = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -55,7 +57,7 @@ const Contact = () => {
   const contactMutation = useMutation({
     mutationFn: (formData) => {
       return axios.post(
-        "https://southindiagarmentsassociation.com/public/api/create-contact",
+         `${BASE_URL}/api/create-contact`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -200,15 +202,13 @@ const Contact = () => {
   );
 
   return (
+    // <SuspenseLoader/>
     <div className="relative w-full pt-28 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <motion.div
+       
+        <div
           className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+        
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             SIGA <Highlight>Contact Us</Highlight>
@@ -217,11 +217,11 @@ const Contact = () => {
             Please select a topic below related to your inquiry. If you don't
             find what you need, fill out our contact form.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Contact Info and Form Row */}
+
         <div className="grid md:grid-cols-2 gap-6 mb-16">
-          {/* Contact Info Cards - Takes 2/3 space on desktop */}
+       
           <div className="md:col-span-2 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {contactdata.map((item, idx) => (
               <FeatureCard key={idx} className="flex flex-col">
@@ -259,7 +259,7 @@ const Contact = () => {
             ))}
           </div>
 
-          {/* Contact Form - Takes 1/3 space on desktop */}
+
           <div className="md:col-span-1">
             <FeatureCard className="h-full">
               <CardHeader className="pb-3">
@@ -366,7 +366,7 @@ const Contact = () => {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="mt-auto w-full py-2  hover:cursor-pointer px-3 sm:px-4 border border-black bg-blue-300 hover:bg-blue-600 hover:text-white text-black text-sm sm:text-base font-medium rounded-lg transition-colors flex items-center justify-center"
+                    className="mt-auto w-full py-2  hover:cursor-pointer px-3 sm:px-4  bg-blue-600 hover:bg-blue-400 hover:text-gray-800 text-white text-sm sm:text-base font-medium rounded-lg transition-colors flex items-center justify-center"
                  
                     transition={{ duration: 0.3 }}
                   >
@@ -408,7 +408,7 @@ const Contact = () => {
           </div>
         </div>
 
-        {/* Full Width Map Section */}
+    
       </div>
     </div>
   );

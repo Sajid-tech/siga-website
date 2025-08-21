@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Heart, Users, Mail, Trophy, ChevronRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const buttonColorMap = {
   red: {
     gradient: "from-red-400/70 via-red-500/60 to-red-400/70",
@@ -126,7 +126,8 @@ const BentoCard = ({
           size="sm"
           className="pointer-events-auto relative text-black overflow-hidden"
         >
-          <button onClick={()=>navigate(href)}  className="flex items-center gap-1 relative z-10 hover:cursor-pointer">
+          
+          <Link to={href}  className="flex items-center gap-1 relative z-10 hover:cursor-pointer">
             {cta}
             <ArrowRight
               size={14}
@@ -138,7 +139,7 @@ const BentoCard = ({
                 colorClasses.gradient
               )}
             />
-          </button>
+          </Link>
         </Button>
       </div>
     </motion.div>

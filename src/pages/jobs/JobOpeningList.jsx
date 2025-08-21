@@ -7,11 +7,12 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import BASE_URL from '@/config/BaseUrl';
 
 const JobOpeningList = () => {
 
   const fetchJobOffers = async () => {
-    const response = await axios.get("https://southindiagarmentsassociation.com/public/api/getJoboffer");
+    const response = await axios.get(  `${BASE_URL}/api/getJoboffer`);
     return response.data;
   };
 

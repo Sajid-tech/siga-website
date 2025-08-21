@@ -16,6 +16,8 @@ import useNumericInput from "@/hooks/useNumericInput";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import BASE_URL from "@/config/BaseUrl";
+import Disclaimer from "@/components/disclaimer/Disclaimer";
 
 const PaymentMediation = () => {
   const [formData, setFormData] = useState({
@@ -113,7 +115,7 @@ const PaymentMediation = () => {
   const paymenttMutation = useMutation({
     mutationFn: (payload) => {
       return axios.post(
-        "https://southindiagarmentsassociation.com/public/api/create-duereconcilation",
+       `${BASE_URL}/api/create-duereconcilation`,
         payload,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -181,9 +183,15 @@ const PaymentMediation = () => {
     payload.append("pending_from", formData.pending_from);
     payload.append("ledger", formData.ledger);
     payload.append("authorisation_letter", formData.authorisation_letter);
-
+    try {
       await paymenttMutation.mutateAsync(payload);
-    console.log("Form submitted:", payload);
+      console.log("Form submitted:", payload);
+    } catch (error) {
+      console.error("Error submitting payment mediation form:", error);
+    } finally {
+      setLoader(false);
+    }
+
   };
 
   const CardHeading = useCallback(
@@ -232,12 +240,9 @@ const PaymentMediation = () => {
     <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto ">
         {/* Hero Section */}
-        <motion.div
+        <div
           className="text-center mb-8 sm:mb-12 md:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+  
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Payment Mediation</Highlight>
@@ -246,7 +251,7 @@ const PaymentMediation = () => {
             SIGA assist members to resolve the conflict/disputes with their
             buyers/purchaser for recovery of pending payments.
           </p>
-        </motion.div>
+        </div>
 
         {/* Form Section */}
         <FeatureCard>
@@ -772,8 +777,8 @@ const PaymentMediation = () => {
                       htmlFor="agreeToTerms"
                       className="font-medium text-gray-700"
                     >
-                      I have read, understood and agree to the Terms &
-                      Conditions
+                      I have read, understood and agree to the 
+                       <Disclaimer title="terms-condition" />
                     </label>
                     {errors.agreeToTerms && (
                       <p className="text-red-500 text-xs mt-1">
@@ -788,11 +793,15 @@ const PaymentMediation = () => {
               <div className="pt-4 sm:pt-6">
                 <motion.button
                   type="submit"
+                  disabled={loader}
                   className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  Submit Payment Mediation Request
+                 
+                  {loader
+                      ? "Submitting..."
+                      : " Submit Payment Mediation Request"}
                 </motion.button>
               </div>
             </form>

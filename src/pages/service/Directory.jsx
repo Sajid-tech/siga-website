@@ -14,10 +14,11 @@ import {
   Briefcase,
   MapPin,
 } from "lucide-react";
+import BASE_URL from "@/config/BaseUrl";
 
 const fetchDirectoryData = async () => {
   const response = await fetch(
-    "https://southindiagarmentsassociation.com/public/api/getDirectory"
+      `${BASE_URL}/api/getDirectory`
   );
   if (!response.ok) {
     throw new Error("Network response was not ok");

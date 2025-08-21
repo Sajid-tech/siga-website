@@ -13,6 +13,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Button } from "@/components/ui/button";
 import { TextEffect } from "@/components/ui/text-effect";
+import BASE_URL from "@/config/BaseUrl";
 
 const JobOpportunities = () => {
   const [activeView, setActiveView] = useState("main");
@@ -24,7 +25,7 @@ const JobOpportunities = () => {
  
   const fetchJobOffers = async () => {
     const response = await axios.get(
-      "https://southindiagarmentsassociation.com/public/api/getJoboffer"
+       `${BASE_URL}/api/getJoboffer`
     );
     return response.data;
   };
@@ -41,7 +42,7 @@ const JobOpportunities = () => {
  
   const fetchJobSeekers = async () => {
     const response = await axios.get(
-      "https://southindiagarmentsassociation.com/public/api/getJobrequire"
+       `${BASE_URL}/api/getJobrequire`
     );
     return response.data;
   };
@@ -218,12 +219,9 @@ const JobOpportunities = () => {
     <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
      
-        <motion.div
+        <div
           className="text-center mb-8 sm:mb-12 md:mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          viewport={{ once: true }}
+        
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Job Opportunities</Highlight>
@@ -232,7 +230,7 @@ const JobOpportunities = () => {
             Connecting SIGA members with talented professionals in the apparel
             sector
           </p>
-        </motion.div>
+        </div>
 
      
         <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16">
@@ -252,6 +250,7 @@ const JobOpportunities = () => {
                   office, godown, accounts, sales, or tailoring unit? Fill the
                   form online and relax - SIGA is working for you.
                 </p>
+             
                 <motion.button
                   onClick={() => setActiveView("offer")}
                   whileHover={{ backgroundColor: "#333" }}
@@ -273,6 +272,7 @@ const JobOpportunities = () => {
                   </svg>
                   Post a Job Opening
                 </motion.button>
+              
               </div>
             </CardContent>
           </FeatureCard>
@@ -466,16 +466,18 @@ const JobOpportunities = () => {
             of professionals.
           </p>
           <Button
-            onClick={() => navigate("/become-member")}
+        
             size="lg"
             className="rounded-xl  hover:scale-105  text-yellow-800  px-5 text-base relative overflow-hidden hover:cursor-pointer group"
           >
+            <Link to={'/become-member'}>
             <span className="relative z-10">
               <TextEffect preset="scale" per="word">
                 Click Here
               </TextEffect>
             </span>
             <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
+            </Link>
           </Button>
         </motion.div>
 

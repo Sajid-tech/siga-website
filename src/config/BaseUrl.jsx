@@ -1,4 +1,4 @@
-// const BASE_URL = "https://agsdemo.in/storeapi/public"
-const BASE_URL = "https://lohiyakitchen.com/storeapi/public"
+
+const BASE_URL = "https://southindiagarmentsassociation.com/public"
 
 export default BASE_URL

@@ -187,7 +187,7 @@ export default function HeroSection() {
                           backgroundSize: "25px 25px",
                         }}
                       ></div>
-                      <div
+                      {/* <div
                         className="absolute inset-0 opacity-10 sm:opacity-20"
                         style={{
                           backgroundImage:
@@ -195,7 +195,7 @@ export default function HeroSection() {
                           backgroundSize: "30px 30px",
                           animation: "moveBackground 20s infinite alternate",
                         }}
-                      ></div>
+                      ></div> */}
                     </div>
 
                     {/* Scrolling Images Container */}

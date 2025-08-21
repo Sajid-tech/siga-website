@@ -3,9 +3,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import BASE_URL from "@/config/BaseUrl";
 
 const fetchBrands = async () => {
-  const response = await fetch("https://southindiagarmentsassociation.com/public/api/getBrand");
+  const response = await fetch(  `${BASE_URL}/api/getBrand`);
   if (!response.ok) throw new Error('Network response was not ok');
   return response.json();
 };
@@ -93,14 +94,14 @@ const ShowCaseCloth = () => {
             backgroundSize: '50px 50px',
           }}
         ></div>
-        <div 
+        {/* <div 
           className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: 'radial-gradient(circle at 70% 30%, #7c3aed 1px, transparent 1.5px), radial-gradient(circle at 30% 70%, #db2777 1px, transparent 1.5px)',
             backgroundSize: '60px 60px',
             animation: 'moveBackground 20s infinite alternate',
           }}
-        ></div>
+        ></div> */}
       </div>
       
 

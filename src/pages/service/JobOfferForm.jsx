@@ -11,6 +11,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
+import BASE_URL from "@/config/BaseUrl";
+import Disclaimer from "@/components/disclaimer/Disclaimer";
 
 const JobOfferForm = () => {
   const [formData, setFormData] = useState({
@@ -124,7 +126,7 @@ const JobOfferForm = () => {
   const jobOfferMutation = useMutation({
     mutationFn: (payload) => {
       return axios.post(
-        "https://southindiagarmentsassociation.com/public/api/create-job-offered",
+          `${BASE_URL}/api/create-job-offered`,
         payload,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -190,8 +192,14 @@ const JobOfferForm = () => {
     payload.append("contact_name", formData.contact_name);
     payload.append("contact_mobile", formData.contact_mobile);
     payload.append("contact_email", formData.contact_email);
-
-    await jobOfferMutation.mutateAsync(payload);
+    try {
+      await jobOfferMutation.mutateAsync(payload);
+    } catch (error) {
+      console.error("Error submitting job offer form:", error);
+    } finally {
+      setLoader(false);
+    }
+   
   };
 
   const CardHeading = useCallback(
@@ -657,7 +665,7 @@ const JobOfferForm = () => {
                       htmlFor="agreeToTerms"
                       className="font-medium text-gray-700"
                     >
-                      I have read, understood and agree to the disclaimer
+                      I have read, understood and agree to the <Disclaimer title="disclaimer" />
                     </label>
                     {errors.agreeToTerms && (
                       <p className="text-red-500 text-xs mt-1">

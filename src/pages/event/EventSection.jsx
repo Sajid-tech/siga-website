@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Highlight } from "@/components/ui/hero-highlight";
-import SectionWithMockup from "./SectionWithMockup";
-import { EventFeatures } from "./EventFeatures";
+import PhotoGallery from "@/components/ui/photo-gallery";
 
 const exampleData1 = {
   title: (
     <>
-      Welcome to
+      Thank You for Making
       <br />
       <motion.p
         initial={{ opacity: 0, y: 20 }}
@@ -15,184 +14,90 @@ const exampleData1 = {
         transition={{ duration: 0.5, ease: [0.4, 0.0, 0.2, 1] }}
       > 
         <Highlight className="text-black dark:text-white">
-          SIGA Garment Fair 2025!
+          SIGA Garment Fair 2025 a Grand Success!
         </Highlight>
       </motion.p>
     </>
   ),
   description: (
     <>
-      Join South India's premier garment industry event hosted by
+      We extend our heartfelt gratitude to all retailers, visitors,
+   
+      exhibitors, and industry partners who joined us for the
       <br />
-      South India Garment Association (SIGA). For over a decade,
+      30th edition of SIGA Garment Fair 2025. Your overwhelming
+   
+      response and participation made this event a tremendous
       <br />
-      we've united manufacturers, distributors, agents, and retailers
-      <br />
-      across the region. Discover new business opportunities,
-      <br />
-      network with industry leaders, and explore the latest trends.
+      success, strengthening the South India garment industry ecosystem.
     </>
   ),
-  primaryImageSrc:
-    "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg",
-  secondaryImageSrc:
-    "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg",
-};
-
-const FireworkParticle = ({ color, angle, delay, centerX, centerY }) => {
-  const speed = 2 + Math.random() * 3;
-  const endX = centerX + Math.cos(angle) * speed * 50;
-  const endY = centerY + Math.sin(angle) * speed * 50;
-  
-  return (
-    <motion.circle
-      cx={centerX}
-      cy={centerY}
-      r={2}
-      fill={color}
-      initial={{ 
-        opacity: 1,
-        cx: centerX,
-        cy: centerY
-      }}
-      animate={{
-        opacity: 0,
-        cx: endX,
-        cy: endY
-      }}
-      transition={{
-        duration: 2,
-        delay: delay * 0.02,
-        ease: "easeOut"
-      }}
-    />
-  );
-};
-
-const Firework = ({ x, y, id }) => {
-  const colorPalette = ["#FFD700", "#C0C0C0", "#FF6B6B", "#FFFFFF"];
-  const particleCount = 30;
-  
-  return (
-    <g key={id}>
-      {Array.from({ length: particleCount }).map((_, i) => {
-        const angle = (Math.PI * 2 * i) / particleCount;
-        return (
-          <FireworkParticle
-            key={i}
-            color={colorPalette[Math.floor(Math.random() * colorPalette.length)]}
-            angle={angle}
-            delay={i}
-            centerX={x}
-            centerY={y}
-          />
-        );
-      })}
-    </g>
-  );
 };
 
 const EventSection = () => {
-  // const [fireworks, setFireworks] = useState([]);
-  // const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  // const containerRef = useRef(null);
-
-  // useEffect(() => {
-  //   const updateDimensions = () => {
-  //     setDimensions({
-  //       width: window.innerWidth,
-  //       height: window.innerHeight
-  //     });
-  //   };
-
-  //   updateDimensions();
-  //   window.addEventListener('resize', updateDimensions);
-  //   return () => window.removeEventListener('resize', updateDimensions);
-  // }, []);
-
-  // useEffect(() => {
-  //   const fireworkInterval = setInterval(() => {
-  //     if (dimensions.width > 0) {
-  //       const newFirework = {
-  //         id: Date.now(),
-  //         x: Math.random() * dimensions.width,
-  //         y: Math.random() * (dimensions.height * 0.5)
-  //       };
-        
-  //       setFireworks(prev => [
-  //         ...prev.slice(-4), 
-  //         newFirework
-  //       ]);
-  //     }
-  //   }, 2500);
-
-  //   return () => clearInterval(fireworkInterval);
-  // }, [dimensions]);
-
-  // const rayCount = 24;
-  // const centerX = dimensions.width / 2;
-  // const centerY = dimensions.height / 2;
-
   return (
-    // ref={containerRef}
-    <div className="relative w-full py-24 bg-white overflow-hidden" >
-  
-      {/* <svg 
-        className="absolute inset-0 z-0 opacity-50 pointer-events-none"
-        width="100%"
-        height="100%"
-        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
-        style={{ width: '100vw', height: '100vh' }}
-      >
-        <defs>
-          <filter id="blur40">
-            <feGaussianBlur stdDeviation="40" />
-          </filter>
-          
-          <linearGradient id="gradientSoft" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255, 215, 0, 0.12)" />
-            <stop offset="50%" stopColor="rgba(192, 192, 192, 0.06)" />
-            <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
-          </linearGradient>
-          
-          <linearGradient id="gradientSharp" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255, 215, 0, 0.35)" />
-            <stop offset="50%" stopColor="rgba(255, 107, 107, 0.25)" />
-            <stop offset="100%" stopColor="rgba(255, 255, 255, 0)" />
-          </linearGradient>
-        </defs>
-        
-    
-        {Array.from({ length: rayCount }).map((_, i) => {
-          const rayAngle = (360 / rayCount) * i;
-          return (
-            <g key={i} transform={`translate(${centerX}, ${centerY}) rotate(${rayAngle})`}>
-              <path
-                d={`M0,0 L${dimensions.width},200 L${dimensions.width},-200 Z`}
-                fill="url(#gradientSoft)"
-                filter="url(#blur40)"
-              />
-              <path
-                d={`M0,0 L${dimensions.width},80 L${dimensions.width},-80 Z`}
-                fill="url(#gradientSharp)"
-              />
-            </g>
-          );
-        })}
-        
-        {fireworks.map(fw => (
-          <Firework key={fw.id} x={fw.x} y={fw.y} id={fw.id} />
-        ))}
-      </svg> */}
-
+    <div className="relative w-full mt-24 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionWithMockup
-          title={exampleData1.title}
-          description={exampleData1.description}
-          primaryImageSrc={exampleData1.primaryImageSrc}
-          secondaryImageSrc={exampleData1.secondaryImageSrc}
-        />
-        <EventFeatures />
+        <section className="relative bg-gradient-to-r from-green-50 via-transparent to-blue-50 py-10 md:py-12 overflow-hidden">
+          <div className="container max-w-[1220px] w-full px-6 md:px-10 relative z-10 mx-auto">
+            
+        
+            <motion.div
+              className="flex flex-col items-center text-center gap-4 max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              viewport={{ once: true }}
+            >
+              <div className="space-y-2 md:space-y-1">
+                <h2 className="text-black text-3xl md:text-[40px] font-semibold leading-tight md:leading-[53px]">
+                  {exampleData1.title}
+                </h2>
+              </div>
+
+              <p className="text-gray-800 text-sm md:text-[15px] leading-6 mt-6">
+                {exampleData1.description}
+              </p>
+            </motion.div>
+<PhotoGallery/>
+
+            <motion.div
+              className=" text-center bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-8 md:p-12"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+            >
+              <h3 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-4">
+                A Heartfelt Thank You to Our Community
+              </h3>
+              <p className="text-gray-600 text-lg max-w-4xl mx-auto mb-6">
+                The 30th SIGA Garment Fair 2025 has concluded with remarkable success, and we couldn't have done it without each and every one of you. To our exhibitors who showcased their finest collections, retailers who discovered new opportunities, visitors who brought energy to the venue, and partners who supported our vision - thank you for making this milestone event truly memorable.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 mt-8">
+                <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
+                  #SIGA2025Success
+                </span>
+                <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
+                  #ThankYou
+                </span>
+                <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
+                  #30thEdition
+                </span>
+              </div>
+            </motion.div>
+
+          </div>
+
+          {/* Decorative bottom gradient */}
+          <div
+            className="absolute w-full h-px bottom-0 left-0 z-0"
+            style={{
+              background:
+                "radial-gradient(50% 50% at 50% 50%, rgba(34,197,94,0.24) 0%, rgba(34,197,94,0) 100%)",
+            }}
+          />
+        </section>
       </div>
     </div>
   );

@@ -7,15 +7,21 @@ import { User } from 'lucide-react';
 import { BackgroundGradient } from './BackgroundGradient';
 import { motion } from "framer-motion";
 import { AnimatedTabs } from './AnimatedTabs';
+import BASE_URL from '@/config/BaseUrl';
 
 const fetchCommitteeByYear = async (year) => {
-  const response = await fetch(`https://southindiagarmentsassociation.com/public/api/getCommitteeByYear/${year}`);
+  const response = await fetch(  `${BASE_URL}/api/getCommitteeByYear/${year}`);
   if (!response.ok) throw new Error('Network response was not ok');
   return response.json();
 };
 
 const fetchCommitteeYears = async () => {
-  const response = await fetch('https://southindiagarmentsassociation.com/public/api/getCommitteeYear');
+  const response = await fetch(  `${BASE_URL}/api/getCommitteeYear`);
+  if (!response.ok) throw new Error('Network response was not ok');
+  return response.json();
+};
+const fetchPasPresident = async () => {
+  const response = await fetch(  `${BASE_URL}/api/getCommitteePastPresident`);
   if (!response.ok) throw new Error('Network response was not ok');
   return response.json();
 };
@@ -27,6 +33,12 @@ const ManagingCommitte = () => {
     queryKey: ['committeeYears'],
     queryFn: fetchCommitteeYears,
   });
+  const { data: pastPresidentData, isLoading: pastPresidentLoading, isError: pastPresidentError } = useQuery({
+    queryKey: ['pastPresident'],
+    queryFn: fetchPasPresident,
+  });
+
+
 
 
   const [selectedYear, setSelectedYear] = useState(
@@ -44,6 +56,7 @@ const ManagingCommitte = () => {
     queryFn: () => fetchCommitteeByYear(selectedTabYear),
     enabled: !!selectedTabYear 
   });
+ 
 
   
   React.useEffect(() => {
@@ -335,6 +348,42 @@ const ManagingCommitte = () => {
               </div>
             )}
           </div>
+          <div
+  className="bg-purple-50/80 grid grid-cols-1 gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky"
+  style={{ top: "100px" }}
+>
+  <h2 className="text-xl sm:text-2xl font-medium text-gray-900 mb-6 text-center col-span-full">
+    OUR PAST PRESIDENT
+  </h2>
+
+  {isLoading ? (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-6 w-full">
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className="flex flex-col items-center">
+          <Skeleton height={200} width={200} className="rounded-md" />
+          <Skeleton height={20} width={120} className="mt-2" />
+        </div>
+      ))}
+    </div>
+  ) : (
+    pastPresidentData?.committee_past_president?.length > 0 && (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-6 w-full">
+        {pastPresidentData.committee_past_president.map((president) => (
+          <div
+            key={president.name}
+            className="bg-white p-3 rounded-lg shadow-sm flex flex-col items-center text-center"
+          >
+            <div className="mx-auto bg-gray-200 rounded-full h-12 w-12 flex items-center justify-center mb-2">
+              <User className="h-6 w-6 text-gray-500" />
+            </div>
+            <h3 className="font-medium text-gray-900 text-sm">{president.name}</h3>
+          </div>
+        ))}
+      </div>
+    )
+  )}
+</div>
+
 
           {/* Past committee member */}
           <div className="bg-blue-50 p-8 md:p-12 rounded-3xl mb-16">

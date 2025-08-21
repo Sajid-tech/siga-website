@@ -66,7 +66,7 @@ export const CardCarousel = ({
                         src={image.src}
                         width={500}
                         height={500}
-                        className="size-full border border-indigo-900 shadow-xl backdrop-blur-2xl shadow-indigo-500 rounded-lg"
+                        className="size-full border border-indigo-900 shadow-xl backdrop-blur-2xl shadow-indigo-200 rounded-lg"
                         alt={image.alt}
                         loading="lazy"
                       />

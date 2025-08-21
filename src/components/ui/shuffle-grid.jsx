@@ -3,6 +3,8 @@
 import { Waves } from "@/components/ui/waves-background";
 import { cn } from "@/lib/utils";
 import CircularTestimonials from "./circular-testimonial";
+import { Button } from "./button";
+import { Link, useNavigate } from "react-router-dom";
 
 const testimonials = [
   {
@@ -65,6 +67,7 @@ const testimonials = [
  
 ];
  const ShuffleHero = () => {
+  const navigate = useNavigate()
   return (
     <div className="w-full pt-8">
       <div className=" mx-auto ">
@@ -100,15 +103,25 @@ const testimonials = [
   These moments capture our ongoing commitment to strengthening connections 
   between industry stakeholders, policymakers, and the business community.
           </p>
-          <button
-            className={cn(
-              "bg-primary text-primary-foreground font-medium py-2 px-4 rounded-md",
-              "transition-all hover:bg-primary/90 active:scale-95",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            )}
-          >
-            Explore SIGA 
-          </button>
+          
+          <Button
+    className="rounded-xl mb-4 px-5 text-base relative cursor-pointer overflow-hidden group hover:bg-gradient-to-r hover:from-yellow-400/30 hover:via-yellow-500/40 hover:to-yellow-400/30"
+           
+             
+            
+              aria-label="Explore Siga"
+            >
+                <Link to={'/efforts'}>
+
+<span className="relative z-10  ">
+ <span>           Explore SIGA </span>
+</span>
+              <span className="absolute inset-0 bg-gradient-to-r from-green-400/30 via-green-500/40 to-green-400/30  
+               
+              
+              opacity-100 transition-opacity duration-300 -skew-x-12" />
+</Link>
+            </Button>
         </div>
   <CircularTestimonials
             testimonials={testimonials}
