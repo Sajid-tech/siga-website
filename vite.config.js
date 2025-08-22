@@ -2,42 +2,59 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import viteCompression from 'vite-plugin-compression'
 import path from 'path'
-// https://vitejs.dev/config/
+
 export default defineConfig({
   plugins: [
     react(),
     viteCompression({
-      algorithm: 'gzip',
-      ext: '.gz',
-      threshold: 10240, 
-      deleteOriginFile: false, 
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 1024,
+      compressionOptions: { level: 11 },
+      deleteOriginFile: false
     })
   ],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://southindiagarmentsassociation.com',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
   },
-   resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
   build: {
-    minify: 'terser', 
+    minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true, 
-        drop_debugger: true,
-      },
-      format: {
-        comments: false,
-      },
+        drop_console: true,
+        drop_debugger: true
+      }
     },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@reduxjs/toolkit', 'react-redux'],
+          utils: ['axios', 'moment']
+        },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: ({ name }) => {
+          if (/\.(css)$/.test(name ?? '')) return 'assets/css/[name]-[hash][extname]'
+          return 'assets/[name]-[hash][extname]'
+        }
+      }
+    },
+    assetsInlineLimit: 4096,
+    cssCodeSplit: true,
+    sourcemap: false
   },
+  server: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  },
+  preview: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable'
+    }
+  }
 })

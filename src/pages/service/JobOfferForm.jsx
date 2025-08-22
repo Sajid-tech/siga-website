@@ -13,8 +13,15 @@ import axios from "axios";
 import { toast } from "sonner";
 import BASE_URL from "@/config/BaseUrl";
 import Disclaimer from "@/components/disclaimer/Disclaimer";
+import useNumericInput from "@/hooks/useNumericInput";
+import TextCaptcha from "@/components/customCaptcha/TextCaptcha";
 
 const JobOfferForm = () => {
+    const [showCaptcha, setShowCaptcha] = useState(false);
+    const [captchaVerified, setCaptchaVerified] = useState(false);
+    const [showCaptchaError, setShowCaptchaError] = useState(false);
+    const [captchaErrorType, setCaptchaErrorType] = useState('');
+
   const [formData, setFormData] = useState({
     company_name: "",
     company_type: "",
@@ -29,7 +36,7 @@ const JobOfferForm = () => {
     contact_email: "",
     agreeToTerms: false,
   });
-
+ const keyDown = useNumericInput();
   const [errors, setErrors] = useState({});
   const [loader, setLoader] = useState(false);
 
@@ -153,6 +160,8 @@ const JobOfferForm = () => {
           contact_email: "",
           agreeToTerms: false,
         });
+        setCaptchaVerified(false);
+        setShowCaptcha(false);
         toast.success(res.msg || "Job offer submitted successfully! ✅");
       } else if (res.code === "400") {
         toast.error(res.heading || "Something went wrong ❌");
@@ -167,15 +176,36 @@ const JobOfferForm = () => {
       setLoader(false);
     },
   });
-
-  const handleSubmit = async (e) => {
+  const handleNext = (e) => {
     e.preventDefault();
-
+    
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+    
+    setShowCaptcha(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    
+  
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+      if (showCaptcha && !captchaVerified) {
+        setShowCaptchaError(true);
+        setCaptchaErrorType('incomplete')
+        return;
+      }
+     
+    
 
     setLoader(true);
     const payload = new FormData();
@@ -275,7 +305,7 @@ const JobOfferForm = () => {
           <CardContent>
             <form
               onSubmit={handleSubmit}
-              className="space-y-4 sm:space-y-6 p-2 sm:p-4 "
+              className="space-y-4 sm:space-y-4 p-2 sm:p-4 "
             >
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Company Name */}
@@ -486,10 +516,10 @@ const JobOfferForm = () => {
                   </label>
                   <div className="">
                     <input
-                      type="number"
+                      type="tel"
                       id="appx_exp"
                       name="appx_exp"
-                      min="0"
+                      onKeyDown={keyDown}
                       value={formData.appx_exp}
                       onChange={handleChange}
                       placeholder="Years of experience"
@@ -596,6 +626,9 @@ const JobOfferForm = () => {
                         name="contact_mobile"
                         value={formData.contact_mobile}
                         onChange={handleChange}
+                             onKeyDown={keyDown}
+                             minLength={10}
+                             maxLength={10}
                         placeholder="Mobile Number"
                         className={`px-3 py-2 w-full rounded-md border-gray-300 shadow-sm focus:outline-none focus:ring-1 text-sm border
                           ${
@@ -646,7 +679,7 @@ const JobOfferForm = () => {
               </div>
 
               {/* Terms Agreement */}
-              <div className="pt-4 sm:pt-6 border-t border-gray-200">
+              {/* <div className="pt-4 sm:pt-6 border-t border-gray-200">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input
@@ -674,10 +707,101 @@ const JobOfferForm = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </div> */}
+              <div className="pt-4 sm:pt-6 border-t border-gray-200">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div className="flex items-start md:w-3/5">
+      <div className="flex items-center h-5">
+      <input
+                      id="agreeToTerms"
+                      name="agreeToTerms"
+                      type="checkbox"
+                      checked={formData.agreeToTerms}
+                      onChange={handleChange}
+                      className={`h-3 w-3 sm:h-4 sm:w-4 rounded border-gray-300 
+                        focus:ring-0 
+                        ${errors.agreeToTerms ? "text-red-600 " : "text-yellow-600"}`}
+                    />
+      </div>
+      <div className="ml-2 sm:ml-3 text-xs sm:text-sm">
+      <label
+                      htmlFor="agreeToTerms"
+                      className="font-medium text-gray-700"
+                    >
+                      I have read, understood and agree to the <Disclaimer title="disclaimer" />
+                    </label>
+                    {errors.agreeToTerms && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors.agreeToTerms}
+                      </p>
+                    )}
+      </div>
+    </div>
+    <div className="md:w-2/5 mt-4 md:mt-0 md:pl-4">
+      {!showCaptcha && (
+        <motion.button
+          onClick={handleNext}
+          className="w-full  flex justify-center py-1.5 sm:py-2.5 px-3.5 sm:px-5.5 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Next
+        </motion.button>
+      )}
+    </div>
+  </div>
+</div>
 
+            
+               
+{showCaptcha && (
+  <div className="pt-2  sm:pt-2 border-t border-gray-200">
+    <TextCaptcha 
+      onVerify={(isVerified) => {
+        setCaptchaVerified(isVerified);
+        if (!isVerified) {
+          setShowCaptchaError(true);
+          setCaptchaErrorType('failed');
+        } else {
+          setShowCaptchaError(false);
+          setCaptchaErrorType('');
+        }
+      }}
+      onRefresh={() => {
+        setCaptchaVerified(false);
+        setShowCaptchaError(false);
+        setCaptchaErrorType('');
+      }}
+      showVerifyButton={false} 
+    />
+    {showCaptchaError && (
+      <p className="text-red-500 text-xs mt-2">
+        {captchaErrorType === 'failed' 
+          ? "CAPTCHA verification failed. Please try again."
+          : "Please complete the CAPTCHA verification"
+        }
+      </p>
+    )}
+  </div>
+)}
+                
+                {/* Submit Button */}
+                {showCaptcha && (
+                  <div className="  ">
+                    <motion.button
+                       type="submit"
+                       disabled={loader}
+                  
+                      className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                        {loader ? "Submitting..." : "Submit Job Opening"}
+                    </motion.button>
+                  </div>
+                )}
               {/* Submit Button */}
-              <div className="pt-4 sm:pt-6">
+              {/* <div className="pt-4 sm:pt-6">
                 <motion.button
                   type="submit"
                   disabled={loader}
@@ -687,7 +811,7 @@ const JobOfferForm = () => {
                 >
                   {loader ? "Submitting..." : "Submit Job Opening"}
                 </motion.button>
-              </div>
+              </div> */}
             </form>
           </CardContent>
         </FeatureCard>
