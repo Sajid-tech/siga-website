@@ -18,8 +18,13 @@ import axios from "axios";
 import { toast } from "sonner";
 import BASE_URL from "@/config/BaseUrl";
 import Disclaimer from "@/components/disclaimer/Disclaimer";
+import TextCaptcha from "@/components/customCaptcha/TextCaptcha";
 
 const PaymentMediation = () => {
+  const [showCaptcha, setShowCaptcha] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [showCaptchaError, setShowCaptchaError] = useState(false);
+  const [captchaErrorType, setCaptchaErrorType] = useState('');
   const [formData, setFormData] = useState({
     company_firm: "",
     address: "",
@@ -93,25 +98,39 @@ const PaymentMediation = () => {
     return newErrors;
   }, [formData]);
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+  // const handleChange = (e) => {
+  //   const { name, value, type, files } = e.target;
 
+  //   if (type === "file") {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [name]: files[0],
+  //     }));
+  //   } else {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //     }));
+  //   }
+  //   setErrors((prev) => ({
+  //       ...prev,
+  //       [name]: "",
+  //     }));
+  // };
+  const handleChange = (e) => {
+    const { name, value, type, files, checked } = e.target;
+    
     if (type === "file") {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: files[0],
-      }));
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+  
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
+  
   const paymenttMutation = useMutation({
     mutationFn: (payload) => {
       return axios.post(
@@ -145,6 +164,8 @@ const PaymentMediation = () => {
             authorisation_letter: null,
             agreeToTerms: false
         });
+        setCaptchaVerified(false);
+        setShowCaptcha(false);
         toast.success(res.msg || "Payment Mediation sent successfully! ✅");
       } else if (res.code === "400") {
         toast.error(res.heading || "Something went wrong ❌");
@@ -158,15 +179,36 @@ const PaymentMediation = () => {
       setLoader(false);
     },
   });
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    
+    setShowCaptcha(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+  
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
+      if (showCaptcha && !captchaVerified) {
+        setShowCaptchaError(true);
+        setCaptchaErrorType('incomplete')
+        return;
+      }
+     
+    
     setLoader(true);
     const payload = new FormData();
     payload.append("company_firm", formData.company_firm);
@@ -185,13 +227,12 @@ const PaymentMediation = () => {
     payload.append("authorisation_letter", formData.authorisation_letter);
     try {
       await paymenttMutation.mutateAsync(payload);
-      console.log("Form submitted:", payload);
+     
     } catch (error) {
       console.error("Error submitting payment mediation form:", error);
     } finally {
       setLoader(false);
     }
-
   };
 
   const CardHeading = useCallback(
@@ -242,7 +283,6 @@ const PaymentMediation = () => {
         {/* Hero Section */}
         <div
           className="text-center mb-8 sm:mb-12 md:mb-16"
-  
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Payment Mediation</Highlight>
@@ -265,7 +305,7 @@ const PaymentMediation = () => {
           <CardContent>
             <form
               onSubmit={handleSubmit}
-              className="space-y-6 sm:space-y-8 p-3 sm:p-4"
+              className="space-y-4 sm:space-y-4 p-3 sm:p-4"
             >
               {/* Supplier's Details Section */}
               <div className="space-y-3 sm:space-y-4">
@@ -355,6 +395,9 @@ const PaymentMediation = () => {
                         name="contact_mobile"
                         value={formData.contact_mobile}
                         onChange={handleChange}
+                        onKeyDown={keyDown}
+                        minLength={10}
+                        maxLength={10}
                         placeholder="9876543210"
                         className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
                             
@@ -529,6 +572,9 @@ const PaymentMediation = () => {
                         name="d_contact_mobile"
                         value={formData.d_contact_mobile}
                         onChange={handleChange}
+                        onKeyDown={keyDown}
+                        minLength={10}
+                        maxLength={10}
                         placeholder="9876543210 "
                         className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
                             
@@ -636,6 +682,8 @@ const PaymentMediation = () => {
                         name="due_amount"
                         value={formData.due_amount}
                         onChange={handleChange}
+                        onKeyDown={keyDown}
+                       
                         placeholder="123456 "
                         className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
                             
@@ -695,7 +743,7 @@ const PaymentMediation = () => {
                       Ledger (Min. 3 Years) *
                     </label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <div className="absolute inset-y-0 left-0  pl-3 flex items-center pointer-events-none">
                         <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                       </div>
                       <input
@@ -703,7 +751,7 @@ const PaymentMediation = () => {
                         id="ledger"
                         name="ledger"
                         onChange={handleChange}
-                        className={`pl-9 sm:pl-10 block w-full text-xs sm:text-sm text-gray-500 
+                        className={`pl-9 sm:pl-10 block w-full text-xs border border-gray-300  rounded-lg sm:text-sm text-gray-500 
                             file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
                             file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
                             file:bg-yellow-50 hover:file:bg-yellow-100
@@ -738,7 +786,7 @@ const PaymentMediation = () => {
                         id="authorisation_letter"
                         name="authorisation_letter"
                         onChange={handleChange}
-                        className={`pl-9 sm:pl-10 block w-full text-xs sm:text-sm text-gray-500 
+                        className={`pl-9 sm:pl-10 block w-full  border border-gray-300 rounded-lg text-xs sm:text-sm text-gray-500 
     file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
     file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
     file:bg-yellow-50 hover:file:bg-yellow-100
@@ -758,39 +806,99 @@ const PaymentMediation = () => {
               </div>
 
               {/* Terms Agreement */}
+              
+              
               <div className="pt-4 sm:pt-6 border-t border-gray-200">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="agreeToTerms"
-                      name="agreeToTerms"
-                      type="checkbox"
-                      checked={formData.agreeToTerms}
-                      onChange={handleChange}
-                      className={`h-3 w-3 sm:h-4 sm:w-4 rounded border-gray-300 
-    focus:ring-0 
-    ${errors.agreeToTerms ? "text-red-600 " : "text-yellow-600"}`}
-                    />
-                  </div>
-                  <div className="ml-2 sm:ml-3 text-xs sm:text-sm">
-                    <label
-                      htmlFor="agreeToTerms"
-                      className="font-medium text-gray-700"
-                    >
-                      I have read, understood and agree to the 
-                       <Disclaimer title="terms-condition" />
-                    </label>
-                    {errors.agreeToTerms && (
-                      <p className="text-red-500 text-xs mt-1">
-                        {errors.agreeToTerms}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+    <div className="flex items-start md:w-3/5">
+      <div className="flex items-center h-5">
+        <input
+          id="agreeToTerms"
+          name="agreeToTerms"
+          type="checkbox"
+          checked={formData.agreeToTerms}
+          onChange={handleChange}
+          className={`h-3 w-3 sm:h-4 sm:w-4 rounded border-gray-300 focus:ring-0 ${
+            errors.agreeToTerms ? "text-red-600" : "text-yellow-600"
+          }`}
+        />
+      </div>
+      <div className="ml-2 sm:ml-3 text-xs sm:text-sm">
+        <label htmlFor="agreeToTerms" className="font-medium text-gray-700">
+          I have read, understood and agree to the <Disclaimer title="terms-condition" />
+        </label>
+        {errors.agreeToTerms && (
+          <p className="text-red-500 text-xs mt-1">{errors.agreeToTerms}</p>
+        )}
+      </div>
+    </div>
+    <div className="md:w-2/5 mt-4 md:mt-0 md:pl-4">
+      {!showCaptcha && (
+        <motion.button
+          onClick={handleNext}
+          className="w-full  flex justify-center py-1.5 sm:py-2.5 px-3.5 sm:px-5.5 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Next
+        </motion.button>
+      )}
+    </div>
+  </div>
+</div>
 
+            
+               
+{showCaptcha && (
+  <div className="pt-2  sm:pt-2 border-t border-gray-200">
+    <TextCaptcha 
+      onVerify={(isVerified) => {
+        setCaptchaVerified(isVerified);
+        if (!isVerified) {
+          setShowCaptchaError(true);
+          setCaptchaErrorType('failed');
+        } else {
+          setShowCaptchaError(false);
+          setCaptchaErrorType('');
+        }
+      }}
+      onRefresh={() => {
+        setCaptchaVerified(false);
+        setShowCaptchaError(false);
+        setCaptchaErrorType('');
+      }}
+      showVerifyButton={false} 
+    />
+    {showCaptchaError && (
+      <p className="text-red-500 text-xs mt-2">
+        {captchaErrorType === 'failed' 
+          ? "CAPTCHA verification failed. Please try again."
+          : "Please complete the CAPTCHA verification"
+        }
+      </p>
+    )}
+  </div>
+)}
+                
+                {/* Submit Button */}
+                {showCaptcha && (
+                  <div className="  ">
+                    <motion.button
+                      type="submit"
+                      disabled={loader}
+                      // onClick={handleSubmit}
+                      className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {loader
+                        ? "Submitting..."
+                        : "Submit Payment Mediation Request"}
+                    </motion.button>
+                  </div>
+                )}
               {/* Submit Button */}
-              <div className="pt-4 sm:pt-6">
+              {/* <div className="pt-4 sm:pt-6">
                 <motion.button
                   type="submit"
                   disabled={loader}
@@ -798,12 +906,13 @@ const PaymentMediation = () => {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                 
                   {loader
-                      ? "Submitting..."
-                      : " Submit Payment Mediation Request"}
+                    ? "Submitting..."
+                    : showCaptcha 
+                      ? "Complete CAPTCHA to Submit"
+                      : "Submit Payment Mediation Request"}
                 </motion.button>
-              </div>
+              </div> */}
             </form>
           </CardContent>
         </FeatureCard>
@@ -822,3 +931,7 @@ const Highlight = ({ children, className }) => {
     </span>
   );
 };
+
+
+
+

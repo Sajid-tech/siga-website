@@ -114,7 +114,7 @@ const BentoCard = ({
         </p>
       </div>
 
-      <div
+      {/* <div
         className={cn(
           "pointer-events-none absolute right-0 bottom-0 flex items-center transition-all duration-300 p-4 md:p-6",
           active ? "opacity-100" : "opacity-0",
@@ -141,7 +141,36 @@ const BentoCard = ({
             />
           </Link>
         </Button>
-      </div>
+      </div> */}
+      {cta && (
+  <div
+    className={cn(
+      "pointer-events-none absolute right-0 bottom-0 flex items-center transition-all duration-300 p-4 md:p-6",
+      active ? "opacity-100" : "opacity-0",
+      "group-hover:opacity-100"
+    )}
+  >
+    <Button
+      asChild
+      size="sm"
+      className="pointer-events-auto relative text-black overflow-hidden"
+    >
+      <Link to={href} className="flex items-center gap-1 relative z-10 hover:cursor-pointer">
+        {cta}
+        <ArrowRight
+          size={14}
+          className="group-hover:translate-x-0.5 transition-transform"
+        />
+        <span
+          className={cn(
+            "absolute inset-0 -z-10 bg-gradient-to-r opacity-100 transition-opacity duration-300 -skew-x-12",
+            colorClasses.gradient
+          )}
+        />
+      </Link>
+    </Button>
+  </div>
+)}
     </motion.div>
   );
 };
@@ -173,18 +202,38 @@ const WhyChoose = () => {
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-blue-100 blur-xl"></div>
       )
     },
+    // {
+    //   name: "Coming Soon",
+    //   description: "Exciting new features are on their way!",
+    //   href: "/service?tab=job_opportunities",
+    //   cta: "Learn more",
+    //   buttonColor: "purple",
+    //   className: cn(
+    //     "lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3",
+    //     "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+    //   ),
+    //   background: (
+    //     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent to-gray-200/50 dark:to-gray-800/50"></div>
+    //   )
+    // },
     {
-      name: "Coming Soon",
-      description: "Exciting new features are on their way!",
-      href: "/service?tab=job_opportunities",
-      cta: "Learn more",
-      buttonColor: "purple",
+      name: "",
+      description: "",
+      href: "",
+      cta: "",
+      buttonColor: "",
       className: cn(
         "lg:row-start-1 lg:row-end-3 lg:col-start-2 lg:col-end-3",
-        "bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+        "bg-[#1C3A6E]"
       ),
       background: (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent to-gray-200/50 dark:to-gray-800/50"></div>
+        <div className="absolute inset-0 flex items-center justify-center p-4">
+          <img 
+            src="/30-years-g.png" 
+            alt="Coming Soon" 
+            className="max-w-full max-h-full object-contain"
+          />
+        </div>
       )
     },
     {

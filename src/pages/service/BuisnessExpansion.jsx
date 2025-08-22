@@ -16,9 +16,15 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
 import BASE_URL from "@/config/BaseUrl";
+import useNumericInput from "@/hooks/useNumericInput";
+import TextCaptcha from "@/components/customCaptcha/TextCaptcha";
 
 const BusinessExpansion = () => {
   const [activeTab, setActiveTab] = useState("products");
+    const [showCaptcha, setShowCaptcha] = useState(false);
+    const [captchaVerified, setCaptchaVerified] = useState(false);
+    const [showCaptchaError, setShowCaptchaError] = useState(false);
+    const [captchaErrorType, setCaptchaErrorType] = useState('');
   const [productsForm, setProductsForm] = useState({
     full_name: "",
     mobile_no: "",
@@ -46,7 +52,7 @@ const BusinessExpansion = () => {
     investment_amount1: "",
     what_you_offer1: "",
   });
-
+  const keyDown = useNumericInput();
   const [errors, setErrors] = useState({});
   const [loader, setLoader] = useState(false);
 
@@ -177,6 +183,8 @@ const BusinessExpansion = () => {
           investment_amount: "",
           what_you_offer: "",
         });
+        setCaptchaVerified(false);
+        setShowCaptcha(false);
         toast.success(
           res.msg || "Looking Products request sent successfully! ✅"
         );
@@ -223,6 +231,8 @@ const BusinessExpansion = () => {
           investment_amount1: "",
           what_you_offer1: "",
         });
+        setCaptchaVerified(false);
+        setShowCaptcha(false);
         toast.success(res.msg || "Distributor request sent successfully! ✅");
       } else if (res.code === "400") {
         toast.error(res.msg || "Something went wrong ❌");
@@ -236,7 +246,24 @@ const BusinessExpansion = () => {
       setLoader(false);
     },
   });
-
+  const handleNext = (e) => {
+    e.preventDefault();
+  
+    let validationErrors = {};
+    if (activeTab === "products") {
+      validationErrors = validateProducts();
+    } else {
+      validationErrors = validateDistributor();
+    }
+  
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+  
+    setShowCaptcha(true);
+  };
+  
   const handleProductsSubmit = async (e) => {
     e.preventDefault();
 
@@ -245,7 +272,11 @@ const BusinessExpansion = () => {
       setErrors(validationErrors);
       return;
     }
-
+    if (showCaptcha && !captchaVerified) {
+      setShowCaptchaError(true);
+      setCaptchaErrorType('incomplete')
+      return;
+    }
     setLoader(true);
     const payload = new FormData();
     payload.append("full_name", productsForm.full_name);
@@ -277,7 +308,11 @@ const BusinessExpansion = () => {
       setErrors(validationErrors);
       return;
     }
-
+    if (showCaptcha && !captchaVerified) {
+      setShowCaptchaError(true);
+      setCaptchaErrorType('incomplete')
+      return;
+    }
     setLoader(true);
     const payload = new FormData();
     payload.append("full_name1", distributorForm.full_name1);
@@ -404,7 +439,7 @@ const BusinessExpansion = () => {
             {activeTab === "products" && (
               <form
                 onSubmit={handleProductsSubmit}
-                className="space-y-4 sm:space-y-6 p-2 sm:p-4"
+                className="space-y-4 sm:space-y-4 p-2 sm:p-4"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   {/* Full Name */}
@@ -442,6 +477,9 @@ const BusinessExpansion = () => {
                     <input
                       type="tel"
                       name="mobile_no"
+                      onKeyDown={keyDown}
+                      minLength={10}
+                      maxLength={10}
                       value={productsForm.mobile_no}
                       onChange={handleProductsChange}
                       placeholder="9876543210"
@@ -693,8 +731,71 @@ const BusinessExpansion = () => {
                   )}
                 </div>
 
+
+
+                {!showCaptcha && (
+        <motion.button
+          onClick={handleNext}
+          className="w-full  flex justify-center py-1.5 sm:py-2.5 px-3.5 sm:px-5.5 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Next
+        </motion.button>
+      )}
+          
+               
+                {showCaptcha && (
+  <div className="pt-2  sm:pt-2 border-t border-gray-200">
+    <TextCaptcha 
+      onVerify={(isVerified) => {
+        setCaptchaVerified(isVerified);
+        if (!isVerified) {
+          setShowCaptchaError(true);
+          setCaptchaErrorType('failed');
+        } else {
+          setShowCaptchaError(false);
+          setCaptchaErrorType('');
+        }
+      }}
+      onRefresh={() => {
+        setCaptchaVerified(false);
+        setShowCaptchaError(false);
+        setCaptchaErrorType('');
+      }}
+      showVerifyButton={false} 
+    />
+    {showCaptchaError && (
+      <p className="text-red-500 text-xs mt-2">
+        {captchaErrorType === 'failed' 
+          ? "CAPTCHA verification failed. Please try again."
+          : "Please complete the CAPTCHA verification"
+        }
+      </p>
+    )}
+  </div>
+)}
+                
                 {/* Submit Button */}
-                <div className="pt-2 sm:pt-4">
+                {showCaptcha && (
+                  <div className="  ">
+                    <motion.button
+                      type="submit"
+                      disabled={loader}
+                     
+                      className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {loader
+                      ? "Submitting..."
+                      : "Submit Looking Products Request"}
+                    </motion.button>
+                  </div>
+                )}
+
+                {/* Submit Button */}
+                {/* <div className="pt-2 sm:pt-4">
                   <motion.button
                     type="submit"
                     className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
@@ -706,7 +807,7 @@ const BusinessExpansion = () => {
                       ? "Submitting..."
                       : "Submit Looking Products Request"}
                   </motion.button>
-                </div>
+                </div> */}
               </form>
             )}
 
@@ -714,7 +815,7 @@ const BusinessExpansion = () => {
             {activeTab === "distributors" && (
               <form
                 onSubmit={handleDistributorSubmit}
-                className="space-y-4 sm:space-y-6 p-2 sm:p-4"
+                className="space-y-4 sm:space-y-4 p-2 sm:p-4"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                   {/* Full Name */}
@@ -752,6 +853,9 @@ const BusinessExpansion = () => {
                     <input
                       type="tel"
                       name="mobile_no1"
+                      onKeyDown={keyDown}
+                      minLength={10}
+                      maxLength={10}
                       value={distributorForm.mobile_no1}
                       onChange={handleDistributorChange}
                       placeholder="9876543210"
@@ -1071,8 +1175,70 @@ const BusinessExpansion = () => {
                   )}
                 </div>
 
+ {!showCaptcha && (
+        <motion.button
+          onClick={handleNext}
+          className="w-full  flex justify-center py-1.5 sm:py-2.5 px-3.5 sm:px-5.5 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          Next
+        </motion.button>
+      )}
+          
+               
+                {showCaptcha && (
+  <div className="pt-2  sm:pt-2 border-t border-gray-200">
+    <TextCaptcha 
+      onVerify={(isVerified) => {
+        setCaptchaVerified(isVerified);
+        if (!isVerified) {
+          setShowCaptchaError(true);
+          setCaptchaErrorType('failed');
+        } else {
+          setShowCaptchaError(false);
+          setCaptchaErrorType('');
+        }
+      }}
+      onRefresh={() => {
+        setCaptchaVerified(false);
+        setShowCaptchaError(false);
+        setCaptchaErrorType('');
+      }}
+      showVerifyButton={false} 
+    />
+    {showCaptchaError && (
+      <p className="text-red-500 text-xs mt-2">
+        {captchaErrorType === 'failed' 
+          ? "CAPTCHA verification failed. Please try again."
+          : "Please complete the CAPTCHA verification"
+        }
+      </p>
+    )}
+  </div>
+)}
+                
                 {/* Submit Button */}
-                <div className="pt-2 sm:pt-4">
+                {showCaptcha && (
+                  <div className="  ">
+                    <motion.button
+                      type="submit"
+                      disabled={loader}
+                     
+                      className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {loader
+                      ? "Submitting..."
+                      : "Submit Looking Distributor Request"}
+                    </motion.button>
+                  </div>
+                )}
+
+
+                {/* Submit Button */}
+                {/* <div className="pt-2 sm:pt-4">
                   <motion.button
                     type="submit"
                     className="w-full flex justify-center py-2 sm:py-3 px-4 sm:px-6 border border-transparent rounded-md shadow-sm text-xs sm:text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500"
@@ -1084,7 +1250,7 @@ const BusinessExpansion = () => {
                       ? "Submitting..."
                       : "Submit Looking Distributor Request"}
                   </motion.button>
-                </div>
+                </div> */}
               </form>
             )}
           </CardContent>

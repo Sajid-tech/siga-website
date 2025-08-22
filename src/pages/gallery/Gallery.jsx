@@ -9,6 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import BASE_URL from '@/config/BaseUrl';
 
+
 const fetchGalleryData = async () => {
   const { data } = await axios.get(  `${BASE_URL}/api/getGallery`);
   return data;
