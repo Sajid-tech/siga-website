@@ -149,6 +149,11 @@ const Gallery = () => {
 
   const Gallery_Data = [
     {
+      question: "Autumn Winter 2025 - Princess Shrine",
+      answer: "Gallery images from our Autumn Winter 2025 event at Princess Shrine",
+      galleryData: galleryData?.gallery_autum_winter_2025_princess_shrine
+    },
+    {
       question: "Autumn Winter 2024 - Princess Shrine",
       answer: "Gallery images from our Autumn Winter 2024 event at Princess Shrine",
       galleryData: galleryData?.gallery_autum_winter_2024_princess_shrine

@@ -3,16 +3,30 @@ import { ArrowRight } from "lucide-react";
 import { BackgroundBeamsWithCollision } from "@/components/ui/background-beams-with-collision";
 import { TextEffect } from "@/components/ui/text-effect";
 import BecomeMember from "@/components/becomeMember/BecomeMember";
-const images = [
-  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2365.JPG",
-  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2466.JPG",
-  "https://southindiagarmentsassociation.com/assets/images/gallery/2024/large/DSC_2480.JPG",
-  "https://i.postimg.cc/1tYVNMRG/tes.png",
-];
+import axios from "axios";
+import BASE_URL from "@/config/BaseUrl";
+import { useQuery } from "@tanstack/react-query";
 
-const duplicatedImages = [...images, ...images];
+
+
+const fetchHeroImages = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/getHeroSection`);
+  return data;
+};
+
+
+
 
 export default function HeroSection() {
+   const { data: heroData, isLoading, isError } = useQuery({
+    queryKey: ['heroImages'],
+    queryFn: fetchHeroImages,
+    staleTime: 60 * 1000 * 5
+  });
+
+
+  const images = heroData?.hero_section || [];
+  const duplicatedImages = [...images, ...images];
   return (
     <>
       <style>{`
@@ -201,7 +215,7 @@ export default function HeroSection() {
                     {/* Scrolling Images Container */}
                     <div className="w-full relative overflow-hidden flex items-center justify-center">
                       <div className="relative z-10 w-full  flex items-center justify-center py-8">
-                        <div className="scroll-container w-full max-w-6xl">
+                        {/* <div className="scroll-container w-full max-w-6xl">
                           <div className="infinite-scroll flex gap-6 w-max">
                             {duplicatedImages.map((image, index) => (
                               <div
@@ -219,7 +233,39 @@ export default function HeroSection() {
                               </div>
                             ))}
                           </div>
-                        </div>
+                        </div> */}
+                         {isLoading ? (
+                          <div className="flex gap-6 w-max">
+                            {[...Array(14)].map((_, index) => (
+                              <div
+                                key={index}
+                                className="flex-shrink-0 w-auto h-48 md:h-64 lg:h-80 rounded-xl overflow-hidden shadow-2xl bg-gray-200 animate-pulse"
+                              ></div>
+                            ))}
+                          </div>
+                        ) : isError ? (
+                          <div className="text-center text-gray-500">
+                            Failed to load images
+                          </div>
+                        ) : (
+                          <div className="scroll-container w-full max-w-6xl">
+                            <div className="infinite-scroll flex gap-6 w-max">
+                              {duplicatedImages.map((image, index) => (
+                                <div
+                                  key={index}
+                                  className="image-item flex-shrink-0 w-auto h-48  md:h-64  lg:h-80 rounded-xl overflow-hidden shadow-2xl"
+                                >
+                                  <img
+                                    src={image}
+                                    alt={`Gallery image ${(index % images.length) + 1}`}
+                                    className="w-auto h-full object-cover"
+                                    loading="lazy"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
