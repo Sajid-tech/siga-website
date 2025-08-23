@@ -12,12 +12,27 @@ import "swiper/css/free-mode";
 import "swiper/css/mousewheel";
 import { TextEffect } from "./text-effect";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import BASE_URL from "@/config/BaseUrl";
+import { useQuery } from "@tanstack/react-query";
+
+
+const fetchEventGallery = async () => {
+  const { data } = await axios.get(`${BASE_URL}/api/getEventGallery`);
+  return data;
+};
 
 const PhotoGallery = ({ animationDelay = 0.5 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [swiperInstance, setSwiperInstance] = useState(null);
   const swiperRef = useRef(null);
   const navigate = useNavigate()
+   const { data: galleryData, isLoading, isError } = useQuery({
+    queryKey: ['eventGallery'],
+    queryFn: fetchEventGallery,
+    staleTime: 60 * 1000 * 5
+  });
+
   useEffect(() => {
     const visibilityTimer = setTimeout(() => {
       setIsVisible(true);
@@ -40,16 +55,23 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
     }
   }, [swiperInstance]);
 
-  const photos = [
-    { id: 1, zIndex: 20, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 2, zIndex: 25, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 3, zIndex: 30, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 4, zIndex: 35, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 5, zIndex: 20, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 6, zIndex: 25, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 7, zIndex: 30, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-    { id: 8, zIndex: 35, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
-  ];
+   const photos = galleryData?.event_gallery?.map((src, index) => ({
+    id: index + 1,
+    zIndex: 20 + (index % 4) * 5, 
+    direction: index % 2 === 0 ? "left" : "right", 
+    src: src
+  })) || [];
+
+  // const photos = [
+  //   { id: 1, zIndex: 20, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 2, zIndex: 25, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 3, zIndex: 30, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 4, zIndex: 35, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 5, zIndex: 20, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 6, zIndex: 25, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 7, zIndex: 30, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  //   { id: 8, zIndex: 35, direction: "right", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
+  // ];
 
   const handleMouseEnter = () => swiperInstance?.autoplay.stop();
   const handleMouseLeave = () => swiperInstance?.autoplay.start();
@@ -83,45 +105,60 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
               animate={{ opacity: isVisible ? 1 : 0 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
             >
-              <Swiper
-                ref={swiperRef}
-                id="photo-gallery-swiper"
-                modules={[Autoplay, Mousewheel, FreeMode]}
-                spaceBetween={20}
-                slidesPerView={"auto"}
-                centeredSlides={true}
-                freeMode={{
-                  enabled: true,
-                  momentum: true,
-                  momentumRatio: 0.7,
-                  momentumVelocityRatio: 0.8,
-                }}
-                mousewheel={{
-                  sensitivity: 0.8,
-                  releaseOnEdges: true,
-                  eventsTarget: 'container',
-                }}
-                autoplay={{
-                  delay: 2500,
-                  disableOnInteraction: false,
-                }}
-                speed={800}
-                onSwiper={setSwiperInstance}
-                className="!py-10 w-full"
-              >
-                {photos.map((photo) => (
-                  <SwiperSlide key={photo.id} className="!w-auto pointer-events-auto">
-                    <Photo
-                      width={220}
-                      height={220}
-                      src={photo.src}
-                      alt="Gallery photo"
-                      direction={photo.direction}
-                      zIndex={photo.zIndex}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+           {isLoading ? (
+                          <div className="flex gap-6 w-max">
+                            {[...Array(8)].map((_, index) => (
+                              <div
+                                key={index}
+                                className="flex-shrink-0 w-[220px] h-[220px] rounded-3xl bg-gray-200 animate-pulse"
+                              ></div>
+                            ))}
+                          </div>
+                        ) : isError ? (
+                          <div className="text-center text-gray-500 py-10">
+                            Failed to load gallery images
+                          </div>
+                        ) : (
+                          <Swiper
+                            ref={swiperRef}
+                            id="photo-gallery-swiper"
+                            modules={[Autoplay, Mousewheel, FreeMode]}
+                            spaceBetween={20}
+                            slidesPerView={"auto"}
+                            centeredSlides={true}
+                            freeMode={{
+                              enabled: true,
+                              momentum: true,
+                              momentumRatio: 0.7,
+                              momentumVelocityRatio: 0.8,
+                            }}
+                            mousewheel={{
+                              sensitivity: 0.8,
+                              releaseOnEdges: true,
+                              eventsTarget: 'container',
+                            }}
+                            autoplay={{
+                              delay: 2500,
+                              disableOnInteraction: false,
+                            }}
+                            speed={800}
+                            onSwiper={setSwiperInstance}
+                            className="!py-10 w-full"
+                          >
+                            {photos.map((photo) => (
+                              <SwiperSlide key={photo.id} className="!w-auto pointer-events-auto">
+                                <Photo
+                                  width={220}
+                                  height='100%'
+                                  src={photo.src}
+                                  alt="Gallery photo"
+                                  direction={photo.direction}
+                                  zIndex={photo.zIndex}
+                                />
+                              </SwiperSlide>
+                            ))}
+                          </Swiper>
+                        )}
             </motion.div>
           </div>
 
