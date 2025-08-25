@@ -59,10 +59,10 @@ const EventSection = () => {
                 {exampleData1.description}
               </p>
             </motion.div>
-<PhotoGallery/>
+
 
             <motion.div
-              className=" text-center bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-8 md:p-12"
+              className=" text-center mt-5 bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl p-8 md:p-12"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
@@ -86,9 +86,9 @@ const EventSection = () => {
                 </span>
               </div>
             </motion.div>
-
+            <PhotoGallery/>
           </div>
-
+         
           {/* Decorative bottom gradient */}
           <div
             className="absolute w-full h-px bottom-0 left-0 z-0"

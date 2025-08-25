@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -11,7 +12,7 @@ import {
   Phone,
   Twitter,
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import BASE_URL from '@/config/BaseUrl';
@@ -99,7 +100,7 @@ export default function Footer() {
     queryKey: ['visitorCount'],
     queryFn: fetchVisitorcount,
   });
-  const navigate = useNavigate()
+
 
   const vistorCounts = React.useMemo(() => {
     if (!visitorData || !visitorData.data) return [];
@@ -179,7 +180,7 @@ export default function Footer() {
             </p>
 
             <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
-              {socialLinks.map(({ icon: Icon, label, href }) => (
+              {socialLinks.map(({ icon: Icon,label, href }) => (
                 <li key={label}>
                   <Link
                     to={href}

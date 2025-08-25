@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Heart, Users, Mail, Trophy, ChevronRight, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import loaderOuter from '../../assets/images/loaderouter.png';
+import loaderNew from '../../assets/images/loader-new.png';
 const buttonColorMap = {
   red: {
     gradient: "from-red-400/70 via-red-500/60 to-red-400/70",
@@ -234,16 +236,16 @@ const WhyChoose = () => {
             className="max-w-full max-h-full object-contain"
           /> */}
     
-      <div className="relative w-44  h-44 sm:w-56 sm:h-56 ">
+      <div className="relative w-44  h-44 sm:w-72 sm:h-72 ">
         
         <img
-          src="./loader/loaderouter.png"
+          src={loaderOuter}
           alt="outerlayer"
           className="absolute top-0 left-0 w-full h-full animate-[spin_20s_linear_infinite]"
         />
        
         <img
-          src="./loader/loader-new.png"
+          src={loaderNew}
           alt="insidelayer"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
         />

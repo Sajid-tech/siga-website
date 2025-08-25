@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Suspense, useEffect } from "react";
 
 import  HeroSection  from "./HeroSection";
@@ -32,7 +33,7 @@ const Home = () => {
   const mutation = useMutation({
     mutationFn: updateVisitorCount,
     onSuccess: (data) => {
-      console.log("Visitor count updated:", data);
+console.log('visitor count',data)
       queryClient.invalidateQueries(["visitorCount"]);
     },
     onError: (error) => {

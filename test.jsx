@@ -1,100 +1,122 @@
-{
-    "name": "siga-website",
-    "private": true,
-    "version": "1.0.0",
-    "type": "module",
-    "scripts": {
-      "dev": "vite",
-      "build": "vite build",
-      "build:analyze": "vite build --mode analyze",
-      "build:preview": "vite build && vite preview",
-      "build:prod": "NODE_ENV=production vite build",
-      "lint": "eslint . --ext .js,.jsx --fix",
-      "lint:css": "stylelint \"src/**/*.css\" \"src/**/*.jsx\"",
-      "preview": "vite preview",
-      "type-check": "tsc --noEmit",
-      "bundle-analyze": "npm run build:analyze && npx serve dist",
-      "optimize-images": "node scripts/optimize-images.js",
-      "prebuild": "npm run optimize-images && npm run lint",
-      "postbuild": "npm run bundle-analyze"
-    },
-    "dependencies": {
-      "@gsap/react": "^2.1.2",
-      "@radix-ui/react-dialog": "^1.1.14",
-      "@radix-ui/react-label": "^2.1.7",
-      "@radix-ui/react-radio-group": "^1.3.7",
-      "@radix-ui/react-select": "^2.2.5",
-      "@radix-ui/react-separator": "^1.1.7",
-      "@radix-ui/react-slot": "^1.2.3",
-      "@radix-ui/react-tabs": "^1.1.12",
-      "@radix-ui/react-toggle-group": "^1.1.11",
-      "@reduxjs/toolkit": "^2.8.2",
-      "@tailwindcss/postcss": "^4.1.11",
-      "@tanstack/react-query": "^5.83.0",
-      "axios": "^1.10.0",
-      "class-variance-authority": "^0.7.1",
-      "clsx": "^2.1.1",
-      "crypto-js": "^4.2.0",
-      "embla-carousel-react": "^8.6.0",
-      "framer-motion": "^12.23.12",
-      "gsap": "^3.13.0",
-      "lucide-react": "^0.525.0",
-      "moment": "^2.30.1",
-      "motion": "^12.23.12",
-      "next-themes": "^0.4.6",
-      "ogl": "^1.0.11",
-      "postcss": "^8.5.6",
-      "react": "^19.1.0",
-      "react-dom": "^19.1.0",
-      "react-lazy-load-image-component": "^1.6.3",
-      "react-loading-skeleton": "^3.5.0",
-      "react-masonry-css": "^1.0.16",
-      "react-redux": "^9.2.0",
-      "react-router-dom": "^7.6.3",
-      "redux-persist": "^6.0.0",
-      "sonner": "^2.0.7",
-      "swiper": "^11.2.10",
-      "tailwind-merge": "^3.3.1",
-      "tailwindcss": "^4.1.11",
-      "vaul": "^1.1.2"
-    },
-    "devDependencies": {
-      "@babel/preset-react": "^7.25.9",
-      "@types/react": "^19.1.8",
-      "@types/react-dom": "^19.1.6",
-      "@vitejs/plugin-legacy": "^5.2.0",
-      "@vitejs/plugin-react": "^4.2.1",
-      "autoprefixer": "^10.4.20",
-      "babel-plugin-react-compiler": "^0.0.0-experimental-9d75f1b",
-      "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-      "cssnano": "^7.0.6",
-      "globals": "^16.3.0",
-      "rollup-plugin-visualizer": "^5.12.0",
-      "sharp": "^0.33.5",
-      "stylelint": "^16.9.0",
-      "stylelint-config-standard": "^36.0.1",
-      "tw-animate-css": "^1.3.6",
-      "vite": "^5.2.10",
-      "vite-plugin-chunk-split": "^1.0.2",
-      "vite-plugin-compression": "^0.5.1",
-      "vite-plugin-html": "^3.2.2",
-      "vite-plugin-pwa": "^1.0.2",
-      "vite-bundle-visualizer": "^1.1.0"
-    },
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
-    },
-    "engines": {
-      "node": ">=18.0.0",
-      "npm": ">=8.0.0"
-    }
-  }
+// import { defineConfig } from 'vite'
+// import react from '@vitejs/plugin-react'
+// import viteCompression from 'vite-plugin-compression'
+// import { VitePWA } from 'vite-plugin-pwa'
+// import { visualizer } from 'rollup-plugin-visualizer'
+// import path from 'path'
+// import { fileURLToPath } from 'url'
+
+// // 🔧 Fix __dirname in ESM
+// const __filename = fileURLToPath(import.meta.url)
+// const __dirname = path.dirname(__filename)
+
+// export default defineConfig({
+//   plugins: [
+//     react(),
+//     viteCompression({
+//       algorithm: 'brotliCompress',
+//       ext: '.br',
+//       threshold: 1024,
+//       compressionOptions: { level: 11 },
+//       deleteOriginFile: false
+//     }),
+//     // Add VitePWA plugin
+//     VitePWA({
+//       registerType: 'autoUpdate',
+//       includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+//       manifest: {
+//         name: 'SIGA Website',
+//         short_name: 'SIGA',
+//         description: 'SIGA Website',
+//         theme_color: '#ffffff',
+//         background_color: '#ffffff',
+//         display: 'standalone',
+//         start_url: '/',
+//         icons: [
+//           {
+//             src: '/siga-fav.png',
+//             sizes: '192x192',
+//             type: 'image/png'
+//           },
+//           {
+//             src: 'siga-fav.png',
+//             sizes: '512x512',
+//             type: 'image/png'
+//           },
+//           {
+//             src: 'siga-fav.png',
+//             sizes: '512x512',
+//             type: 'image/png',
+//             purpose: 'any maskable'
+//           }
+//         ]
+//       },
+//       workbox: {
+//         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+//         runtimeCaching: [
+//           {
+//             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+//             handler: 'CacheFirst',
+//             options: {
+//               cacheName: 'images',
+//               expiration: {
+//                 maxEntries: 60,
+//                 maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+//               }
+//             }
+//           }
+//         ]
+//       }
+//     }),
+//     // Add visualizer plugin (only in production)
+//     process.env.NODE_ENV === 'production' && visualizer({
+//       filename: 'dist/stats.html',
+//       open: false,
+//       gzipSize: true,
+//       brotliSize: true
+//     })
+//   ].filter(Boolean),
+//   resolve: {
+//     alias: {
+//       '@': path.resolve(__dirname, './src')
+//     }
+//   },
+//   build: {
+//     minify: 'terser',
+//     terserOptions: {
+//       compress: {
+//         drop_console: true,
+//         drop_debugger: true
+//       }
+//     },
+//     rollupOptions: {
+//       output: {
+//         manualChunks: {
+//           vendor: ['react', 'react-dom'],
+//           router: ['react-router-dom'],
+//           ui: ['@reduxjs/toolkit', 'react-redux'],
+//           utils: ['axios', 'moment']
+//         },
+//         chunkFileNames: 'assets/js/[name]-[hash].js',
+//         entryFileNames: 'assets/js/[name]-[hash].js',
+//         assetFileNames: ({ name }) => {
+//           if (/\.(css)$/.test(name ?? '')) return 'assets/css/[name]-[hash][extname]'
+//           return 'assets/[name]-[hash][extname]'
+//         }
+//       }
+//     },
+//     assetsInlineLimit: 4096,
+//     cssCodeSplit: true,
+//     sourcemap: false
+//   },
+//   server: {
+//     headers: {
+//       'Cache-Control': 'public, max-age=31536000, immutable'
+//     }
+//   },
+//   preview: {
+//     headers: {
+//       'Cache-Control': 'public, max-age=31536000, immutable'
+//     }
+//   }
+// })

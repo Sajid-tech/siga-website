@@ -43,15 +43,7 @@ const JobRequireList = () => {
   
   const paginateSeekers = (pageNumber) => setCurrentPageSeekers(pageNumber);
 
-  const CardHeading = ({ icon: Icon, title, description }) => (
-    <div className="px-2">
-      <span className="text-muted-foreground flex items-center gap-2">
-        <Icon className="size-4" />
-        {title}
-      </span>
-      <p className="mt-4 text-2xl font-semibold">{description}</p>
-    </div>
-  );
+ 
 
   const FeatureCard = ({ children, className }) => (
     <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>

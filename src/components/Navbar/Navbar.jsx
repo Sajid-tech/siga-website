@@ -41,6 +41,20 @@ const Navbar = () => {
   const logoHeight = useTransform(scrollY, [0, 100], ["2.5rem", "2rem"]);
   const navbarHeight = useTransform(scrollY, [0, 100], ["7rem", "5rem"]);
 
+
+
+   const logoWrapperHeight = useTransform(scrollY, [50, 100], ["auto", "4rem"]);
+    const logoWrapperPadding = useTransform(scrollY, [50, 100], ["0px", "8px"]);
+    const logoWrapperBg = useTransform(scrollY, [50, 100], ["transparent", "rgba(255, 255, 255, 1)"]);
+    const logoWrapperRadius = useTransform(scrollY, [50, 100], ["0px", "16px"]);
+  
+    const navMenuHeight = useTransform(scrollY, [50, 100], ["auto", "4rem"]);
+    const navMenuPadding = useTransform(scrollY, [50, 100], ["0px", "8px"]);
+    const navMenuBg = useTransform(scrollY, [50, 100], ["transparent", "rgba(255, 255, 255, 1)"]);
+    const navMenuRadius = useTransform(scrollY, [50, 100], ["0px", "16px"]);
+    const navMenuFontSize = useTransform(scrollY, [0, 100], ["1rem", "0.875rem"]);
+
+
   const navbarVariants = {
     hidden: { 
       y: -20, 
@@ -140,12 +154,12 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/")}
-              style={{
-                height: useTransform(scrollY, [50, 100], ["auto", "4rem"]),
-                padding: useTransform(scrollY, [50, 100], ["0px", "8px"]),
-                backgroundColor: useTransform(scrollY, [50, 100], ["transparent", "rgba(255, 255, 255, 1)"]),
-                borderRadius: useTransform(scrollY, [50, 100], ["0px", "16px"])
-              }}
+                style={{
+                             height: logoWrapperHeight,
+                             padding: logoWrapperPadding,
+                             backgroundColor: logoWrapperBg,
+                             borderRadius: logoWrapperRadius
+                           }}
             >
               <motion.img
                 src="https://southindiagarmentsassociation.com/assets/images/logo.png"
@@ -160,12 +174,12 @@ const Navbar = () => {
             {/* Desktop Navigation Menu */}
             <motion.div 
               className="hidden md:flex items-center space-x-1"
-              style={{
-                height: useTransform(scrollY, [50, 100], ["auto", "4rem"]),
-                padding: useTransform(scrollY, [50, 100], ["0px", "8px"]),
-                backgroundColor: useTransform(scrollY, [50, 100], ["transparent", "rgba(255, 255, 255, 1)"]),
-                borderRadius: useTransform(scrollY, [50, 100], ["0px", "16px"])
-              }}
+             style={{
+                             height: navMenuHeight,
+                             padding: navMenuPadding,
+                             backgroundColor: navMenuBg,
+                             borderRadius: navMenuRadius
+                           }}
             >
               {menuItems.map((item) => (
                 <motion.div
@@ -179,7 +193,7 @@ const Navbar = () => {
                     onClick={() => navigate(item.path)}
                     className="px-3 py-2 rounded-md cursor-pointer font-medium text-gray-700 hover:text-blue-600 transition-all duration-300"
                     style={{
-                      fontSize: useTransform(scrollY, [0, 100], ["1rem", "0.875rem"])
+                      fontSize: navMenuFontSize
                     }}
                   >
                     {item.name}

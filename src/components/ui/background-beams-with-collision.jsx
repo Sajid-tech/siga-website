@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import React, { useRef, useState, useEffect } from "react";
