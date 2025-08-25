@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
     useEffect,
     useRef,
@@ -24,7 +25,7 @@ import { Button } from "./button";
     testimonials,
     autoplay = true,
     colors = {},
-    fontSizes = {},
+   
   }) => {
     // Color & font config
     const colorArrowBg = colors.arrowBackground ?? "#141414";

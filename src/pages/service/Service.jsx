@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ChevronRight, Briefcase, CreditCard, Newspaper, TrendingUp, Users, MapPin } from 'lucide-react';
 
 import PaymentMediation from './PaymentMediation';
@@ -7,11 +7,12 @@ import BuisnessExpansion from './BuisnessExpansion';
 
 import JobOpportunities from './JobOppurtunities';
 import { Link, useSearchParams } from 'react-router-dom';
-
+import loaderOuter from '../../assets/images/loaderouter.png';
+import loaderNew from '../../assets/images/loader-new.png';
 const Service = () => {
   const [activeMenu, setActiveMenu] = useState('job-opportunities');
   const [searchParams, setSearchParams] = useSearchParams();
-  const menuItems = [
+  const menuItems = useMemo(() => [
     {
       id: 'job-opportunities',
       title: 'Job Opportunities',
@@ -39,10 +40,8 @@ const Service = () => {
       param: 'business_expansion',
       icon: TrendingUp,
       description: 'Growth solutions'
-    },
-   
-   
-  ];
+    }
+  ], []);
 
  
   useEffect(() => {
@@ -53,7 +52,7 @@ const Service = () => {
         setActiveMenu(matchingItem.id);
       }
     }
-  }, [searchParams]);
+  }, [menuItems, searchParams]);
 
  
   // const handleMenuClick = (menuId) => {
@@ -119,7 +118,7 @@ const Service = () => {
                     onAuxClick={(e) => {
                       
                       if (e.button === 1) {
-                       
+                       // Future: handle middle-click if needed
                       }
                     }}
             
@@ -153,11 +152,33 @@ const Service = () => {
                   );
                 })}
               </nav>
-              <nav className=" hidden lg:block  space-y-5 mt-5 bg-white p-1 border border-red-200 ">
-              <img
+              <nav className=" hidden lg:block msx-auto  space-y-5 mt-5  bg-white p-1 border border-red-200 ">
+              {/* <img
               src='https://southindiagarmentsassociation.com/assets/images/banner/about.jpg'
               alt='event-ads'
-              />
+              /> */}
+               <div className=" inset-0 flex items-center bg-[#0b2655] justify-center p-4">
+                        {/* <img 
+                          src="/30-years-g.png" 
+                          alt="Coming Soon" 
+                          className="max-w-full max-h-full object-contain"
+                        /> */}
+                  
+                    <div className="relative w-32  h-32  ">
+                      
+                      <img
+                        src={loaderOuter}
+                        alt="outerlayer"
+                        className="absolute top-0  left-0 right-5 w-full h-full "
+                      />
+                     
+                      <img
+                        src={loaderNew}
+                        alt="insidelayer"
+                        className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
+                      />
+                    </div>
+                      </div>
               </nav>
             </div>
           </div>

@@ -86,7 +86,7 @@ class Noise {
   }
 }
 
-export function Waves({
+export default function Waves({
   lineColor = "hsl(var(--foreground))",
   backgroundColor = "transparent",
   waveSpeedX = 0.0125,
@@ -224,7 +224,7 @@ export function Waves({
         backgroundColor,
       }}
       className={cn(
-        "absolute top-0 left-0 w-full h-full overflow-hidden",
+        "absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[85rem] mx-auto  h-full overflow-hidden",
         className
       )}
     >

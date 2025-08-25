@@ -8,6 +8,7 @@ import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import BASE_URL from '@/config/BaseUrl';
+import moment from 'moment';
 
 const JobOpeningList = () => {
 
@@ -25,12 +26,12 @@ const JobOpeningList = () => {
   const jobOpeningsData = jobOffersApiData?.data?.map((job, index) => ({
     id: index + 1,
     position: job.profile_employee || 'Not specified',
-    type: 'Full-time',
+  
     location: job.location || 'Not specified',
     salary: job.appx_sal || 'Salary not specified',
-    posted: 'Recently', 
+    posted: job.company_validity, 
     company_name: job.company_name,
-    experience: job.appx_exp,
+    experience: `${job.appx_exp} Years`,
     validity: job.company_validity
   })) || [];
   
@@ -121,7 +122,7 @@ const JobOpeningList = () => {
         </div>
 
         <div className="mb-16">
-          <motion.h2 
+          <motion.h1 
             className="font-bold text-gray-800 mb-6 flex flex-row items-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -129,10 +130,10 @@ const JobOpeningList = () => {
             viewport={{ once: true }}
           >
             <Briefcase className="w-6 h-6 text-yellow-600 mr-2" />
-            <h1 className="text-md sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-900">
+            <span className="text-md sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-900">
               Current Job Openings
-            </h1>
-          </motion.h2>
+            </span>
+          </motion.h1>
           
           <FeatureCard>
             <div className="overflow-x-auto">
@@ -143,7 +144,7 @@ const JobOpeningList = () => {
                       Position
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Job Type
+                      Experience
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Location
@@ -152,7 +153,7 @@ const JobOpeningList = () => {
                       Salary
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Posted
+                      Validity
                     </th>
                   </tr>
                 </thead>
@@ -199,12 +200,8 @@ const JobOpeningList = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            job.type === 'Full-time' ? 'bg-green-100 text-green-800' : 
-                            job.type === 'Part-time' ? 'bg-blue-100 text-blue-800' : 
-                            'bg-purple-100 text-purple-800'
-                          }`}>
-                            {job.type}
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full  text-gray-700`}>
+                            {job.experience} 
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -217,7 +214,7 @@ const JobOpeningList = () => {
                           {job.salary}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {job.posted}
+                          {moment(job.posted).format('DD-MMM-YYYY')}
                         </td>
                       </motion.tr>
                     ))

@@ -197,7 +197,7 @@ const CardDecorator = () => (
     </>
 );
 
-const CardHeading = ({ icon: Icon, title, description }) => (
+const CardHeading = ({  title, description }) => (
     <div className="p-6">
         <span className="text-muted-foreground flex items-center gap-2">
             <Icon className="size-4" />

@@ -14,7 +14,7 @@ const FeaturedAbout = () => {
 
   return (
     <div className="w-full py-8 ">
-      <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[85rem] mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-4xl font-bold text-gray-900">Pictures of Siga Fair</h1>

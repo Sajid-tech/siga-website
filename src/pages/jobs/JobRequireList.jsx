@@ -8,6 +8,7 @@ import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import BASE_URL from '@/config/BaseUrl';
+import moment from 'moment';
 
 const JobRequireList = () => {
  
@@ -25,10 +26,10 @@ const JobRequireList = () => {
   const jobSeekersData = jobSeekersApiData?.data?.map((seeker, index) => ({
     id: index + 1,
     name: seeker.full_name || 'Anonymous',
-    position: seeker.designation || seeker.job_profile || 'Not specified',
+    profile:   seeker.job_profile || '-',
     experience: seeker.exp_salary ? `Expected salary: ${seeker.exp_salary}` : 'Salary not specified',
-    location: 'Location not specified', 
-    availability: 'Available', 
+    designation: seeker.designation, 
+
     validity: seeker.staff_validity
   })) || [];
     
@@ -42,15 +43,7 @@ const JobRequireList = () => {
   
   const paginateSeekers = (pageNumber) => setCurrentPageSeekers(pageNumber);
 
-  const CardHeading = ({ icon: Icon, title, description }) => (
-    <div className="px-2">
-      <span className="text-muted-foreground flex items-center gap-2">
-        <Icon className="size-4" />
-        {title}
-      </span>
-      <p className="mt-4 text-2xl font-semibold">{description}</p>
-    </div>
-  );
+ 
 
   const FeatureCard = ({ children, className }) => (
     <Card className={cn('group relative rounded-none shadow-zinc-950/5', className)}>
@@ -137,9 +130,9 @@ const JobRequireList = () => {
             viewport={{ once: true }}
           >
             <User className="w-6 h-6 text-purple-600 mr-2" />
-            <h1 className="text-md sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-900 ">
+            <span className="text-md sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-900 ">
               Job Seekers
-            </h1>
+            </span>
           </motion.h2>
           
           <FeatureCard>
@@ -151,13 +144,13 @@ const JobRequireList = () => {
                       Candidate
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Seeking Position
+                    Job Profile
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Experience
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Location
+                    Designation
                     </th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Availability
@@ -206,7 +199,7 @@ const JobRequireList = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{seeker.position}</div>
+                          <div className="text-sm text-gray-900">{seeker.profile}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
@@ -215,15 +208,13 @@ const JobRequireList = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           <div className="flex items-center">
-                            <Map className="h-4 w-4 text-gray-400 mr-1" />
-                            {seeker.location}
+                         
+                            {seeker.designation}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            seeker.availability === 'Immediate' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                          }`}>
-                            {seeker.availability}
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full `}>
+                            {moment(seeker.validity).format("DD-MMM-YYYY")}
                           </span>
                         </td>
                       </motion.tr>

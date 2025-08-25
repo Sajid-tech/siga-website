@@ -1,73 +1,31 @@
 
 
-import { Waves } from "@/components/ui/waves-background";
+
 import { cn } from "@/lib/utils";
 import CircularTestimonials from "./circular-testimonial";
 import { Button } from "./button";
 import { Link, useNavigate } from "react-router-dom";
+import Waves from "./waves-background";
+import { useQuery } from "@tanstack/react-query";
+import BASE_URL from "@/config/BaseUrl";
+import axios from "axios";
 
-const testimonials = [
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/1.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/2.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/3.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/4.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/5.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/6.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/7.jpg",
-  },
-  {
-    quote:
-      "Meeting with Honarable Prime Minister Narendara Modi",
- 
-    src:
-      "./efforts/8.jpg",
-  },
- 
- 
-];
+
  const ShuffleHero = () => {
   const navigate = useNavigate()
+  const { data: effortsData = {}, isLoading, isError } = useQuery({
+      queryKey: ["efforts"],
+      queryFn: async () => {
+        const response = await axios.get(`${BASE_URL}/api/getEfforts`);
+        return response.data;
+      },
+    });
+  
+    const testimonials =
+      effortsData?.data?.map((effort) => ({
+        quote: `${effort.efforts_heading}`,
+        src: `${effortsData.image_url}${effort.efforts_image}`,
+      })) || [];
   return (
     <div className="w-full pt-8">
       <div className=" mx-auto ">
@@ -123,6 +81,7 @@ const testimonials = [
 </Link>
             </Button>
         </div>
+        {!isLoading && !isError && testimonials.length > 0 && (
   <CircularTestimonials
             testimonials={testimonials}
             autoplay={true}
@@ -140,6 +99,7 @@ const testimonials = [
               quote: "20px",
             }}
           />
+        )}
       </div>
     </section>
     </div>

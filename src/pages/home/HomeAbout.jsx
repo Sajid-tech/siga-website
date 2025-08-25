@@ -68,9 +68,9 @@ export default function HomeAbout() {
   return (
     <section
       id="about-section"
-      className="w-full py-24 px-4 bg-gradient-to-bl from-blue-50 via-transparent to-red-50 text-gray-800 relative"
+      className="w-full  py-24 px-4 bg-gradient-to-bl from-blue-50 via-transparent to-red-50 text-gray-800 relative"
     >
-      <div className="container mx-auto max-w-6xl relative z-10">
+      <div className="container mx-auto  max-w-6xl relative z-10">
         <div className="flex flex-col items-center mb-6">
           <span className="text-blue-500 font-medium mb-2 flex items-center gap-2">
             <Zap className="w-4 h-4" /> ABOUT OUR ASSOCIATION

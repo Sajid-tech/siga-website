@@ -137,7 +137,10 @@ const Efforts = () => {
 
 
         {!isLoading && !isError && effortsData.data && (
-          <div className="relative">
+          <div 
+            className="relative grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-20"
+          
+          >
   
             <div className="absolute  left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-indigo-300 to-purple-300 transform -translate-x-1/2"></div>
             
@@ -145,46 +148,51 @@ const Efforts = () => {
               <motion.div 
                 key={index}
                 className={cn(
-                  "mb-5 md:mb-0  flex flex-col md:flex-row",
-                  index % 2 === 0 ? "md:flex-row-reverse" : ""
+                  "mb-5 md:mb-2  flex flex-col md:flex-row",
+                  index % 2 === 1 ? 'md:translate-y-32' :""
+                  
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
               
-                <div className="relative z-10 flex items-start justify-center md:justify-start md:w-1/2">
-                  <div className={cn(
-                    "absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-indigo-600 border-4 border-white shadow-lg transform -translate-x-1/2",
-                    index % 2 === 0 ? `md:left-1/2  ` : `md:left-1/2  `
-                  )}></div>
-                </div>
+               
 
             
                 <div className={cn(
-                  "ml-10 md:ml-0 md:w-1/2 ",
-                  index % 2 === 0 ? `md:pr-12 md:pl-0 md:text-right    ` : "md:pl-12  -translate-y-0 md:-translate-y-32 lg:-translate-y-48 "
+                  "ml-10 md:ml-0  ",
+             
                   
                 )}>
-                  <FeatureCard className="p-2 border border-gray-100">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4">
-                      <span className="text-xs font-medium px-2 py-1 bg-indigo-100 text-indigo-800 rounded-md">
+                   
+                  <div className=" ">
+                    <div className="flex  flex-col sm:flex-row items-start sm:items-center justify-between gap-2  ">
+                      <span className="text-sm  font-medium px-2 py-1 bg-indigo-100 text-indigo-800 rounded-tl-lg rounded-tr-lg  ">
                         {item.efforts_heading || ''} 
                       </span>
                     </div>
                     
                     <div className={cn(
-                      "aspect-video overflow-hidden rounded-lg mb-4",
-                      index % 2 === 0 ? "md:float-left md:mr-4 md:ml-0" : "md:float-right md:ml-4 md:mr-0"
+                      "aspect-video overflow-hidden    rounded-b-lg rounded-r-lg mb-4",
+                   
                     )}>
                       <img 
                         src={`${effortsData.image_url}${item.efforts_image}`} 
                         alt={item.efforts_description}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="w-full  h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                     </div>
-                    <h3 className="text-xl font-medium text-gray-900 mb-3">{item.efforts_description}</h3>
-                  </FeatureCard>
+                    <h3 className= {cn(
+                      "text-lg font-medium text-gray-900 mb-3",
+                      index % 2 === 0 ? "md:float-left md:mr-4 md:ml-0" : "md:float-right md:ml-4 md:mr-0 "
+                    )}
+                   
+                    
+                    
+                    
+                    >{item.efforts_description}</h3>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -200,7 +208,7 @@ const Efforts = () => {
 
       
         <motion.div 
-          className="p-6 sm:p-8 mt-12 sm:mt-16 md:mt-20 rounded-2xl border border-white/20 backdrop-blur-lg text-center overflow-hidden relative"
+          className="p-6 sm:p-8 mt-12 sm:mt-16 md:mt-36 rounded-2xl border border-white/20 backdrop-blur-lg text-center overflow-hidden relative"
           style={{
             background: "linear-gradient(135deg, rgba(253, 224, 71, 0.1) 0%, rgba(250, 204, 21, 0.1) 100%",
             boxShadow: "0 4px 16px rgba(99, 102, 241, 0.1), 0 8px 32px rgba(168, 85, 247, 0.05)",

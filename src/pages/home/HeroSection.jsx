@@ -6,6 +6,7 @@ import BecomeMember from "@/components/becomeMember/BecomeMember";
 import axios from "axios";
 import BASE_URL from "@/config/BaseUrl";
 import { useQuery } from "@tanstack/react-query";
+import { FireworksBackground } from "@/components/ui/fireworks-background";
 
 
 
@@ -99,7 +100,15 @@ export default function HeroSection() {
               className="absolute inset-0 -z-10 size-full [background:radial-gradient(125%_125%_at_50%_100%,transparent_0%,var(--background)_75%)]"
             />
 
-            <BackgroundBeamsWithCollision>
+            {/* <BackgroundBeamsWithCollision> */}
+            <FireworksBackground
+      population={1}
+      color={["#ff0000", "#00ff00", "#0000ff", "#ffff00"]}
+      fireworkSpeed={{min: 1, max: 5}}
+      fireworkSize={{min: 0.8, max: 2}} 
+      particleSpeed={{min: 0.5, max: 2}} 
+      particleSize={{min: 0.3, max: 1}} 
+    >
               <div className="mx-auto max-w-[85rem] px-3 sm:px-4 md:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row  gap-6 lg:gap-8">
                   {/* Left Content */}
@@ -327,8 +336,7 @@ export default function HeroSection() {
     </h3>
 
     <p className="text-yellow-950 text-sm sm:text-base mt-2 sm:mt-3 font-light max-w-lg">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-      Error iusto totam nesciunt voluptas, quam inventore ducimus accusantium.
+    Any company or person working as a manufacturer, distributor, retailer or agent in the apparel sector is eligible to join.
     </p>
   </div>
 
@@ -343,7 +351,9 @@ export default function HeroSection() {
                   </div>
                 </div>
               </div>
-            </BackgroundBeamsWithCollision>
+           
+            {/* </BackgroundBeamsWithCollision> */}
+            </FireworksBackground>
           </div>
         </section>
       </main>

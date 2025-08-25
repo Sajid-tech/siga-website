@@ -3,7 +3,8 @@ import React from 'react'
 import TeamMeeting from '../home/TeamMeeting'
 
 import FeaturedAbout from './FeaturedAbout'
-
+import loaderOuter from '../../assets/images/loaderouter.png';
+import loaderNew from '../../assets/images/loader-new.png';
 
 const AboutUs = () => {
   return (
@@ -28,13 +29,35 @@ const AboutUs = () => {
             {/* Second column - Two images stacked */}
             <div className="grid grid-cols-1 gap-4 h-full">
               {/* Top right image */}
-              <div className="h-full bg-gray-200 rounded-md overflow-hidden">
+              {/* <div className="h-full bg-gray-200 rounded-md overflow-hidden">
                 <img 
                   src="https://maraviyainfotech.com/projects/grabit-tailwind/grabit-tailwind/assets/img/common/about-2.png" 
                   alt="Farmer harvesting tomatoes" 
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </div> */}
+               <div className=" inset-0 rounded-md flex items-center bg-[#0b2655] justify-center p-4">
+                                      {/* <img 
+                                        src="/30-years-g.png" 
+                                        alt="Coming Soon" 
+                                        className="max-w-full max-h-full object-contain"
+                                      /> */}
+                                
+                                  <div className="relative w-40  h-40  ">
+                                    
+                                    <img
+                                      src={loaderOuter}
+                                      alt="outerlayer"
+                                      className="absolute top-0 left-0 w-full h-full animate-[spin_20s_linear_infinite]"
+                                    />
+                                   
+                                    <img
+                                      src={loaderNew}
+                                      alt="insidelayer"
+                                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
+                                    />
+                                  </div>
+                                    </div>
               
               {/* Bottom right image */}
               <div className="h-full bg-gray-200 rounded-md overflow-hidden">
