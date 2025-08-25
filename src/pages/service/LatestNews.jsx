@@ -72,7 +72,7 @@ const LatestNews = () => {
 
     return (
         <div className="relative w-full py-8 md:py-12 bg-white overflow-hidden">
-            <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative z-10 max-w-[85rem] mx-auto ">
                 <AnimatePresence mode="wait">
                     {selectedNews ? (
                         <motion.div
@@ -92,7 +92,7 @@ const LatestNews = () => {
                             </button>
 
                             <FeatureCard className="mb-8">
-                                <CardContent className="p-6">
+                                <CardContent className="p-4">
                                     <div className="flex items-center text-sm text-gray-500 mb-4">
                                         <Calendar className="h-4 w-4 mr-2" />
                                         {selectedNews.news_date ? new Date(selectedNews.news_date).toLocaleDateString('en-US', {

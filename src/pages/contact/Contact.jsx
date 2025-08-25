@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import BASE_URL from "@/config/BaseUrl";
 import SuspenseLoader from "@/components/loader/SuspenseLoader";
+import { FireworksBackground } from "@/components/ui/fireworks-background";
 const Contact = () => {
   const [mapLoaded, setMapLoaded] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -119,11 +120,12 @@ const Contact = () => {
 
   const contactdata = [
     {
-      title: "Mail Us",
+      title: "Mail",
       icon: <Mail className="w-5 h-5" />,
       entries: [
-        { icon: <Mail size={14} />, text: "sigabng@yahoo.com" || "N/A" },
+       
         { icon: <Earth size={14} />, text: "sigabengluru@gmail.com" },
+        { icon: <Mail size={14} />, text: "info.sigafair@gmail.com" || "-" },
       ],
     },
     {
@@ -161,19 +163,23 @@ const Contact = () => {
     },
   ];
 
+  
   const CardHeading = useCallback(
     ({ icon: Icon, title, description }) => (
-      <div className="px-2">
+      <div className="px-2 flex items-center justify-between ">
         <span className="text-muted-foreground flex  items-center gap-2">
-          <Icon className="size-4" />
+          <Icon className="size-5" />
           {title}
         </span>
-        <p className="mt-4 text-2xl font-medium">{description}</p>
+        <p className=" text-lg sm:text-2xl font-medium">
+          <CardHighlight>
+        {description}
+        </CardHighlight>
+        </p>
       </div>
     ),
     []
   );
-
   const CardDecorator = useCallback(
     () => (
       <>
@@ -202,6 +208,7 @@ const Contact = () => {
   );
 
   return (
+   
     // <SuspenseLoader/>
     <div className="relative w-full pt-28 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
@@ -230,8 +237,8 @@ const Contact = () => {
                     icon={item.icon.type}
                     title={item.title}
                     description={
-                      item.title === "Mail Us"
-                        ? "Email us"
+                      item.title === "Mail"
+                        ? "Write us"
                         : item.title === "Contact"
                         ? "Call us"
                         : "Visit us"
@@ -419,6 +426,16 @@ const Highlight = ({ children, className }) => {
     <span className={`relative inline-block ${className}`}>
       <span className="relative z-10">{children}</span>
       <span className="absolute bottom-0 left-0 w-full h-2 bg-blue-300/70 -rotate-1 -z-0"></span>
+    </span>
+  );
+};
+
+const CardHighlight = ({ children, className }) => {
+  return (
+    <span className={`relative inline-block font-semibold ${className}`}>
+      <span className="relative z-10">{children}</span>
+  
+      <span className="absolute inset-0 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 rounded-lg px-2 py-1 -z-0 blur-sm"></span>
     </span>
   );
 };

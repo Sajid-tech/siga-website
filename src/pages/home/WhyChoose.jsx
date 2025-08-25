@@ -233,7 +233,8 @@ const WhyChoose = () => {
             alt="Coming Soon" 
             className="max-w-full max-h-full object-contain"
           /> */}
-            <div className="relative w-48 h-48 ">
+    
+      <div className="relative w-44  h-44 sm:w-56 sm:h-56 ">
         
         <img
           src="./loader/loaderouter.png"
@@ -242,9 +243,9 @@ const WhyChoose = () => {
         />
        
         <img
-          src="./loader/loader.png"
+          src="./loader/loader-new.png"
           alt="insidelayer"
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-36 h-36"
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
         />
       </div>
         </div>
@@ -280,7 +281,7 @@ const WhyChoose = () => {
   return (
     <div className="py-12 px-4 relative overflow-hidden  bg-gradient-to-br from-green-50/20 via-transparent to-blue-50">
       {/* Refined SVG Pattern Background */}
-      <div className="absolute inset-0 z-10 opacity-10">
+      <div className="absolute inset-0 z-10  max-w-[85rem] mx-auto  opacity-10">
         <svg 
           className="absolute left-0 top-1/4"
           width="240" 

@@ -279,7 +279,7 @@ export default function Footer() {
                       className="flex items-center justify-center gap-1.5 sm:justify-start"
                       href="#"
                     >
-                      <Icon className="text-primary size-5 hidden md:block shrink-0 shadow-sm" />
+                      <Icon className="text-primary size-5 hidden md:block shrink-0 " />
                       {isAddress ? (
                         <address className="text-secondary-foreground/70 -mt-0.5 flex-1 not-italic transition">
                           {text}

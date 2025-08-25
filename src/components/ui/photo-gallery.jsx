@@ -123,8 +123,11 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
                             ref={swiperRef}
                             id="photo-gallery-swiper"
                             modules={[Autoplay, Mousewheel, FreeMode]}
+           
                             spaceBetween={20}
+
                             slidesPerView={"auto"}
+                            loop={true}
                             centeredSlides={true}
                             freeMode={{
                               enabled: true,
@@ -138,10 +141,10 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
                               eventsTarget: 'container',
                             }}
                             autoplay={{
-                              delay: 2500,
+                              delay: 1000,
                               disableOnInteraction: false,
                             }}
-                            speed={800}
+                            speed={1000}
                             onSwiper={setSwiperInstance}
                             className="!py-10 w-full"
                           >
@@ -149,7 +152,8 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
                               <SwiperSlide key={photo.id} className="!w-auto pointer-events-auto">
                                 <Photo
                                   width={220}
-                                  height='100%'
+                                  // height='100%'
+                                  height={220}
                                   src={photo.src}
                                   alt="Gallery photo"
                                   direction={photo.direction}
@@ -225,11 +229,11 @@ const Photo = ({
       tabIndex={0}
       {...props}
     >
-      <div className="relative h-full w-full overflow-hidden rounded-3xl shadow-lg">
+      <div className="relative h-full w-full overflow-hidden rounded-3xl border border-red-400 shadow-md shadow-red-300">
         <LazyLoadImage
           src={src}
           alt={alt}
-          className={cn("rounded-3xl object-cover w-full h-full pointer-events-none")}
+          className={cn("rounded-3xl object-cover w-full h-[13.75rem] pointer-events-none")}
           effect="blur"
         />
       </div>

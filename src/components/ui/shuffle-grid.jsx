@@ -1,10 +1,11 @@
 
 
-import { Waves } from "@/components/ui/waves-background";
+
 import { cn } from "@/lib/utils";
 import CircularTestimonials from "./circular-testimonial";
 import { Button } from "./button";
 import { Link, useNavigate } from "react-router-dom";
+import Waves from "./waves-background";
 
 const testimonials = [
   {

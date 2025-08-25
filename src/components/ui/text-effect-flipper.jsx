@@ -15,7 +15,7 @@ const FlipLink = ({ children, href }) => {
       target="_blank"
       href={href}
       className="relative inline-block overflow-hidden whitespace-nowrap  uppercase"
-      style={{ lineHeight: 0.75 }}
+      style={{ lineHeight: 0.8 }}
     >
       <div>
         {words.map((word, wordIndex) => (

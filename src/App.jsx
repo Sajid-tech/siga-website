@@ -35,7 +35,7 @@ function App() {
      
           <VerticalDottedText />
           <ScrollToTop />
-          <Newsletter />
+          {/* <Newsletter /> */}
           
           <MainLayout>
   <Routes>
