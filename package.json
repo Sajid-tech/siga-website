@@ -3,12 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+ 
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "build:analyze": "vite build --mode analyze",
+  "build:preview": "vite build && vite preview",
+  "build:prod": "vite build --mode production",
+  "lint": "eslint . --ext .js,.jsx --fix",
+  "lint:css": "stylelint \"src/**/*.css\" \"src/**/*.jsx\"",
+  "preview": "vite preview",
+  "type-check": "tsc --noEmit || exit 0",
+  "bundle-analyze": "npm run build:analyze && npx serve dist",
+  "optimize-images": "node scripts/optimize-images.js",
+  "prebuild": "npm run optimize-images && npm run lint",
+  "postbuild": "npm run bundle-analyze"
+},
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-dialog": "^1.1.14",

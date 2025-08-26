@@ -3,22 +3,31 @@ import react from '@vitejs/plugin-react'
 import viteCompression from 'vite-plugin-compression'
 import { VitePWA } from 'vite-plugin-pwa'
 import { visualizer } from 'rollup-plugin-visualizer'
+import legacy from '@vitejs/plugin-legacy'
+import { createHtmlPlugin } from 'vite-plugin-html'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-// 🔧 Fix __dirname in ESM
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig(({ mode }) => {
-  // Load env file based on `mode` in the current working directory
+ 
   const env = loadEnv(mode, process.cwd(), '')
   const isDev = mode === 'development'
   
   return {
     plugins: [
-      react(),
-      // Only enable compression in production
+       react({
+              babel: {
+                plugins: [
+                  ['babel-plugin-react-compiler'],
+                  ['babel-plugin-transform-react-remove-prop-types', { removeImport: true }]
+                ]
+              }
+            }),
+     
       !isDev && viteCompression({
         algorithm: 'brotliCompress',
         ext: '.br',
@@ -26,7 +35,14 @@ export default defineConfig(({ mode }) => {
         compressionOptions: { level: 11 },
         deleteOriginFile: false
       }),
-      // Add VitePWA plugin (only in production)
+      !isDev && viteCompression({
+        algorithm: 'gzip',
+        ext: '.gz',
+        threshold: 1024,
+        deleteOriginFile: false
+      }),
+      
+      
       !isDev && VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
@@ -67,26 +83,47 @@ export default defineConfig(({ mode }) => {
                 cacheName: 'images',
                 expiration: {
                   maxEntries: 60,
-                  maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+                  maxAgeSeconds: 30 * 24 * 60 * 60 
                 }
               }
             }
           ]
         }
       }),
-      // Add visualizer plugin (only in production)
-      !isDev && visualizer({
+      !isDev && legacy({
+        targets: ['defaults', 'not IE 11'],
+        modernPolyfills: true,
+        renderLegacyChunks: false,
+      }),
+      createHtmlPlugin({
+        minify: !isDev, 
+        inject: {
+          data: {
+            title: 'SIGA Website',
+            description: 'SIGA Website',
+            keywords: 'siga, industry, services,garments'
+          }
+        }
+      }),
+      
+      mode === 'analyze' &&  visualizer({
         filename: 'dist/stats.html',
         open: false,
         gzipSize: true,
         brotliSize: true
       })
     ].filter(Boolean),
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src')
-      }
-    },
+   resolve: {
+         alias: {
+           '@': path.resolve(__dirname, './src'),
+           '@components': path.resolve(__dirname, './src/components'),
+           '@pages': path.resolve(__dirname, './src/pages'),
+           '@utils': path.resolve(__dirname, './src/utils'),
+           '@hooks': path.resolve(__dirname, './src/hooks'),
+           '@redux': path.resolve(__dirname, './src/redux')
+         },
+         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
+       },
     build: {
       minify: isDev ? false : 'terser',
       terserOptions: isDev ? {} : {
@@ -113,7 +150,17 @@ export default defineConfig(({ mode }) => {
       },
       assetsInlineLimit: 4096,
       cssCodeSplit: !isDev,
-      sourcemap: isDev
+      sourcemap: isDev,
+  
+      chunkSizeWarningLimit: 800,
+      reportCompressedSize: false
+    },
+    optimizeDeps: {
+      include: [
+        'react', 'react-dom', 'react-router-dom', 
+        '@reduxjs/toolkit', 'react-redux', 'axios'
+      ],
+      exclude: ['@gsap/react', 'framer-motion', 'swiper']
     },
     server: {
       headers: {
