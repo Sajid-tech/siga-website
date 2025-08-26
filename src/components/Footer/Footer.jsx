@@ -86,7 +86,7 @@ const helpfulLinks = [
   { text: 'Events', href: data.help.event },
   { text: 'Join Us', href: data.help.join },
   { text: 'Gallery', href: data.help.gallery },
-  { text: 'Directory', href: data.help.directory, hasIndicator: true },
+  { text: 'Directory', href: data.help.directory },
 ];
 
 const contactInfo = [
@@ -194,10 +194,10 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
-            <div className="text-center sm:text-left">
+          <div className="grid grid-cols-2 gap-0 md:gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
+            <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">About Us</p>
-              <ul className="mt-8 space-y-4 text-sm">
+              <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
                  
                   <li key={text}>
@@ -218,9 +218,9 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Our Services</p>
-              <ul className="mt-8 space-y-4 text-sm">
+              <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
                        <Link
@@ -239,9 +239,9 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Helpful Links</p>
-              <ul className="mt-8 space-y-4 text-sm">
+              <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
                 {helpfulLinks.map(({ text, href, hasIndicator }) => (
                   <li key={text}>
                         <Link
@@ -251,8 +251,8 @@ export default function Footer() {
            
                       className={`${
                         hasIndicator
-                          ? 'group flex justify-center gap-1.5 sm:justify-start hover:cursor-pointer hover:text-red-500' 
-                          : 'text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500'
+                          ? 'group flex justify-center gap-1.5 sm:justify-start hover:cursor-pointer hover:text-red-500 ' 
+                          : 'text-secondary-foreground/70 transition hover:cursor-pointer hover:text-red-500 '
                       }`}
                     >
                       <span className="text-secondary-foreground/70 transition">
@@ -271,9 +271,9 @@ export default function Footer() {
               </ul>
             </div>
 
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Contact Us</p>
-              <ul className="mt-8 space-y-4 text-sm">
+              <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
                 {contactInfo.map(({ icon: Icon, text, isAddress }) => (
                   <li key={text}>
                     <a
@@ -296,9 +296,10 @@ export default function Footer() {
               </ul>
             </div>
           </div>
+          
         </div>
 
-        <div className="mt-12 border-t pt-6">
+        <div className="mt-2 md:mt-12 border-t pt-1 md:pt-6">
           <div className="text-center sm:flex sm:justify-between sm:text-left">
           <p className="text-secondary-foreground/70 mt-4 text-sm transition sm:order-first sm:mt-0">
               &copy; 2025 {data.company.name}

@@ -6,7 +6,7 @@ export default {
     ],
     theme: {
       extend: {
-        // Your custom theme extensions here
+        //  custom theme 
       },
     },
     plugins: [],

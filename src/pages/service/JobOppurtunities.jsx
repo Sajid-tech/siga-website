@@ -462,7 +462,7 @@ const JobOpportunities = () => {
             Join SIGA Membership
           </h3>
           <p className="text-yellow-100 mb-4 sm:mb-6 max-w-2xl mx-auto text-xs sm:text-sm">
-            Any company or person working as a manufacturer, distributor, retailer or
+            Company or person working as a manufacturer, distributor, retailer or
             agent in the apparel sector is eligible to join our growing network
             of professionals.
           </p>

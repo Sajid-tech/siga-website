@@ -1,6 +1,5 @@
 import React from 'react';
-import loaderOuter from '../../assets/images/loaderouter.png';
-import loaderNew from '../../assets/images/loader-new.png';
+
 
 
 const SuspenseLoader = () => {
@@ -9,13 +8,13 @@ const SuspenseLoader = () => {
       <div className="relative w-56 h-56">
         
         <img
-                 src={loaderOuter}
+                 src='/optimized-images/loaderouter.webp'
           alt="outerlayer"
           className="absolute top-0 left-0 w-full h-full animate-[spin_10s_linear_infinite]"
         />
-       
+      
         <img
-                  src={loaderNew}
+                  src='/optimized-images/loader-new.webp'
           alt="insidelayer"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
         />

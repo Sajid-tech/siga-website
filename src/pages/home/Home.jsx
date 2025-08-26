@@ -32,8 +32,8 @@ const Home = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: updateVisitorCount,
-    onSuccess: (data) => {
-console.log('visitor count',data)
+    onSuccess: () => {
+// console.log('visitor count',data)
       queryClient.invalidateQueries(["visitorCount"]);
     },
     onError: (error) => {

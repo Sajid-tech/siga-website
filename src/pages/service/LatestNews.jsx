@@ -71,7 +71,7 @@ const LatestNews = () => {
     );
 
     return (
-        <div className="relative w-full py-8 md:py-12 bg-white overflow-hidden">
+        <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
             <div className="relative z-10 max-w-[85rem] mx-auto ">
                 <AnimatePresence mode="wait">
                     {selectedNews ? (

@@ -35,7 +35,7 @@ const AnimatedTabs = ({
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
             className={cn(
-              "relative px-4 py-2 text-sm font-medium rounded-lg outline-none transition-colors",
+              "relative px-4 py-2 text-sm font-medium rounded-lg outline-none transition-colors hover:cursor-pointer",
               activeTab === tab.id 
                 ? "text-blue-800" 
                 : "text-blue-600 hover:text-blue-700 hover:bg-blue-50"

@@ -1,7 +1,4 @@
 
-// const BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-
-const BASE_URL = "https://southindiagarmentsassociation.com/public"
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default BASE_URL

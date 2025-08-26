@@ -7,10 +7,10 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 export default defineConfig([
   globalIgnores(['dist']),
 
-  // Main app files (browser)
+ 
   {
     files: ['**/*.{js,jsx}'],
-    ignores: ['vite.config.js', 'tailwind.config.js', 'postcss.config.js'], // prevent double lint
+    ignores: ['vite.config.js', 'tailwind.config.js', 'postcss.config.js'], 
     extends: [
       js.configs.recommended,
       reactHooks.configs['recommended-latest'],
@@ -30,18 +30,18 @@ export default defineConfig([
     },
   },
 
-  // Node.js config files (vite.config.js, tailwind, etc.)
+
   {
     files: ['*.config.js', 'vite.config.js'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.node, // 👈 enables process, __dirname, module, etc.
+      globals: globals.node, 
       parserOptions: {
         sourceType: 'module',
       },
     },
     rules: {
-      // allow console in config files
+      
       'no-console': 'off',
     },
   },
