@@ -7,25 +7,25 @@ import BuisnessExpansion from './BuisnessExpansion';
 
 import JobOpportunities from './JobOppurtunities';
 import { Link, useSearchParams } from 'react-router-dom';
-import loaderOuter from '../../assets/images/loaderouter.png';
-import loaderNew from '../../assets/images/loader-new.png';
+
 const Service = () => {
-  const [activeMenu, setActiveMenu] = useState('job-opportunities');
+  const [activeMenu, setActiveMenu] = useState('payment-mediation');
   const [searchParams, setSearchParams] = useSearchParams();
   const menuItems = useMemo(() => [
-    {
-      id: 'job-opportunities',
-      title: 'Job Opportunities',
-      param: 'job_opportunities',
-      icon: Briefcase,
-      description: 'Explore career opportunities'
-    },
+ 
     {
       id: 'payment-mediation',
       title: 'Payment Mediation',
       param: 'payment_mediation',
       icon: CreditCard,
       description: 'Secure payment processing'
+    },
+    {
+      id: 'job-opportunities',
+      title: 'Job Opportunities',
+      param: 'job_opportunities',
+      icon: Briefcase,
+      description: 'Explore career opportunities'
     },
     {
       id: 'latest-news',
@@ -85,7 +85,7 @@ const Service = () => {
         return <BuisnessExpansion />;
     
       default:
-        return <JobOpportunities />;
+        return <PaymentMediation />;
     }
   };
 
@@ -167,13 +167,13 @@ const Service = () => {
                     <div className="relative w-32  h-32  ">
                       
                       <img
-                        src={loaderOuter}
+                src='/optimized-images/loaderouter.webp'
                         alt="outerlayer"
                         className="absolute top-0  left-0 right-5 w-full h-full "
                       />
                      
                       <img
-                        src={loaderNew}
+                       src='/optimized-images/loader-new.webp'
                         alt="insidelayer"
                         className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
                       />

@@ -296,14 +296,18 @@ const ManagingCommitte = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
                 {data?.office_berres?.map((member) => (
+               
+
+
                   <MemberCard 
                     key={member.name}
                     name={member.name}
                     designation={member.designation || member.designation}
                     image={`${data.image_url}${member.image}`}
                   />
+              
                 ))}
               </div>
             )}
@@ -323,7 +327,7 @@ const ManagingCommitte = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
                 {data?.committee_members?.map((member) => (
                   <MemberCard 
                     key={member.name}
@@ -405,7 +409,7 @@ const ManagingCommitte = () => {
 
 const MemberCard = ({ name, designation, image }) => {
   return (
-    <BackgroundGradient className="rounded-md max-w-sm p-1 cursor-pointer bg-white">
+    <div className="rounded-md max-w-sm p-0 cursor-pointer bg-white">
       <img
         src={image}
         alt="member_committe_pic"
@@ -413,13 +417,13 @@ const MemberCard = ({ name, designation, image }) => {
         width="400"
         className="object-contain rounded-md hover:scale-105 hover:-translate-y-4 hover:transition-transform"
       />
-      <p className="text-[15px] text-center text-black mt-2 mb-1">
+      <p className="text-xs  md:text-[15px] font-medium text-center text-black mt-2 mb-1">
         {name}
       </p>
-      <p className="text-sm text-center text-neutral-600">
+      <p className="text-xs md:text-sm text-center text-neutral-600">
         {designation}
       </p>
-    </BackgroundGradient>
+    </div>
   );
 };
 

@@ -168,7 +168,7 @@ const Efforts = () => {
                    
                   <div className=" ">
                     <div className="flex  flex-col sm:flex-row items-start sm:items-center justify-between gap-2  ">
-                      <span className="text-sm  font-medium px-2 py-1 bg-indigo-100 text-indigo-800 rounded-tl-lg rounded-tr-lg  ">
+                      <span className="text-xs md:text-sm  font-medium px-2 py-1 bg-indigo-100 text-indigo-800 rounded-tl-lg rounded-tr-lg  ">
                         {item.efforts_heading || ''} 
                       </span>
                     </div>

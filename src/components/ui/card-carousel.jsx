@@ -25,7 +25,7 @@ export const CardCarousel = ({
           <div className="flex w-full items-center justify-center gap-4">
             <div className="w-full">
               <Swiper
-                spaceBetween={50}
+               
                 autoplay={{
                   delay: autoplayDelay,
                   disableOnInteraction: false,
@@ -58,6 +58,10 @@ export const CardCarousel = ({
                 resistanceRatio={0.85}
                 threshold={15}
                 updateOnWindowResize={true}
+                breakpoints={{
+                  0: { spaceBetween: 10 },   
+                  640: { spaceBetween: 50 }, 
+                }}
               >
                 {images.map((image, index) => (
                   <SwiperSlide key={index}>

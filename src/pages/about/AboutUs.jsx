@@ -3,8 +3,7 @@ import React from 'react'
 import TeamMeeting from '../home/TeamMeeting'
 
 import FeaturedAbout from './FeaturedAbout'
-import loaderOuter from '../../assets/images/loaderouter.png';
-import loaderNew from '../../assets/images/loader-new.png';
+
 
 const AboutUs = () => {
   return (
@@ -46,13 +45,13 @@ const AboutUs = () => {
                                   <div className="relative w-40  h-40  ">
                                     
                                     <img
-                                      src={loaderOuter}
+                                     src='/optimized-images/loaderouter.webp'
                                       alt="outerlayer"
                                       className="absolute top-0 left-0 w-full h-full animate-[spin_20s_linear_infinite]"
                                     />
                                    
                                     <img
-                                      src={loaderNew}
+                                      src='/optimized-images/loader-new.webp'
                                       alt="insidelayer"
                                       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full"
                                     />

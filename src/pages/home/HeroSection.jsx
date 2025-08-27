@@ -7,6 +7,7 @@ import axios from "axios";
 import BASE_URL from "@/config/BaseUrl";
 import { useQuery } from "@tanstack/react-query";
 import { FireworksBackground } from "@/components/ui/fireworks-background";
+import { Highlight } from "@/components/ui/hero-highlight";
 
 
 
@@ -167,14 +168,14 @@ export default function HeroSection() {
                           </div>
 
                           {/* of SIGA */}
-                          <TextEffect
+                          <span
                             className="text-6xl md:text-7xl  xl:text-[5.25rem] mt-2 "
                             preset="slide"
                             per="word"
                             delay={0.8}
                           >
-                            of SIGA
-                          </TextEffect>
+                            of <Highlight>SIGA</Highlight>
+                          </span>
                         </div>
 
                         {/* Description */}
@@ -336,7 +337,7 @@ export default function HeroSection() {
     </h3>
 
     <p className="text-yellow-950 text-sm sm:text-base mt-2 sm:mt-3 font-light max-w-lg">
-    Any company or person working as a manufacturer, distributor, retailer or agent in the apparel sector is eligible to join.
+    Company or person working as a manufacturer, distributor, retailer or agent in the apparel sector is eligible to join.
     </p>
   </div>
 
