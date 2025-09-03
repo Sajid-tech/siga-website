@@ -186,7 +186,7 @@ const WhyChoose = () => {
       cta: "View",
       Icon: Heart,
       buttonColor: "red",
-      className: "lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2",
+      className: "  lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2",
       background: (
         <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-red-100 blur-xl"></div>
       )
