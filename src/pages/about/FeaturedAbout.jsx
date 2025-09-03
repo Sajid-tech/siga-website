@@ -13,7 +13,7 @@ const FeaturedAbout = () => {
   }, []);
 
   return (
-    <div className="w-full py-8 ">
+    <div className="w-full py-8 border ">
       <div className="max-w-[85rem] mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">

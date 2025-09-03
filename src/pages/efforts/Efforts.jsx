@@ -9,6 +9,8 @@ import axios from 'axios';
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import BASE_URL from "@/config/BaseUrl";
+import { TextEffect } from "@/components/ui/text-effect";
+import { Button } from "@/components/ui/button";
 
 const stats = [
   { icon: Users, value: "5000+", label: "Maufaturer Connected" },
@@ -207,7 +209,7 @@ const Efforts = () => {
         )}
 
       
-        <motion.div 
+        {/* <motion.div 
           className="p-6 sm:p-8 mt-12 sm:mt-16 md:mt-36 rounded-2xl border border-white/20 backdrop-blur-lg text-center overflow-hidden relative"
           style={{
             background: "linear-gradient(135deg, rgba(253, 224, 71, 0.1) 0%, rgba(250, 204, 21, 0.1) 100%",
@@ -236,7 +238,80 @@ const Efforts = () => {
               Get Involved
             </Link>
           </div>
-        </motion.div>
+        </motion.div> */}
+
+
+
+
+         <div
+                              className="relative p-3  sm:p-4 mt-12 sm:mt-16 md:mt-36 rounded-lg sm:rounded-xl border border-white/20 backdrop-blur-lg text-center text-white mb-8 sm:mb-12 lg:mb-16 overflow-hidden"
+                              style={{
+                                background:
+                                  "linear-gradient(135deg, rgba(255, 193, 7, 1) 0%, rgba(245, 158, 11, 1) 100%)",
+                                boxShadow:
+                                  "0 4px 16px rgba(251, 191, 36, 0.2), 0 8px 32px rgba(251, 191, 36, 0.1)",
+                              }}
+                            >
+                              
+                              <div className="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
+                              <div className="absolute inset-0 overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-500/15"></div>
+                                <div className="absolute top-1/4 left-1/4 w-8 sm:w-16 h-8 sm:h-16 rounded-full bg-yellow-400/10 blur-lg sm:blur-xl"></div>
+                                <div className="absolute bottom-1/3 right-1/3 w-12 sm:w-24 h-12 sm:h-24 rounded-full bg-amber-500/15 blur-lg sm:blur-xl"></div>
+                              </div>
+        
+                            
+                              <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left justify-between">
+          {/* Decorative GIFs */}
+          <img
+            src="https://a-us.storyblok.com/f/1020544/500x500/fc53950a6e/blue-curl.gif"
+            alt="blue curl"
+            className="absolute -top-4 -left-4 w-10 sm:w-14 lg:w-16 opacity-80 pointer-events-none"
+          />
+          <img
+            src="https://a-us.storyblok.com/f/1019472/500x500/9353110b3c/yellow-star.gif"
+            alt="yellow star"
+            className="absolute -bottom-6 right-6 w-12 sm:w-16 lg:w-20 opacity-90 pointer-events-none"
+          />
+          <img
+            src="https://a-us.storyblok.com/f/1020544/500x500/39ac930bc7/green-curl.gif"
+            alt="green curl"
+            className="absolute top-1/2 -right-6 w-10 sm:w-14 lg:w-16 opacity-80 pointer-events-none"
+          />
+        
+          {/* Text Content */}
+          <div className="flex flex-col items-center sm:items-start relative z-10">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold text-yellow-900 drop-shadow-md">
+              Join SIGA Efforts
+            </h3>
+        
+            <p className="text-yellow-950 text-sm sm:text-base mt-2 sm:mt-3 font-light max-w-lg">
+            Become part of SIGA's mission to strengthen the garment industry through advocacy, networking, and development initiatives.
+            </p>
+          </div>
+        
+          {/* Button */}
+          <div className="mt-1 sm:mt-0 relative z-10">
+          <Link to={'/become-member'} >
+         
+                       <Button
+                                size="lg"
+                                className="rounded-xl  hover:scale-105  text-yellow-800  px-5 text-base relative overflow-hidden hover:cursor-pointer group"
+                              >
+                                <span className="relative z-10">
+                                  <TextEffect preset="scale" per="word">
+                           
+                                    Click Here
+                                  </TextEffect>
+                                </span>
+                                <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
+                              </Button>
+                    </Link>
+          </div>
+        </div>
+        
+        
+                            </div>
       </div>
     </div>
   );
