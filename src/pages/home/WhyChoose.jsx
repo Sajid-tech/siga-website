@@ -54,7 +54,7 @@ const CardDecorator = () => (
     <span className="absolute -bottom-px -right-px block size-2 border-b-2 border-r-2 border-red-500"></span>
   </>
 );
-const BentoCard = ({
+  const BentoCard = ({
   name,
   className,
   background,
@@ -146,7 +146,7 @@ const BentoCard = ({
       {cta && (
   <div
     className={cn(
-      "pointer-events-none absolute right-0 bottom-0 flex items-center transition-all duration-300 p-4 md:p-6",
+      "pointer-events-none absolute right-0 top-0 flex items-center transition-all duration-300 p-4 md:p-6",
       active ? "opacity-100" : "opacity-0",
       "group-hover:opacity-100"
     )}

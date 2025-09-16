@@ -24,8 +24,8 @@ const fetchVisitorcount = async () => {
 };
 
 const data = {
-  facebookLink: '#',
-  instaLink: '#',
+  facebookLink: 'https://www.facebook.com/siga.bangalore/',
+  instaLink: 'https://www.instagram.com/siga_bangalore/?hl=en',
   twitterLink: '#',
   githubLink: '#',
   dribbbleLink: '#',
@@ -49,7 +49,7 @@ const data = {
   },
   contact: {
     email: 'sigabengluru@gmail.com',
-    phone: '+91 9998887776',
+    phone: '+91 9632648525',
     address: 'No. 308, 1st Floor, Auto Tower #9, J.C. Road, Bangalore-560002.',
   },
   company: {
@@ -63,9 +63,7 @@ const data = {
 const socialLinks = [
   { icon: Facebook, label: 'Facebook', href: data.facebookLink },
   { icon: Instagram, label: 'Instagram', href: data.instaLink },
-  { icon: Twitter, label: 'Twitter', href: data.twitterLink },
-  { icon: Github, label: 'GitHub', href: data.githubLink },
-  { icon: Dribbble, label: 'Dribbble', href: data.dribbbleLink },
+
 ];
 
 const aboutLinks = [
@@ -166,13 +164,12 @@ export default function Footer() {
           <div>
             <div className="text-primary flex justify-center gap-2 sm:justify-start">
               <img
-                src={data.company.logo || '/placeholder.svg'}
-                alt="logo"
-                className="h-8 w-8 rounded-full"
+              alt="Company Logo"
+                   effect="blur"
+                   src="/siga-logo.png"
+                   className={(" h-14 w-auto")}
               />
-              <span className="text-2xl font-semibold">
-                {data.company.name}
-              </span>
+             
             </div>
 
             <p className="text-foreground/50 mt-6 max-w-md text-center leading-relaxed sm:max-w-xs sm:text-left">

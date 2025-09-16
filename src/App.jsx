@@ -15,6 +15,7 @@ import JobOpeningList from "./pages/jobs/JobOpeningList.jsx";
 import JobRequireList from "./pages/jobs/JobRequireList.jsx";
 import { Toaster } from "sonner";
 import SuspenseLoader from "./components/loader/SuspenseLoader.jsx";
+import GalleryAllByYear from "./pages/gallery/GalleryAllByYear.jsx";
 
 
 const Home = lazy(() => import("./pages/home/Home"));
@@ -132,6 +133,14 @@ function App() {
       element={
         <Suspense fallback={<SuspenseLoader/>}>
           <JobRequireList />
+        </Suspense>
+      }
+    />
+    <Route
+      path="/galleryAll/:id"
+      element={
+        <Suspense fallback={<SuspenseLoader/>}>
+          <GalleryAllByYear />
         </Suspense>
       }
     />

@@ -11,12 +11,13 @@ const menuItems = [
   { name: "About", href: "/about" },
   { name: "Event", href: "/event" },
   { name: "Service", href: "/service" },
+  { name: "Gallery", href: "/gallery" },
   {
     name: "Others",
     href: "/other",
     subItems: [
       { name: "Efforts", href: "/efforts" },
-      { name: "Gallery", href: "/gallery" },
+
       { name: "Directory", href: "/directory" },
       { name: "Managing Committee", href: "/committee" },
       { name: "Contact", href: "/contact" },
@@ -92,7 +93,7 @@ const HeroHeader = () => {
           className={cn(
             "mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12",
             isScrolled &&
-              "bg-white max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5"
+              "bg-white max-w-5xl rounded-2xl border backdrop-blur-lg lg:px-5"
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -607,7 +608,7 @@ const Logo = ({ className }) => {
     <LazyLoadImage
       alt="Company Logo"
       effect="blur"
-      src="https://southindiagarmentsassociation.com/assets/images/logo.png"
+      src="/siga-logo.png"
       className={cn(" h-14 w-auto", className)}
     />
   );

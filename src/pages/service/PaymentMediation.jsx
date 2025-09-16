@@ -279,13 +279,13 @@ const PaymentMediation = () => {
   );
 
   return (
-    <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
+    <div className="relative w-full   bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto ">
         {/* Hero Section */}
         <div
-          className="text-center mb-8 sm:mb-12 md:mb-16"
+          className="text-center mb-4 "
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl  font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Payment Mediation</Highlight>
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
@@ -296,13 +296,7 @@ const PaymentMediation = () => {
 
         {/* Form Section */}
         <FeatureCard>
-          <CardHeader className="pb-2 sm:pb-4">
-            <CardHeading
-              icon={DollarSign}
-              title="Payment Mediation"
-              description="Submit your payment dispute details"
-            />
-          </CardHeader>
+         
           <CardContent>
             <form
               onSubmit={handleSubmit}

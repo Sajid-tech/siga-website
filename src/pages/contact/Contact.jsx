@@ -268,7 +268,7 @@ const Contact = () => {
 
 
           <div className="md:col-span-1">
-            <FeatureCard className="h-full">
+            <div className="h-full">
               <CardHeader className="pb-3">
                 <CardHeading
                   icon={Mail}
@@ -277,7 +277,7 @@ const Contact = () => {
                 />
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <input
                       type="text"
@@ -381,10 +381,10 @@ const Contact = () => {
                   </motion.button>
                 </form>
               </CardContent>
-            </FeatureCard>
+            </div>
           </div>
           <div className="">
-            <FeatureCard>
+            <div>
               <motion.h2
                 className="text-2xl font-medium text-gray-800 mb-6 flex items-center"
                 initial={{ opacity: 0, y: 20 }}
@@ -411,7 +411,7 @@ const Contact = () => {
                   onLoad={() => setMapLoaded(true)}
                 />
               </div>
-            </FeatureCard>
+            </div>
           </div>
         </div>
 

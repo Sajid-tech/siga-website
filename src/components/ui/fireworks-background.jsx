@@ -157,29 +157,31 @@ function FireworksBackground({
     if (!canvas || !container) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
- 
+  
     let maxX = container.offsetWidth;
     let maxY = container.offsetHeight;
     canvas.width = maxX;
     canvas.height = maxY;
- 
+  
     const setCanvasSize = () => {
       maxX = container.offsetWidth;
       maxY = container.offsetHeight;
       canvas.width = maxX;
       canvas.height = maxY;
     };
-    
+  
     const resizeObserver = new ResizeObserver(setCanvasSize);
     resizeObserver.observe(container);
- 
+  
     const explosions = [];
     const fireworks = [];
- 
+  
     const handleExplosion = (particles) => {
       explosions.push(...particles);
     };
- 
+  
+    let launchTimeoutId;
+  
     const launchFirework = () => {
       const x = rand(maxX * 0.1, maxX * 0.9);
       const y = maxY;
@@ -187,27 +189,33 @@ function FireworksBackground({
       const fireworkColor = getColor(color);
       const speed = getValueByRange(fireworkSpeed);
       const size = getValueByRange(fireworkSize);
-      fireworks.push(createFirework(
-        x,
-        y,
-        targetY,
-        fireworkColor,
-        speed,
-        size,
-        particleSpeed,
-        particleSize,
-        handleExplosion
-      ));
-      const timeout = rand(500, 1200) / population; // Longer timeout for slower pace
-      setTimeout(launchFirework, timeout);
+      fireworks.push(
+        createFirework(
+          x,
+          y,
+          targetY,
+          fireworkColor,
+          speed,
+          size,
+          particleSpeed,
+          particleSize,
+          handleExplosion
+        )
+      );
+      const timeout = rand(500, 1200) / population;
+  
+      // only schedule next firework if page is visible
+      if (document.visibilityState === "visible") {
+        launchTimeoutId = setTimeout(launchFirework, timeout);
+      }
     };
- 
+  
     launchFirework();
- 
+  
     let animationFrameId;
     const animate = () => {
       ctx.clearRect(0, 0, maxX, maxY);
- 
+  
       for (let i = fireworks.length - 1; i >= 0; i--) {
         const firework = fireworks[i];
         if (!firework?.update()) {
@@ -216,7 +224,7 @@ function FireworksBackground({
           firework.draw(ctx);
         }
       }
- 
+  
       for (let i = explosions.length - 1; i >= 0; i--) {
         const particle = explosions[i];
         particle?.update();
@@ -226,12 +234,12 @@ function FireworksBackground({
           explosions.splice(i, 1);
         }
       }
- 
+  
       animationFrameId = requestAnimationFrame(animate);
     };
- 
+  
     animate();
- 
+  
     const handleClick = (event) => {
       const rect = container.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -240,34 +248,43 @@ function FireworksBackground({
       const fireworkColor = getColor(color);
       const speed = getValueByRange(fireworkSpeed);
       const size = getValueByRange(fireworkSize);
-      fireworks.push(createFirework(
-        x,
-        y,
-        targetY,
-        fireworkColor,
-        speed,
-        size,
-        particleSpeed,
-        particleSize,
-        handleExplosion
-      ));
+      fireworks.push(
+        createFirework(
+          x,
+          y,
+          targetY,
+          fireworkColor,
+          speed,
+          size,
+          particleSpeed,
+          particleSize,
+          handleExplosion
+        )
+      );
     };
- 
-    container.addEventListener('click', handleClick);
- 
+  
+    container.addEventListener("click", handleClick);
+  
+    // Pause/Resume on tab visibility change
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        launchFirework(); // resume launching
+      } else {
+        clearTimeout(launchTimeoutId); // stop launching
+      }
+    };
+  
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+  
     return () => {
       resizeObserver.disconnect();
-      container.removeEventListener('click', handleClick);
+      container.removeEventListener("click", handleClick);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       cancelAnimationFrame(animationFrameId);
+      clearTimeout(launchTimeoutId);
     };
-  }, [
-    population,
-    color,
-    fireworkSpeed,
-    fireworkSize,
-    particleSpeed,
-    particleSize,
-  ]);
+  }, [population, color, fireworkSpeed, fireworkSize, particleSpeed, particleSize]);
+  
  
   return (
     <div

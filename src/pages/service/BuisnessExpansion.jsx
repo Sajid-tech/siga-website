@@ -382,17 +382,17 @@ const BusinessExpansion = () => {
   );
 
   return (
-    <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
+    <div className="relative w-full  bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto ">
         {/* Hero Section */}
         <div
-          className="text-center mb-8 sm:mb-12 md:mb-16"
+          className="text-center mb-4"
           // initial={{ opacity: 0, y: 20 }}
           // whileInView={{ opacity: 1, y: 0 }}
           // transition={{ duration: 0.5 }}
           // viewport={{ once: true }}
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl  font-bold text-gray-900 mb-2 sm:mb-4">
             SIGA <Highlight>Business Expansion</Highlight>
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
@@ -403,15 +403,9 @@ const BusinessExpansion = () => {
 
         {/* Tabs and Form Section */}
         <FeatureCard>
-          <CardHeader className="pb-2 sm:pb-4">
-            <CardHeading
-              icon={Briefcase}
-              title="Business Expansion"
-              description="Connect with potential partners"
-            />
-          </CardHeader>
+         
           <CardContent>
-            <div className="border-b border-gray-200">
+            <div className="border-b border-gray-200 mt-2">
               <nav className="-mb-px flex space-x-0 w-full">
                 <button
                   onClick={() => setActiveTab("products")}
@@ -421,7 +415,7 @@ const BusinessExpansion = () => {
                       : "border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50"
                   }`}
                 >
-                  Looking Products
+                  Looking For Products
                 </button>
                 <button
                   onClick={() => setActiveTab("distributors")}
@@ -431,7 +425,7 @@ const BusinessExpansion = () => {
                       : "border-b border-gray-200 text-gray-900 hover:text-gray-700 bg-gray-50"
                   }`}
                 >
-                  Looking Distributor/Agent/Retailer
+                  Looking For Distributor/Agent/Retailer
                 </button>
               </nav>
             </div>

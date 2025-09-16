@@ -69,7 +69,8 @@ const EventSection = () => {
               viewport={{ once: true }}
             >
               <h3 className="text-xl md:text-3xl font-semibold text-gray-800 mb-4">
-                A Heartfelt Thank You to Our Community
+                A Heartfelt Thank You to Our Exhibitor &
+                Retailer
               </h3>
               <p className="text-gray-600 text-sm md:text-lg   max-w-4xl mx-auto mb-6">
                 The 30th SIGA Garment Fair 2025 has concluded with remarkable success, and we couldn't have done it without each and every one of you. To our exhibitors who showcased their finest collections, retailers who discovered new opportunities, visitors who brought energy to the venue, and partners who supported our vision - thank you for making this milestone event truly memorable.

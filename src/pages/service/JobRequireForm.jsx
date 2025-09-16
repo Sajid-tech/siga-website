@@ -343,13 +343,7 @@ const JobRequireForm = () => {
         </motion.div>
 
         <FeatureCard>
-          <CardHeader className="pb-2 sm:pb-4">
-            <CardHeading
-              icon={User}
-              title="Job Seeker"
-              description="Personal Information"
-            />
-          </CardHeader>
+         
           <CardContent>
             <form
               onSubmit={handleSubmit}

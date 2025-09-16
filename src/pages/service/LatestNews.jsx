@@ -71,7 +71,7 @@ const LatestNews = () => {
     );
 
     return (
-        <div className="relative w-full py-4 sm:py-8 bg-white overflow-hidden">
+        <div className="relative w-full  bg-white overflow-hidden">
             <div className="relative z-10 max-w-[85rem] mx-auto ">
                 <AnimatePresence mode="wait">
                     {selectedNews ? (
@@ -149,8 +149,8 @@ const LatestNews = () => {
                             // exit={{ opacity: 0, y: -20 }}
                             // transition={{ duration: 0.3 }}
                         >
-                            <div className="text-center mb-8 md:mb-16">
-                                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 md:mb-4">
+                            <div className="text-center mb-4">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 md:mb-4">
                                     SIGA <Highlight>Latest News</Highlight>
                                 </h1>
                                 <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
