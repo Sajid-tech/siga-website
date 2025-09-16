@@ -296,13 +296,7 @@ const JobOfferForm = () => {
         </motion.div>
 
         <FeatureCard>
-          <CardHeader className="pb-2 sm:pb-4 ">
-            <CardHeading
-              icon={Briefcase}
-              title="Employer Details"
-              description="Company/Firm Information"
-            />
-          </CardHeader>
+          
           <CardContent>
             <form
               onSubmit={handleSubmit}

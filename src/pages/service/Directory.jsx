@@ -37,30 +37,36 @@ const Directory = () => {
 
   const transformData = (apiData) => {
     if (!apiData || !apiData.data) return [];
-
-    return apiData.data.map((item) => ({
-      id: item.id,
-      name: item.name_of_firm,
-      contactPerson: item.contact_person,
-      address: item.contact_address,
-      email: item.mail_id,
-      website: item.website,
-      phone: item.office_ph_no,
-      mobile: item.cell_no,
-      fax: item.fax_no,
-      businessType: item.nature_of_business,
-      isManufacturer: item.manufacturers === "Yes",
-      brands: item.brands,
-      isDistributor: item.agents !== null,
-      specialization: item.specialization,
-      category:
-        item.manufacturers === "Yes" && item.agents !== null
-          ? "both"
-          : item.manufacturers === "Yes"
-          ? "manufacturer"
-          : "distributor",
-    }));
+  
+    return apiData.data.map((item) => {
+      const isManufacturer = item.manufacturers?.toLowerCase() === "yes";
+      const isDistributor = !!item.agents || !isManufacturer;
+  
+      return {
+        id: item.id,
+        name: item.name_of_firm,
+        contactPerson: item.contact_person,
+        address: item.contact_address,
+        email: item.mail_id,
+        website: item.website,
+        phone: item.office_ph_no,
+        mobile: item.cell_no,
+        fax: item.fax_no,
+        businessType: item.nature_of_business || "",
+        isManufacturer,
+        isDistributor,
+        brands: item.brands,
+        specialization: item.specialization,
+        category:
+          isManufacturer && isDistributor
+            ? "both"
+            : isManufacturer
+            ? "manufacturer"
+            : "distributor",
+      };
+    });
   };
+  
 
   const directoryData = data ? transformData(data) : [];
 

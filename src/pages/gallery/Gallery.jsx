@@ -1,4 +1,5 @@
-import React from 'react';
+// Gallery.jsx
+import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -7,16 +8,15 @@ import "react-lazy-load-image-component/src/effects/opacity.css";
 import Masonry from "react-masonry-css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useNavigate } from "react-router-dom";
 import BASE_URL from '@/config/BaseUrl';
 
-
 const fetchGalleryData = async () => {
-  const { data } = await axios.get(  `${BASE_URL}/api/getGallery`);
+  const { data } = await axios.get(`${BASE_URL}/api/getGallery`);
   return data;
 };
 
-
-const GallerySection = ({ className, items, ...props }) => {
+const GallerySection = ({ className, items, imageUrl, onViewAll, ...props }) => {
   return (
     <section
       className={`py-16 w-full bg-gradient-to-b from-transparent via-muted/50 to-transparent ${className || ''}`}
@@ -31,6 +31,8 @@ const GallerySection = ({ className, items, ...props }) => {
               answer={item.answer}
               index={index}
               galleryData={item.galleryData}
+              imageUrl={imageUrl}
+              onViewAll={() => onViewAll(item)} 
             />
           ))}
         </div>
@@ -39,14 +41,38 @@ const GallerySection = ({ className, items, ...props }) => {
   );
 };
 
+const GalleryItem = ({ question, answer, index, galleryData, imageUrl }) => {
+  const navigate = useNavigate();
 
-const GalleryItem = ({ question, answer, index, galleryData }) => {
   const breakpointColumnsObj = {
-    default: 4,
+    default: 5,
     1280: 3,
     1024: 2,
     640: 1,
   };
+
+  const handleViewFullGallery = () => {
+    if (galleryData && galleryData.length > 0) {
+   
+      const year = galleryData[0]?.gallery_event_year;
+  
+    
+      const yearImages = galleryData.filter(
+        (img) => img.gallery_event_year === year
+      );
+  
+     
+      navigate(`/galleryAll/${year}`, {
+        state: {
+          year,
+          images: yearImages,
+          galleryItem: { question, answer }
+        }
+      });
+    }
+  };
+  
+  
 
   return (
     <motion.div
@@ -54,62 +80,40 @@ const GalleryItem = ({ question, answer, index, galleryData }) => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       viewport={{ once: true }}
-      className="group rounded-lg bg-gradient-to-br from-background via-muted/50 to-background  overflow-hidden"
+      className="group rounded-lg bg-gradient-to-br from-background via-muted/50 to-background overflow-hidden"
     >
+      <div className="relative px-5 py-6 border rounded-xl border-border/20 overflow-hidden group bg-gradient-to-br from-background/80 to-muted/20">
+        <div className="relative z-10 flex items-start justify-between gap-3">
+          <div>
+            <h3 className="text-xl font-semibold text-foreground leading-tight mb-1">
+              {question}
+            </h3>
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {answer}
+            </p>
+          </div>
+          {galleryData && galleryData.length > 0 && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleViewFullGallery}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+            >
+              View All
+            </motion.button>
+          )}
+        </div>
+      </div>
 
-<div className="relative px-5 py-6 border rounded-xl border-border/20 overflow-hidden group bg-gradient-to-br from-background/80 to-muted/20">
-
-  <div className="absolute inset-0 overflow-hidden  transition-opacity duration-300 pointer-events-none">
-    <img 
-      src="https://a-us.storyblok.com/f/1020544/500x500/fc53950a6e/blue-curl.gif" 
-      className="absolute -right-5 -top-2 w-24 h-24 mix-blend-overlay" 
-      alt=""
-    />
-    <img 
-      src="https://a-us.storyblok.com/f/1019472/500x500/9353110b3c/yellow-star.gif" 
-      className="absolute -left-5 -bottom-5 w-20 h-20 mix-blend-lighten" 
-      alt=""
-    />
-    <img 
-      src="https://a-us.storyblok.com/f/1020544/500x500/39ac930bc7/green-curl.gif" 
-      className="absolute right-10 bottom-2 w-16 h-16 mix-blend-color-dodge opacity-70" 
-      alt=""
-    />
-  </div>
-  
-  {/* Compact content layout */}
-  <div className="relative z-10 flex items-start gap-3">
-   
-    
-    <div>
-      <h3 className="text-xl font-semibold text-foreground leading-tight mb-1">
-        {question}
-      </h3>
-      <p className="text-sm text-muted-foreground line-clamp-2">
-        {answer}
-      </p>
-    </div>
-  </div>
-</div>
-    
-      {/* <div className="px-6 py-6 border rounded-lg border-border/20">
-        <h3 className="text-xl font-semibold text-foreground mb-2">
-          {question}
-        </h3>
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {answer}
-        </p>
-      </div> */}
-
-      
-      <div className="px-2 pb-6 pt-4 ">
+      {/* Images */}
+      <div className="px-2 pb-6 pt-4">
         {galleryData && galleryData.length > 0 ? (
           <Masonry
             breakpointCols={breakpointColumnsObj}
             className="my-masonry-grid"
             columnClassName="my-masonry-grid_column"
           >
-            {galleryData.map((imageUrl, imgIndex) => (
+            {galleryData.map((imgObj, imgIndex) => (
               <motion.div
                 key={imgIndex}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -117,15 +121,13 @@ const GalleryItem = ({ question, answer, index, galleryData }) => {
                 transition={{ duration: 0.3, delay: imgIndex * 0.05 }}
                 viewport={{ once: true }}
                 className="mb-4 rounded-lg overflow-hidden group cursor-pointer"
+                onClick={() => navigate(`/galleryAll/${imgObj.gallery_event_year}`)}
               >
                 <LazyLoadImage
-                  src={imageUrl}
-                  alt={`Gallery image ${imgIndex + 1}`}
+                  src={`${imageUrl}${imgObj.gallery_folder}/${imgObj.gallery_image}`}
+                  alt={`Gallery ${imgObj.gallery_event_year} - ${imgIndex + 1}`}
                   effect="blur"
-                  width="100%"
-                  height="auto"
                   className="w-full h-auto object-cover rounded-lg hover:scale-105 transition-transform duration-300 shadow-md hover:shadow-lg"
-                  
                 />
               </motion.div>
             ))}
@@ -141,11 +143,17 @@ const GalleryItem = ({ question, answer, index, galleryData }) => {
 };
 
 const Gallery = () => {
+  const navigate = useNavigate();
   const { data: galleryData, isLoading, isError } = useQuery({
     queryKey: ['galleryData'],
     queryFn: fetchGalleryData,
     staleTime: 60 * 1000 * 5
   });
+
+
+
+
+ 
 
   const Gallery_Data = [
     {
@@ -193,11 +201,7 @@ const Gallery = () => {
   return (
     <div className="relative w-full pt-28 bg-white overflow-hidden">
       <div className="relative z-10 max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero Section */}
-        <div 
-          className="text-center mb-16"
-       
-        >
+        <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             SIGA <Highlight>Gallery</Highlight>
           </h1>
@@ -209,8 +213,8 @@ const Gallery = () => {
         {isLoading ? (
           <div className="space-y-12">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="rounded-lg  overflow-hidden">
-                <div className="px-6 py-6 ">
+              <div key={i} className="rounded-lg overflow-hidden">
+                <div className="px-6 py-6">
                   <Skeleton height={24} width="60%" className="mb-2" />
                   <Skeleton height={16} width="80%" />
                 </div>
@@ -230,9 +234,9 @@ const Gallery = () => {
           </div>
         ) : (
           <GallerySection
-            title="Event Galleries"
-            description="Browse through our past events"
             items={Gallery_Data}
+            imageUrl={galleryData?.image_url}
+          
           />
         )}
       </div>
@@ -244,11 +248,9 @@ const Highlight = ({ children, className }) => {
   return (
     <span className={`relative inline-block font-semibold ${className}`}>
       <span className="relative z-10">{children}</span>
-  
       <span className="absolute inset-0 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 rounded-lg px-2 py-1 -z-0 blur-sm"></span>
     </span>
   );
 };
-
 
 export default Gallery;

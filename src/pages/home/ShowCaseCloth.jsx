@@ -109,7 +109,7 @@ const ShowCaseCloth = () => {
         <div className="mb-8 text-center gap-4">
           <div className="relative z-30"> 
             <h2 className="text-3xl font-medium text-gray-900">
-              Matching style and class with <span className="text-blue-900">luxury and comfort.</span>
+              Brands Participated  <span className="text-blue-900">With Us.</span>
             </h2>
             <p className="text-gray-600 mt-2">
               Clothes Are The Spirit Of Fashion

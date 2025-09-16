@@ -462,10 +462,10 @@ const BecomeMember = () => {
           className="rounded-xl  hover:scale-105  text-yellow-800  px-5 text-base relative overflow-hidden hover:cursor-pointer group"
         >
           <span className="relative z-10">
-            <TextEffect preset="scale" per="word">
+            {/* <TextEffect preset="scale" per="word"> */}
      
               Click Here
-            </TextEffect>
+            {/* </TextEffect> */}
           </span>
           <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
         </Button>

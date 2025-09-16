@@ -55,12 +55,13 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
     }
   }, [swiperInstance]);
 
-   const photos = galleryData?.event_gallery?.map((src, index) => ({
+  const photos = galleryData?.event_gallery?.map((item, index) => ({
     id: index + 1,
     zIndex: 20 + (index % 4) * 5, 
     direction: index % 2 === 0 ? "left" : "right", 
-    src: src
+    src: `${galleryData.image_url}${item.gallery_folder}/${item.gallery_image}`
   })) || [];
+
 
   // const photos = [
   //   { id: 1, zIndex: 20, direction: "left", src: "https://southindiagarmentsassociation.com/assets/images/banner/about.jpg" },
@@ -87,9 +88,9 @@ const PhotoGallery = ({ animationDelay = 0.5 }) => {
             A Journey Through Visual Stories
           </p>
           <h3 className="z-20 mx-auto max-w-2xl justify-center bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text py-3 text-center text-4xl text-transparent dark:bg-gradient-to-r dark:from-slate-100 dark:via-slate-200 dark:to-slate-100 dark:bg-clip-text md:text-7xl">
-          Glimpse of the 30ᵗʰ{" "}
+          Glimpse of the <br /> 
             <span className="text-red-500">
-              <FlipLink>SIGA FAIR</FlipLink>
+            30ᵗʰ{" "}  <FlipLink>SIGA FAIR</FlipLink>
             </span>
           </h3>
 

@@ -82,11 +82,11 @@ export default function HomeAbout() {
         </div>
 
         <p className="text-center max-w-2xl mx-auto mb-16 text-gray-600">
-          South India Garment Association (SIGA) was formed more than a decade ago to create a platform for manufacturers,
+          South India Garment Association (SIGA) was formed more than 3 decade ago to create a platform for manufacturers,
           distributors, agents and retail traders in the garment industry.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
           <div className="space-y-16">
             {services
               .filter((service) => service.position === "left")
@@ -95,7 +95,7 @@ export default function HomeAbout() {
               ))}
           </div>
 
-          <div className="flex justify-center items-center order-first md:order-none mb-8 md:mb-0">
+          {/* <div className="flex justify-center items-center order-first md:order-none mb-8 md:mb-0">
             <div className="relative w-full max-w-xs rounded-md overflow-hidden shadow-xl">
               <img
                 src="https://southindiagarmentsassociation.com/assets/images/banner/about.jpg"
@@ -103,7 +103,7 @@ export default function HomeAbout() {
                 className="w-full h-full object-cover"
               />
             </div>
-          </div>
+          </div> */}
 
           <div className="space-y-16">
             {services
