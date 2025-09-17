@@ -124,16 +124,15 @@ const Contact = () => {
       title: "Mail",
       icon: <Mail className="w-5 h-5" />,
       entries: [
-       
-        { icon: <Earth size={14} />, text: "sigabengluru@gmail.com" },
-        { icon: <Mail size={14} />, text: "info.sigafair@gmail.com" },
+        { icon: <Earth size={14} />, text: "sigabengluru@gmail.com", href: "mailto:sigabengluru@gmail.com" },
+        { icon: <Mail size={14} />, text: "info.sigafair@gmail.com", href: "mailto:info.sigafair@gmail.com" },
       ],
     },
     {
       title: "Contact",
       icon: <Phone className="w-5 h-5" />,
       entries: [
-        { icon: <Phone size={14} />, text: "(+91) 96326 48525"},
+        { icon: <Phone size={14} />, text: "(+91) 96326 48525", href: "tel:+919632648525" },
         {
           icon: (
             <svg
@@ -142,10 +141,11 @@ const Contact = () => {
               viewBox="0 0 32 32"
               fill="currentColor"
             >
-              <path d="M16 0C7.164 0 0 7.163 0 16c0 2.82.735 5.601 2.126 8.049L0 32l8.265-2.086A15.902 15.902 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333c-2.372 0-4.683-.619-6.72-1.792l-.48-.278-4.897 1.237 1.294-4.768-.313-.491a13.245 13.245 0 01-2.06-7.041c0-7.323 5.956-13.28 13.279-13.28 7.324 0 13.28 5.957 13.28 13.28 0 7.323-5.956 13.28-13.28 13.28zM23.61 19.373c-.327-.164-1.934-.955-2.235-1.065-.3-.11-.52-.164-.74.164s-.847 1.065-1.04 1.287c-.191.218-.382.246-.709.082-.327-.163-1.383-.509-2.637-1.622-.974-.867-1.633-1.934-1.825-2.26-.191-.327-.021-.503.145-.667.149-.148.327-.382.491-.573.164-.191.218-.327.327-.546.11-.218.055-.409-.027-.573-.082-.163-.74-1.788-1.015-2.456-.268-.644-.541-.558-.74-.568-.191-.008-.409-.01-.627-.01-.218 0-.573.082-.873.409-.3.327-1.144 1.117-1.144 2.726 0 1.609 1.172 3.164 1.337 3.383.164.218 2.309 3.523 5.6 4.942.783.337 1.393.538 1.869.686.784.25 1.496.215 2.057.13.627-.094 1.934-.79 2.209-1.552.273-.76.273-1.409.19-1.552-.082-.145-.3-.218-.627-.382z" />
+              <path d="M16 0C7.164 0 0 7.163 0 16c0 2.82.735 5.601 2.126 8.049L0 32l8.265-2.086A15.902 15.902 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.333c-2.372 0-4.683-.619-6.72-1.792l-.48-.278-4.897 1.237 1.294-4.768-.313-.491a13.245 13.245 0 01-2.06-7.041c0-7.323 5.956-13.28 13.279-13.28 7.324 0 13.28 5.957 13.28 13.28 0 7.323-5.956 13.28-13.28 13.28zM23.61 19.373c-.327-.164-1.934-.955-2.235-1.065-.3-.11-.52-.164-.74.164s-.847 1.065-1.04 1.287c-.191.218-.382.246-.709.082-.327-.163-1.383-.509-2.637-1.622-.974-.867-1.633-1.934-1.825-2.26-.191-.327-.021-.503.145-.667.149-.148.327-.382.491-.573.164-.191.218-.327.327-.546.11-.218.55-.409-.027-.573-.082-.163-.74-1.788-1.015-2.456-.268-.644-.541-.558-.74-.568-.191-.008-.409-.01-.627-.01-.218 0-.573.082-.873.409-.3.327-1.144 1.117-1.144 2.726 0 1.609 1.172 3.164 1.337 3.383.164.218 2.309 3.523 5.6 4.942.783.337 1.393.538 1.869.686.784.25 1.496.215 2.057.13.627-.094 1.934-.79 2.209-1.552.273-.76.273-1.409.19-1.552-.082-.145-.3-.218-.627-.382z" />
             </svg>
           ),
           text: "(+91) 98450 03059",
+          href: "tel:+919845003059",
         },
       ],
     },
@@ -155,13 +155,13 @@ const Contact = () => {
       entries: [
         {
           icon: <MapPin size={14} />,
-          text:
-            "No. 308, 1st Floor, Auto Tower #9, J.C. Road, Bangalore-560002." ,
+          text: "No. 308, 1st Floor, Auto Tower #9, J.C. Road, Bangalore-560002.",
           multiline: true,
         },
       ],
     },
   ];
+  
 
   
   const CardHeading = useCallback(
@@ -248,17 +248,28 @@ const Contact = () => {
                 <CardContent className="flex-1 flex flex-col">
                   <div className="p-3 flex-1 flex flex-col">
                     <div className="space-y-2">
-                      {item.entries.map((entry, eIdx) => (
-                        <div
-                          key={eIdx}
-                          className={`flex ${
-                            entry.multiline ? "items-start" : "items-center"
-                          } gap-2 text-sm text-gray-600`}
-                        >
-                          <span className="text-gray-500">{entry.icon}</span>
-                          <span>{entry.text}</span>
-                        </div>
-                      ))}
+                    {item.entries.map((entry, eIdx) => (
+  <div
+    key={eIdx}
+    className={`flex ${entry.multiline ? "items-start" : "items-center"} gap-2 text-sm text-gray-600`}
+  >
+    <span className="text-gray-500">{entry.icon}</span>
+    {entry.href ? (
+      <a
+        href={entry.href}
+      
+        className="hover:underline text-blue-600"
+        target={entry.href.startsWith("https") ? "_blank" : "_self"}
+        rel="noopener noreferrer"
+      >
+        {entry.text}
+      </a>
+    ) : (
+      <span>{entry.text}</span>
+    )}
+  </div>
+))}
+
                     </div>
                   </div>
                 </CardContent>

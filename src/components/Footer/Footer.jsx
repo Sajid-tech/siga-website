@@ -147,16 +147,17 @@ export default function Footer() {
        );
      }
    
-  
      if (isError) {
        return (
          <div className="relative w-full bg-gradient-to-br from-red-50 via-transparent to-indigo-300/25 py-8">
            <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
              <div className="text-red-500">Error loading brands. Please try again later.</div>
            </div>
-         </div>
+         </div> 
        );
      }
+
+
   return (
     <footer className=" mt-16  w-full place-self-end rounded-t-xl">
       <div className="mx-auto max-w-[85rem] px-4 pt-5 pb-6 sm:px-6 lg:px-8 ">
@@ -169,13 +170,10 @@ export default function Footer() {
                    src="/siga-logo.png"
                    className={(" h-14 w-auto")}
               />
-             
             </div>
-
             <p className="text-foreground/50 mt-6 max-w-md text-center leading-relaxed sm:max-w-xs sm:text-left">
               {data.company.description}
             </p>
-
             <ul className="mt-8 flex justify-center gap-6 sm:justify-start md:gap-8">
               {socialLinks.map(({ icon: Icon,label, href }) => (
                 <li key={label}>
@@ -190,7 +188,6 @@ export default function Footer() {
               ))}
             </ul>
           </div>
-
           <div className="grid grid-cols-2 gap-0 md:gap-8 sm:grid-cols-2 md:grid-cols-4 lg:col-span-2">
             <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">About Us</p>
@@ -214,7 +211,6 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-
             <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Our Services</p>
               <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
@@ -235,7 +231,6 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-
             <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Helpful Links</p>
               <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
@@ -267,39 +262,49 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-
             <div className="text-center sm:text-left ">
               <p className="text-lg text-red-600 font-medium">Contact Us</p>
               <ul className="mt-1 md:mt-8 space-y-2 md:space-y-4 text-sm">
-                {contactInfo.map(({ icon: Icon, text, isAddress }) => (
-                  <li key={text}>
-                    <a
-                      className="flex items-center justify-center gap-1.5 sm:justify-start"
-                      href="#"
-                    >
-                      <Icon className="text-primary size-5 hidden md:block shrink-0 " />
-                      {isAddress ? (
-                        <address className="text-secondary-foreground/70 -mt-0.5 flex-1 not-italic transition">
-                          {text}
-                        </address>
-                      ) : (
-                        <span className="text-secondary-foreground/70 flex-1 transition break-words w-12">
-                          {text}
-                        </span>
-                      )}
-                    </a>
-                  </li>
-                ))}
+                <li>
+                  <a
+                    href={`mailto:${data.contact.email}`}
+                    target='_blank'
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 sm:justify-start"
+                  >
+                    <Mail className="text-primary size-5 hidden md:block shrink-0" />
+                    <span className="text-secondary-foreground/70 w-28 break-words">
+                      {data.contact.email}
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`tel:${data.contact.phone}`}
+                    className="flex items-center justify-center gap-1.5 sm:justify-start"
+                  >
+                    <Phone className="text-primary size-5 hidden md:block shrink-0" />
+                    <span className="text-secondary-foreground/70">
+                      {data.contact.phone}
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <div className="flex items-center justify-center gap-1.5 sm:justify-start">
+                    <MapPin className="text-primary size-5 hidden md:block shrink-0" />
+                    <address className="text-secondary-foreground/70 not-italic">
+                      {data.contact.address}
+                    </address>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
-          
         </div>
-
         <div className="mt-2 md:mt-12 border-t pt-1 md:pt-6">
           <div className="text-center sm:flex sm:justify-between sm:text-left">
           <p className="text-secondary-foreground/70 mt-4 text-sm transition sm:order-first sm:mt-0">
-              &copy; 2025 {data.company.name}
+              &copy; 2025 Made by  <a href="https://ag-solutions.in/" target="_blank" rel="noopener noreferrer" className=' text-red-600 hover:text-red-800'>AG-Solutions</a> 
             </p>
             <p className="text-sm">
               <span className="block sm:inline">Visitor Count : {vistorCounts[0].TotalVisitor}</span>
@@ -307,9 +312,6 @@ export default function Footer() {
             <p className="text-sm">
               <span className="block sm:inline">All rights reserved.</span>
             </p>
-            
-
-           
           </div>
         </div>
       </div>
