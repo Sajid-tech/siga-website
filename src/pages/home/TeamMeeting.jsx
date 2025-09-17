@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -7,45 +7,14 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import FlipLink from "@/components/ui/text-effect-flipper";
+import { useQuery } from '@tanstack/react-query';
+import BASE_URL from '@/config/BaseUrl';
 
-const items = [
-  {
-    id: "1",
-    title: "ANURAG SINGHLA",
-    role: "President",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/ANURAG_SINGHLA_.jpg",
-  },
-  {
-    id: "2",
-    title: "NARESH LAKHANPAL",
-    role: "Vice President",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/naresh_lakhanpal.jpg",
-  },
-  {
-    id: "3",
-    title: "KISHORE JAIN",
-    role: "Vice President",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/kishore_jain.jpg",
-  },
-  {
-    id: "4",
-    title: "RAJESH CHAWAT",
-    role: "Hon. Secretary",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/RAJESH_CHAWAT.jpg",
-  },
-  {
-    id: "5",
-    title: "GOVIND MUNDRA",
-    role: "Hon. JT Secretary",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/GOVIND_MUNDRA.jpg",
-  },
-  {
-    id: "6",
-    title: "TEJAS MEHTA",
-    role: "Hon. Treasurer",
-    image: "https://southindiagarmentsassociation.com/assets/images/committee/TEJAS_MEHTA.jpg",
-  },
-];
+const fetchCommitteeByYear = async (year) => {
+  const response = await fetch(`${BASE_URL}/api/getCommitteeByYear/${year}`);
+  if (!response.ok) throw new Error('Network response was not ok');
+  return response.json();
+};
 
 const TeamMeeting = () => {
   const [carouselApi, setCarouselApi] = useState();
@@ -53,22 +22,32 @@ const TeamMeeting = () => {
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['committeeData', '2024-26'],
+    queryFn: () => fetchCommitteeByYear('2024-26'),
+  });
+
+  const items = data?.office_berres?.map((member, index) => ({
+    id: (index + 1).toString(),
+    title: member.name,
+    role: member.designation,
+    image: `${data.image_url}${member.image}`,
+  })) || [];
+
+  const handleSelect = () => {
     if (!carouselApi) return;
+    setCanScrollPrev(carouselApi.canScrollPrev());
+    setCanScrollNext(carouselApi.canScrollNext());
+    setCurrentSlide(carouselApi.selectedScrollSnap());
+  };
 
-    const updateSelection = () => {
-      setCanScrollPrev(carouselApi.canScrollPrev());
-      setCanScrollNext(carouselApi.canScrollNext());
-      setCurrentSlide(carouselApi.selectedScrollSnap());
-    };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-    updateSelection();
-    carouselApi.on("select", updateSelection);
-
-    return () => {
-      carouselApi.off("select", updateSelection);
-    };
-  }, [carouselApi]);
+  if (isError) {
+    return <div>Error fetching data.</div>;
+  }
 
   return (
     <div className="w-full pt-10 relative bg-white/90 overflow-hidden">
@@ -76,11 +55,8 @@ const TeamMeeting = () => {
         <div className="flex flex-col items-center text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-semibold text-gray-800 mb-4">
             Our <span className="text-red-500">
-              
-              
-              
               <FlipLink>Leadership</FlipLink>
-              </span>
+            </span>
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl">
             The driving force behind our organization's success
@@ -95,29 +71,25 @@ const TeamMeeting = () => {
               slidesToScroll: 1,
               breakpoints: {
                 "(min-width: 1536px)": {
-                  // 2xl screens - show 6 items
                   slidesToScroll: 1,
                 },
                 "(min-width: 1280px)": {
-                  // xl screens - show 5 items
                   slidesToScroll: 1,
                 },
                 "(min-width: 1024px)": {
-                  // lg screens - show 4 items
                   slidesToScroll: 1,
                 },
                 "(min-width: 768px)": {
-                  // md screens - show 2 items
                   slidesToScroll: 1,
                 },
                 "(max-width: 767px)": {
-                  // mobile - show 1 item with peek
                   slidesToScroll: 1,
                   dragFree: true,
                 },
               },
             }}
             className="w-full"
+            onSelect={handleSelect}
           >
             <CarouselContent className="ml-0 -mr-2">
               {items.map((item) => (
@@ -135,14 +107,16 @@ const TeamMeeting = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="relative z-10">
-                        <h3 className="text-lg lg:text-xl font-bold tracking-tight leading-tight">{item.title}</h3>
-           
-                        <div className=" flex items-center">
-                          <span className="text-red-400 font-medium text-sm lg:text-base">{item.role}</span>
+                        <h3 className="text-lg lg:text-xl font-bold tracking-tight leading-tight">
+                          {item.title}
+                        </h3>
+                        <div className="flex items-center">
+                          <span className="text-red-400 font-medium text-sm lg:text-base">
+                            {item.role}
+                          </span>
                         </div>
                       </div>
                     </div>
-                    {/* Red overlay on hover */}
                     <div className="absolute inset-0 bg-red-400 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
                   </div>
                 </CarouselItem>
@@ -203,8 +177,8 @@ const TeamMeeting = () => {
             <button
               key={index}
               className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                currentSlide === index 
-                  ? "bg-red-500 scale-125" 
+                currentSlide === index
+                  ? "bg-red-500 scale-125"
                   : "bg-gray-400 hover:bg-gray-500"
               }`}
               onClick={() => carouselApi?.scrollTo(index)}

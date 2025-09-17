@@ -31,8 +31,8 @@ const menuItemsMobile = [
   { name: "Service", href: "/service" },
   { name: "Efforts", href: "/efforts" },
   { name: "Gallery", href: "/gallery" },
-  { name: "Directory", href: "/committee" },
-  { name: "Managing Committee", href: "/contact" },
+  { name: "Directory", href: "/directory" },
+  { name: "Managing Committee", href: "/committee" },
   
   
 ];

@@ -242,48 +242,65 @@ const Efforts = () => {
 
 
 <div className="flex flex-col md:flex-row items-center gap-2 mt-12 sm:mt-16 md:mt-36 w-full  ">
-  {/* Payment Mediation - Takes 50% width on desktop */}
   <div className=" w-full h-full md:min-h-[180px] ">
-    <div
-      className="group relative flex flex-col justify-between overflow-hidden bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] transform-gpu rounded-lg p-3 sm:p-5 w-full h-full"
-      style={{ transform: "translateY(0)", transition: "transform 0.3s ease" }}
-      onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-5px)"}
-      onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0)"}
-    >
-      <span className="absolute -left-px -top-px block size-2 border-l-2 border-t-2 border-green-500"></span>
-      <span className="absolute -right-px -top-px block size-2 border-r-2 border-t-2 border-green-500"></span>
-      <span className="absolute -bottom-px -left-px block size-2 border-b-2 border-l-2 border-green-500"></span>
-      <span className="absolute -bottom-px -right-px block size-2 border-b-2 border-r-2 border-green-500"></span>
-      <div className="absolute inset-0 pointer-events-none opacity-10 transition-opacity duration-300 bg-gradient-to-br from-green-400/70 via-green-500/60 to-green-400/70"></div>
-      <div className="absolute -right-20 -top-20 opacity-60 w-40 h-40 rounded-full bg-green-100 blur-xl"></div>
-       <div className="pointer-events-none z-10 flex transform-gpu flex-col gap-1  transition-all duration-300">
-                                     {/* <div className="w-6 h-6 mb-3 flex items-center justify-center rounded-full  bg-green-50 transition-colors">
-                                       <Mail className="h-5 w-5  text-green-500 transition-colors" />
-                                     </div> */}
-                                     <h3 className="text-lg font-semibold text-gray-900 md:text-xl ">
-                                       Payment Mediation
-                                     </h3>
-                                     <p className="max-w-lg mt-5  text-sm text-gray-600 md:text-sm">
-                                     SIGA assist members to resolve the conflict/disputes with their buyers/purchaser for recovery of pending payments.
-                                     </p>
-                                   </div>
-           
-                                   <div className=" absolute right-0 top-0 flex items-center transition-all duration-300 p-4 md:p-6 opacity-100">
-                                     <Link to={"/service?tab=payment_mediation"}>
-                                        <Button
-                                                     size="lg"
-                                                     className="rounded-xl hover:scale-105 text-green-800 px-5 text-base relative overflow-hidden hover:cursor-pointer group"
-                                                   >
-                                                     <span className="relative z-10">
-                                                       {/* <TextEffect preset="scale" per="word"> */}
-                                                         Click Here
-                                                       {/* </TextEffect> */}
-                                                     </span>
-                                                     <span className="absolute inset-0 bg-gradient-to-r from-green-200/80 via-green-300/80 to-green-200 opacity-100 transition-opacity duration-300 -skew-x-12" />
-                                                   </Button>
-                                     </Link>
-                                   </div>
-    </div>
+  <div
+  className="relative p-3 sm:p-6 rounded-lg sm:rounded-xl border border-white/20 backdrop-blur-lg text-center text-white overflow-hidden h-full"
+  style={{
+    background:
+      "linear-gradient(135deg, rgb(223, 197, 249) 0%, rgb(55, 111, 219) 100%)",
+    boxShadow:
+      "0 4px 16px rgba(34, 197, 94, 0.2), 0px 4px 16px rgba(22, 163, 74, 0.1) 0px 8px 32px",
+  }}
+>         
+                               <div className="absolute inset-0 bg-white/5 backdrop-blur-sm"></div>
+                               <div className="absolute inset-0 overflow-hidden">
+                                 <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-transparent to-green-500/15"></div>
+                                 <div className="absolute top-1/4 left-1/4 w-8 sm:w-16 h-8 sm:h-16 rounded-full bg-green-400/10 blur-lg sm:blur-xl"></div>
+                                 <div className="absolute bottom-1/3 right-1/3 w-12 sm:w-24 h-12 sm:h-24 rounded-full bg-green-500/15 blur-lg sm:blur-xl"></div>
+                               </div>
+       
+                               <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 text-center sm:text-left justify-between">
+                             
+                               
+                                
+                                 <img
+                                   src="/rs.gif"
+                                   alt="green curl"
+                                   className="absolute top-1/2 -right-2 w-10 sm:w-14 lg:w-16 opacity-80 pointer-events-none"
+                                 />
+                                
+                            
+       
+       
+                                 <div className="flex flex-col items-center sm:items-start relative z-10">
+                                   <h3 className="text-lg  lg:text-xl font-semibold text-green-900 drop-shadow-md">
+                                   Payment Mediation
+                                   </h3>
+       
+                                   <p className="text-green-950 text-sm sm:text-sm mt-2 sm:mt-3 font-light max-w-full ">
+                                   SIGA assist members to resolve the conflict/disputes with their buyers/purchaser for recovery of pending payments.
+                                   </p>
+                                 </div>
+       
+                          
+                          
+                                 <div className="mt-1 sm:mt-0 relative z-10">
+                                 <Link to={"/service?tab=payment_mediation"}>
+                                            <Button
+                                              size="lg"
+                                              className="rounded-xl hover:scale-105 text-green-800 px-5 text-base relative overflow-hidden hover:cursor-pointer group"
+                                            >
+                                              <span className="relative z-10">
+                                         
+                                                  Click Here
+                                             
+                                              </span>
+                                              <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
+                                            </Button>
+                                          </Link>
+                                        </div>
+                               </div>
+                             </div>
   </div>
 
   {/* Membership CTA - Takes 50% width on desktop */}
