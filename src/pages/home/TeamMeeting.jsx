@@ -95,7 +95,7 @@ const TeamMeeting = () => {
               {items.map((item) => (
                 <CarouselItem
                   key={item.id}
-                  className="pr-2 basis-[85%] sm:basis-1/2 md:basis-1/2 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
+                  className="pr-2 basis-[85%] sm:basis-1/2 md:basis-1/2 lg:basis-1/4 xl:basis-1/5 "
                 >
                   <div className="group relative h-[400px] w-full overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] shadow-lg hover:shadow-2xl">
                     <img
@@ -107,7 +107,7 @@ const TeamMeeting = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <div className="relative z-10">
-                        <h3 className="text-lg lg:text-xl font-bold tracking-tight leading-tight">
+                        <h3 className="text-lg  font-bold tracking-tight leading-tight">
                           {item.title}
                         </h3>
                         <div className="flex items-center">
