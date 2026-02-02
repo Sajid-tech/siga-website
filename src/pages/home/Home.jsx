@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 
 import  HeroSection  from "./HeroSection";
 import axios from "axios";
@@ -28,8 +28,13 @@ const updateVisitorCount = async () => {
   );
   return response.data;
 };
+
+const BANNER_URL =
+  "https://southindiagarmentsassociation.com/crmapi/public/assets/images/banner/31.jpg";
+
 const Home = () => {
   const queryClient = useQueryClient();
+   const [showBanner, setShowBanner] = useState(true);
   const mutation = useMutation({
     mutationFn: updateVisitorCount,
     onSuccess: () => {
@@ -48,6 +53,17 @@ const Home = () => {
 
   return (
     <>
+
+       {showBanner && (
+        <section className="w-full h-auto pt-24 sm:pt-24 md:pt-28 lg:pt-32">
+          <img
+            src={BANNER_URL}
+            alt="Banner"
+            className="w-full h-full object-cover"
+            onError={() => setShowBanner(false)}
+          />
+        </section>
+      )}
       <HeroSection />
 
 

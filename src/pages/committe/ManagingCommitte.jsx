@@ -42,7 +42,7 @@ const ManagingCommitte = () => {
 
 
   const [selectedYear, setSelectedYear] = useState(
-    yearsData?.data?.[0]?.year || '2024-26'
+    yearsData?.data?.[0]?.year 
   );
 
   const { data, isLoading, isError, error } = useQuery({
@@ -286,7 +286,7 @@ const ManagingCommitte = () => {
               Managing Committee {selectedYear} 
             </h2>
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="flex flex-col items-center">
                     <Skeleton height={200} width={200} className="rounded-md" />
@@ -296,7 +296,7 @@ const ManagingCommitte = () => {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 w-full">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 w-full">
                 {data?.office_berres?.map((member) => (
                
 
