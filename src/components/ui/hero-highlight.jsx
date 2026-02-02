@@ -2,12 +2,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import { useMotionValue, motion, useMotionTemplate } from "motion/react";
 
-
-export const HeroHighlight = ({
-  children,
-  className,
-  containerClassName
-}) => {
+export const HeroHighlight = ({ children, className, containerClassName }) => {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
 
@@ -23,11 +18,7 @@ export const HeroHighlight = ({
     },
   };
 
-  function handleMouseMove({
-    currentTarget,
-    clientX,
-    clientY
-  }) {
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
     if (!currentTarget) return;
     let { left, top } = currentTarget.getBoundingClientRect();
 
@@ -38,19 +29,22 @@ export const HeroHighlight = ({
     <div
       className={cn(
         "group relative flex h-[40rem] w-full items-center justify-center bg-white dark:bg-black",
-        containerClassName
+        containerClassName,
       )}
-      onMouseMove={handleMouseMove}>
+      onMouseMove={handleMouseMove}
+    >
       <div
         className="pointer-events-none absolute inset-0 dark:hidden"
         style={{
           backgroundImage: dotPatterns.light.default,
-        }} />
+        }}
+      />
       <div
         className="pointer-events-none absolute inset-0 hidden dark:block"
         style={{
           backgroundImage: dotPatterns.dark.default,
-        }} />
+        }}
+      />
       <motion.div
         className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100 dark:hidden"
         style={{
@@ -69,7 +63,8 @@ export const HeroHighlight = ({
               transparent 100%
             )
           `,
-        }} />
+        }}
+      />
       <motion.div
         className="pointer-events-none absolute inset-0 hidden opacity-0 transition duration-300 group-hover:opacity-100 dark:block"
         style={{
@@ -88,16 +83,14 @@ export const HeroHighlight = ({
               transparent 100%
             )
           `,
-        }} />
+        }}
+      />
       <div className={cn("relative z-20", className)}>{children}</div>
     </div>
   );
 };
 
-export const Highlight = ({
-  children,
-  className
-}) => {
+export const Highlight = ({ children, className }) => {
   return (
     <motion.span
       initial={{
@@ -118,8 +111,9 @@ export const Highlight = ({
       }}
       className={cn(
         `relative inline-block rounded-lg bg-gradient-to-r from-red-300 to-purple-300 px-1 pb-1 dark:from-indigo-500 dark:to-yellow-500`,
-        className
-      )}>
+        className,
+      )}
+    >
       {children}
     </motion.span>
   );
