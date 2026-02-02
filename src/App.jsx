@@ -17,12 +17,10 @@ import { Toaster } from "sonner";
 import SuspenseLoader from "./components/loader/SuspenseLoader.jsx";
 import GalleryAllByYear from "./pages/gallery/GalleryAllByYear.jsx";
 
-
 const Home = lazy(() => import("./pages/home/Home"));
 const Contact = lazy(() => import("./pages/contact/Contact"));
 const AboutUs = lazy(() => import("./pages/about/AboutUs"));
 const EventSection = lazy(() => import("./pages/event/EventSection"));
-
 
 const Service = lazy(() => import("./pages/service/Service"));
 
@@ -31,123 +29,121 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router >
+      <Router>
         <Toaster richColors position="bottom-right" />
-     
-          <VerticalDottedText />
-          <ScrollToTop />
-          {/* <Newsletter /> */}
-          
-          <MainLayout>
-  <Routes>
-    <Route
-      path="/"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Home />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/contact"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Contact />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/about"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <AboutUs />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/event"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <EventSection />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/service"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Service />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/gallery"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Gallery />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/directory"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Directory />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/efforts"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <Efforts />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/become-member"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <MemberShip />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/committee"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <ManagingCommitte />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/jobopening"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <JobOpeningList />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/jobrequire"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <JobRequireList />
-        </Suspense>
-      }
-    />
-    <Route
-      path="/galleryAll/:id"
-      element={
-        <Suspense fallback={<SuspenseLoader/>}>
-          <GalleryAllByYear />
-        </Suspense>
-      }
-    />
-  </Routes>
-</MainLayout>
 
-     
+        <VerticalDottedText />
+        <ScrollToTop />
+        {/* <Newsletter /> */}
+
+        <MainLayout>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Home />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Contact />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <AboutUs />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/event"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <EventSection />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/service"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Service />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/gallery"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Gallery />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/directory"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Directory />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/efforts"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <Efforts />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/become-member"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <MemberShip />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/committee"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <ManagingCommitte />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/jobopening"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <JobOpeningList />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/jobrequire"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <JobRequireList />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/galleryAll/:id"
+              element={
+                <Suspense fallback={<SuspenseLoader />}>
+                  <GalleryAllByYear />
+                </Suspense>
+              }
+            />
+          </Routes>
+        </MainLayout>
       </Router>
     </QueryClientProvider>
   );

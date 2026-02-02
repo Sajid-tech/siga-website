@@ -1,5 +1,4 @@
-
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { TextEffect } from "../ui/text-effect";
@@ -53,10 +52,10 @@ const BecomeMember = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showCaptchaError, setShowCaptchaError] = useState(false);
   const [captchaErrorType, setCaptchaErrorType] = useState("");
-   const [transactionId, setTransactionId] = useState("");
+  const [transactionId, setTransactionId] = useState("");
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const[resMsg,setResMsg]= useState('')
-  const [directoryId,setDirectoryId]=useState('')
+  const [resMsg, setResMsg] = useState("");
+  const [directoryId, setDirectoryId] = useState("");
   const [formData, setFormData] = useState({
     membership_category: "",
     name_of_firm: "",
@@ -108,7 +107,7 @@ const BecomeMember = () => {
     if (!formData.mail_id.trim()) {
       newErrors.mail_id = "Email is required";
     }
-    
+
     if (!formData.manufacturers) {
       newErrors.manufacturers = "Business Type is required";
     }
@@ -199,20 +198,16 @@ const BecomeMember = () => {
   };
   const membershipMutation = useMutation({
     mutationFn: (payload) => {
-      return axios.post(
-        `${BASE_URL}/api/create-directory`,
-        payload,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      return axios.post(`${BASE_URL}/api/create-directory`, payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
     onSuccess: (response) => {
       const res = response.data;
 
       if (res.code === "201") {
-        setResMsg(res.msg)
-        setDirectoryId(res?.latestData?.id)
+        setResMsg(res.msg);
+        setDirectoryId(res?.latestData?.id);
         // setFormData({
         //   membership_category: "",
         //   name_of_firm: "",
@@ -235,7 +230,10 @@ const BecomeMember = () => {
         setPhoto(null);
         setLogo(null);
         setStep(3);
-          toast.success(res.msg || "Membership request sent successfully! Please complete payment. ✅");
+        toast.success(
+          res.msg ||
+            "Membership request sent successfully! Please complete payment. ✅",
+        );
       } else if (res.code === "400") {
         toast.error(res.msg || "Something went wrong ❌");
       } else {
@@ -268,7 +266,7 @@ const BecomeMember = () => {
       setErrors(validationErrors);
       return;
     }
-   if (showCaptcha && !captchaVerified) {
+    if (showCaptcha && !captchaVerified) {
       setShowCaptchaError(true);
       setCaptchaErrorType("incomplete");
       return;
@@ -307,17 +305,16 @@ const BecomeMember = () => {
     },
     onSuccess: (response) => {
       const res = response.data;
-      
+
       if (res.code === "201") {
         setPaymentSuccess(true);
         toast.success(res.msg || "Transaction submitted successfully! ✅");
-        
-       
+
         setTimeout(() => {
           setStep(1);
-          
+
           setTransactionId("");
-          setDirectoryId("")
+          setDirectoryId("");
           setPaymentSuccess(false);
           setFormData({
             membership_category: "",
@@ -345,31 +342,31 @@ const BecomeMember = () => {
     },
     onError: (error) => {
       console.error("Error submitting transaction:", error);
-      toast.error(error.response?.data?.message || "Transaction submission failed");
+      toast.error(
+        error.response?.data?.message || "Transaction submission failed",
+      );
     },
   });
 
   const handleTransactionSubmit = (e) => {
     e.preventDefault();
-    
+
     if (!transactionId.trim()) {
       toast.error("Please enter a transaction ID");
       return;
     }
-    
-   
+
     const numericPrice = membershipData[membershipCategory]?.price
-      .replace('₹', '')
-      .replace(',', '');
-    
+      .replace("₹", "")
+      .replace(",", "");
+
     const payload = {
       directory_id: directoryId,
       directory_membership_category: formData.membership_category,
       directory_payment_transaction: transactionId,
       directory_payment_amount: numericPrice,
-  
     };
-    
+
     transactionMutation.mutate(payload);
   };
 
@@ -431,29 +428,29 @@ const BecomeMember = () => {
     setMembershipCategory("");
   };
 
-  const handleBacktoHome = ()=>{
+  const handleBacktoHome = () => {
     setStep(1);
     setMembershipCategory("");
-            setFormData({
-          membership_category: "",
-          name_of_firm: "",
-          gst: "",
-          contact_person: "",
-          cell_no: "",
-          member_image: "",
+    setFormData({
+      membership_category: "",
+      name_of_firm: "",
+      gst: "",
+      contact_person: "",
+      cell_no: "",
+      member_image: "",
 
-          contact_person2: "",
-          cell_no2: "",
-          member_image2: "",
+      contact_person2: "",
+      cell_no2: "",
+      member_image2: "",
 
-          contact_address: "",
-          mail_id: "",
-          office_ph_no: "",
-          manufacturers: "",
-          image: "",
-          brands: "",
-        });
-  }
+      contact_address: "",
+      mail_id: "",
+      office_ph_no: "",
+      manufacturers: "",
+      image: "",
+      brands: "",
+    });
+  };
   return (
     <Drawer.Root>
       <Drawer.Trigger asChild>
@@ -463,8 +460,7 @@ const BecomeMember = () => {
         >
           <span className="relative z-10">
             {/* <TextEffect preset="scale" per="word"> */}
-     
-              Click Here
+            Click Here
             {/* </TextEffect> */}
           </span>
           <span className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/80 to-white opacity-100 transition-opacity duration-300 -skew-x-12" />
@@ -699,142 +695,142 @@ const BecomeMember = () => {
                     </div>
                   </div>
                 </>
-              ) }
-  {step === 2 && (
-  <>
-  <div className="mb-8">
-    {/* Row 1 */}
-    <div className="hidden sm:flex items-center justify-between">
-      {/* Large screen heading */}
-      <h2 className="text-3xl font-semibold text-gray-900">
-        Fill Your Details
-      </h2>
+              )}
+              {step === 2 && (
+                <>
+                  <div className="mb-8">
+                    {/* Row 1 */}
+                    <div className="hidden sm:flex items-center justify-between">
+                      {/* Large screen heading */}
+                      <h2 className="text-3xl font-semibold text-gray-900">
+                        Fill Your Details
+                      </h2>
 
-      {/* Badge (large screen) */}
-      <div
-        className={`inline-flex items-center px-2.5 py-1 rounded-md border 
+                      {/* Badge (large screen) */}
+                      <div
+                        className={`inline-flex items-center px-2.5 py-1 rounded-md border 
 ${membershipData[membershipCategory]?.borderColor} 
 ${membershipData[membershipCategory]?.textColor}
 ${membershipData[membershipCategory]?.color}
 bg-opacity-40 backdrop-blur-sm shadow-sm ring-1 ring-white/30
 flex-shrink-0`}
-        style={{
-          boxShadow: `0 0 12px -2px var(--tw-shadow-color)`,
-          "--tw-shadow-color":
-            membershipCategory === "life-patron"
-              ? "rgba(168, 85, 247, 0.5)"
-              : membershipCategory === "ordinary"
-              ? "rgba(59, 130, 246, 0.5)"
-              : "rgba(16, 185, 129, 0.5)",
-        }}
-      >
-        <div
-          className={`flex items-center justify-center p-1 rounded-md 
+                        style={{
+                          boxShadow: `0 0 12px -2px var(--tw-shadow-color)`,
+                          "--tw-shadow-color":
+                            membershipCategory === "life-patron"
+                              ? "rgba(168, 85, 247, 0.5)"
+                              : membershipCategory === "ordinary"
+                                ? "rgba(59, 130, 246, 0.5)"
+                                : "rgba(16, 185, 129, 0.5)",
+                        }}
+                      >
+                        <div
+                          className={`flex items-center justify-center p-1 rounded-md 
 ${membershipData[membershipCategory]?.accentColor} text-white shadow-md`}
-        >
-          {membershipData[membershipCategory]?.icon}
-        </div>
+                        >
+                          {membershipData[membershipCategory]?.icon}
+                        </div>
 
-        <span className="ml-2 text-sm font-medium">
-          {membershipData[membershipCategory]?.title}
-        </span>
+                        <span className="ml-2 text-sm font-medium">
+                          {membershipData[membershipCategory]?.title}
+                        </span>
 
-        <span className="ml-2 text-xs font-normal opacity-80">
-          • {membershipData[membershipCategory]?.price}
-        </span>
-      </div>
-    </div>
+                        <span className="ml-2 text-xs font-normal opacity-80">
+                          • {membershipData[membershipCategory]?.price}
+                        </span>
+                      </div>
+                    </div>
 
-    {/* Row 1 - Small screen centered heading */}
-    <div className="flex sm:hidden justify-center mb-3">
-      <h2 className="text-2xl font-semibold text-gray-900">
-        Fill Your Details
-      </h2>
-    </div>
+                    {/* Row 1 - Small screen centered heading */}
+                    <div className="flex sm:hidden justify-center mb-3">
+                      <h2 className="text-2xl font-semibold text-gray-900">
+                        Fill Your Details
+                      </h2>
+                    </div>
 
-    {/* Row 2 */}
-    <div className="flex items-center justify-between mt-2">
-      {/* Change button */}
-      <button
-        onClick={handleBack}
-        className="text-sm font-medium p-1 text-gray-800 cursor-pointer 
+                    {/* Row 2 */}
+                    <div className="flex items-center justify-between mt-2">
+                      {/* Change button */}
+                      <button
+                        onClick={handleBack}
+                        className="text-sm font-medium p-1 text-gray-800 cursor-pointer 
 hover:scale-110 hover:text-gray-900 flex items-center transition-all"
-      >
-        <svg
-          className="w-4 h-4 mr-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="1.5"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        Change
-      </button>
-      {errors.membership_category && (
-        <p className="text-red-500 text-xs mt-1">
-          {errors.membership_category}
-        </p>
-      )}
+                      >
+                        <svg
+                          className="w-4 h-4 mr-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                          />
+                        </svg>
+                        Change
+                      </button>
+                      {errors.membership_category && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.membership_category}
+                        </p>
+                      )}
 
-      {/* Badge (small screen) */}
-      <div className="sm:hidden">
-        <div
-          className={`inline-flex items-center px-2 py-1 rounded-md border 
+                      {/* Badge (small screen) */}
+                      <div className="sm:hidden">
+                        <div
+                          className={`inline-flex items-center px-2 py-1 rounded-md border 
 ${membershipData[membershipCategory]?.borderColor} 
 ${membershipData[membershipCategory]?.textColor}
 ${membershipData[membershipCategory]?.color}
 bg-opacity-40 backdrop-blur-sm shadow-sm ring-1 ring-white/30`}
-          style={{
-            boxShadow: `0 0 12px -2px var(--tw-shadow-color)`,
-            "--tw-shadow-color":
-              membershipCategory === "life-patron"
-                ? "rgba(168, 85, 247, 0.5)"
-                : membershipCategory === "ordinary"
-                ? "rgba(59, 130, 246, 0.5)"
-                : "rgba(16, 185, 129, 0.5)",
-          }}
-        >
-          <div
-            className={`flex items-center justify-center p-1 rounded-md 
+                          style={{
+                            boxShadow: `0 0 12px -2px var(--tw-shadow-color)`,
+                            "--tw-shadow-color":
+                              membershipCategory === "life-patron"
+                                ? "rgba(168, 85, 247, 0.5)"
+                                : membershipCategory === "ordinary"
+                                  ? "rgba(59, 130, 246, 0.5)"
+                                  : "rgba(16, 185, 129, 0.5)",
+                          }}
+                        >
+                          <div
+                            className={`flex items-center justify-center p-1 rounded-md 
 ${membershipData[membershipCategory]?.accentColor} text-white shadow-md`}
-          >
-            {membershipData[membershipCategory]?.icon}
-          </div>
+                          >
+                            {membershipData[membershipCategory]?.icon}
+                          </div>
 
-          <span className="ml-2 text-sm font-medium">
-            {membershipData[membershipCategory]?.title}
-          </span>
+                          <span className="ml-2 text-sm font-medium">
+                            {membershipData[membershipCategory]?.title}
+                          </span>
 
-          <span className="ml-2 text-xs font-normal opacity-80">
-            • {membershipData[membershipCategory]?.price}
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
+                          <span className="ml-2 text-xs font-normal opacity-80">
+                            • {membershipData[membershipCategory]?.price}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-  <div className="space-y-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label
-          htmlFor="name_of_firm"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Company Name *
-        </label>
-        <input
-          type="text"
-          id="name_of_firm"
-          name="name_of_firm"
-          value={formData.name_of_firm}
-          onChange={handleChange}
-          placeholder="Company name"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="name_of_firm"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Company Name *
+                        </label>
+                        <input
+                          type="text"
+                          id="name_of_firm"
+                          name="name_of_firm"
+                          value={formData.name_of_firm}
+                          onChange={handleChange}
+                          placeholder="Company name"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
           ${
             errors.name_of_firm
@@ -842,462 +838,457 @@ ${membershipData[membershipCategory]?.accentColor} text-white shadow-md`}
               : "focus:border-gray-300 focus:ring-indigo-500"
           }
            text-sm py-2 border`}
-        />
+                        />
 
-        {errors.name_of_firm && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.name_of_firm}
-          </p>
-        )}
-      </div>
+                        {errors.name_of_firm && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.name_of_firm}
+                          </p>
+                        )}
+                      </div>
 
-      <div>
-        <label
-          htmlFor="gst"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Gst No *
-        </label>
-        <input
-          type="text"
-          id="gst"
-          name="gst"
-   
-          minLength={15}
-          maxLength={15}
-          value={formData.gst}
-          onChange={handleChange}
-          placeholder="22AAAAA0000A1Z5"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
-
-${
-errors.gst
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
-}
-text-sm py-2 border`}
-        />
-
-        {errors.gst && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.gst}
-          </p>
-        )}
-      </div>
-    </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label
-          htmlFor="contact_person"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Authorized Representative Name *
-        </label>
-        <input
-          type="text"
-          id="contact_person"
-          name="contact_person"
-          value={formData.contact_person}
-          onChange={handleChange}
-          placeholder="Representative name"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                      <div>
+                        <label
+                          htmlFor="gst"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Gst No *
+                        </label>
+                        <input
+                          type="text"
+                          id="gst"
+                          name="gst"
+                          minLength={15}
+                          maxLength={15}
+                          value={formData.gst}
+                          onChange={handleChange}
+                          placeholder="22AAAAA0000A1Z5"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 ${
-errors.contact_person
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
+  errors.gst
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
 }
 text-sm py-2 border`}
-        />
+                        />
 
-        {errors.contact_person && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.contact_person}
-          </p>
-        )}
-      </div>
+                        {errors.gst && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.gst}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-      <div>
-        <label
-          htmlFor="cell_no"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Mobile No *
-        </label>
-        <input
-          type="text"
-          id="cell_no"
-          name="cell_no"
-          onKeyDown={keyDown}
-          minLength={10}
-          maxLength={10}
-          value={formData.cell_no}
-          onChange={handleChange}
-          placeholder="9876543210"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="contact_person"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Authorized Representative Name *
+                        </label>
+                        <input
+                          type="text"
+                          id="contact_person"
+                          name="contact_person"
+                          value={formData.contact_person}
+                          onChange={handleChange}
+                          placeholder="Representative name"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 ${
-errors.cell_no
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
+  errors.contact_person
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
 }
 text-sm py-2 border`}
-        />
+                        />
 
-        {errors.cell_no && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.cell_no}
-          </p>
-        )}
-      </div>
-    </div>
+                        {errors.contact_person && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.contact_person}
+                          </p>
+                        )}
+                      </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div>
-        <label
-          htmlFor="mail_id"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Email Id *
-        </label>
-        <input
-          type="text"
-          id="mail_id"
-          name="mail_id"
-          value={formData.mail_id}
-          onChange={handleChange}
-          placeholder="abc@gmail.com"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                      <div>
+                        <label
+                          htmlFor="cell_no"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Mobile No *
+                        </label>
+                        <input
+                          type="text"
+                          id="cell_no"
+                          name="cell_no"
+                          onKeyDown={keyDown}
+                          minLength={10}
+                          maxLength={10}
+                          value={formData.cell_no}
+                          onChange={handleChange}
+                          placeholder="9876543210"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 ${
-errors.mail_id
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
+  errors.cell_no
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
 }
 text-sm py-2 border`}
-        />
+                        />
 
-        {errors.mail_id && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.mail_id}
-          </p>
-        )}
-      </div>
+                        {errors.cell_no && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.cell_no}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-      <div>
-        <label
-          htmlFor="office_ph_no"
-          className="block text-sm font-medium text-gray-900 mb-1"
-        >
-          Office Phone No 
-        </label>
-        <input
-          type="text"
-          id="office_ph_no"
-          name="office_ph_no"
-          value={formData.office_ph_no}
-          onChange={handleChange}
-          onKeyDown={keyDown}
-          minLength={10}
-          maxLength={10}
-          placeholder="9876543210"
-          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label
+                          htmlFor="mail_id"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Email Id *
+                        </label>
+                        <input
+                          type="text"
+                          id="mail_id"
+                          name="mail_id"
+                          value={formData.mail_id}
+                          onChange={handleChange}
+                          placeholder="abc@gmail.com"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 ${
-errors.office_ph_no
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
+  errors.mail_id
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
 }
 text-sm py-2 border`}
-        />
+                        />
 
-        {errors.office_ph_no && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.office_ph_no}
-          </p>
-        )}
-      </div>
-    </div>
+                        {errors.mail_id && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.mail_id}
+                          </p>
+                        )}
+                      </div>
 
-    <div>
-      <label
-        htmlFor="contact_address"
-        className="block text-sm font-medium text-gray-900 mb-1"
-      >
-        Address *
-      </label>
-      <textarea
-        type="text"
-        rows={3}
-        id="contact_address"
-        name="contact_address"
-        value={formData.contact_address}
-        onChange={handleChange}
-        placeholder="Saint St. 128"
-        className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                      <div>
+                        <label
+                          htmlFor="office_ph_no"
+                          className="block text-sm font-medium text-gray-900 mb-1"
+                        >
+                          Office Phone No
+                        </label>
+                        <input
+                          type="text"
+                          id="office_ph_no"
+                          name="office_ph_no"
+                          value={formData.office_ph_no}
+                          onChange={handleChange}
+                          onKeyDown={keyDown}
+                          minLength={10}
+                          maxLength={10}
+                          placeholder="9876543210"
+                          className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 ${
-errors.contact_address
-? "border-red-500 focus:ring-red-500"
-: "focus:border-gray-300 focus:ring-indigo-500"
+  errors.office_ph_no
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
 }
 text-sm py-2 border`}
-      />
+                        />
 
-      {errors.contact_address && (
-        <p className="text-red-500 text-xs mt-1">
-          {errors.contact_address}
-        </p>
-      )}
-    </div>
+                        {errors.office_ph_no && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.office_ph_no}
+                          </p>
+                        )}
+                      </div>
+                    </div>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Photo Upload */}
-      <div>
-        <Label className="text-gray-900">Photo *</Label>
-        <div className="flex items-center space-x-4 mt-2">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
-              {photo ? (
-                <img
-                  src={photo}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <svg
-                  className="w-6 h-6 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="1.5"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              )}
-            </div>
-          </div>
+                    <div>
+                      <label
+                        htmlFor="contact_address"
+                        className="block text-sm font-medium text-gray-900 mb-1"
+                      >
+                        Address *
+                      </label>
+                      <textarea
+                        type="text"
+                        rows={3}
+                        id="contact_address"
+                        name="contact_address"
+                        value={formData.contact_address}
+                        onChange={handleChange}
+                        placeholder="Saint St. 128"
+                        className={`px-3 py-2  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleChange}
-            id="member_image"
-            name="member_image"
-            className={` w-full text-xs sm:text-sm text-gray-500 
+${
+  errors.contact_address
+    ? "border-red-500 focus:ring-red-500"
+    : "focus:border-gray-300 focus:ring-indigo-500"
+}
+text-sm py-2 border`}
+                      />
+
+                      {errors.contact_address && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.contact_address}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Photo Upload */}
+                      <div>
+                        <Label className="text-gray-900">Photo *</Label>
+                        <div className="flex items-center space-x-4 mt-2">
+                          <div className="relative">
+                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
+                              {photo ? (
+                                <img
+                                  src={photo}
+                                  alt="Preview"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <svg
+                                  className="w-6 h-6 text-gray-400"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="1.5"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                  />
+                                </svg>
+                              )}
+                            </div>
+                          </div>
+
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleChange}
+                            id="member_image"
+                            name="member_image"
+                            className={` w-full text-xs sm:text-sm text-gray-500 
 file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
 file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
 file:bg-indigo-50 hover:file:bg-indigo-100
 ${errors.member_image ? "file:text-red-600" : "file:text-indigo-600"}`}
-          />
-        </div>
-        {errors.member_image && (
-          <p className="text-red-500 text-xs mt-1">
-            {errors.member_image}
-          </p>
-        )}
-      </div>
+                          />
+                        </div>
+                        {errors.member_image && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors.member_image}
+                          </p>
+                        )}
+                      </div>
 
-      {/* Logo Upload */}
-      <div>
-        <Label className="text-gray-900">Logo</Label>
-        <div className="flex items-center space-x-4 mt-2">
-          <div className="w-16 h-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
-            {logo ? (
-              <img
-                src={logo}
-                alt="Preview"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <svg
-                className="w-6 h-6 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-            )}
-          </div>
+                      {/* Logo Upload */}
+                      <div>
+                        <Label className="text-gray-900">Logo</Label>
+                        <div className="flex items-center space-x-4 mt-2">
+                          <div className="w-16 h-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-300 overflow-hidden">
+                            {logo ? (
+                              <img
+                                src={logo}
+                                alt="Preview"
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <svg
+                                className="w-6 h-6 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="1.5"
+                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                />
+                              </svg>
+                            )}
+                          </div>
 
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleChange}
-            id="image"
-            name="image"
-            className={` w-full text-xs sm:text-sm text-gray-500 
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleChange}
+                            id="image"
+                            name="image"
+                            className={` w-full text-xs sm:text-sm text-gray-500 
 file:mr-2 sm:file:mr-4 file:py-1 sm:file:py-2 file:px-2 sm:file:px-4 
 file:rounded-md file:border-0 file:text-xs sm:file:text-sm file:font-semibold 
 file:bg-indigo-50 hover:file:bg-indigo-100
 file:text-indigo-600`}
-          />
-        </div>
-      </div>
-    </div>
+                          />
+                        </div>
+                      </div>
+                    </div>
 
-    <Separator className="my-4" />
+                    <Separator className="my-4" />
 
-    <div>
-      <label
-        htmlFor="manufacturers"
-        className="block text-sm font-medium text-gray-900 mb-1"
-      >
-        Business Type *
-      </label>
-      <Tabs
-        id="manufacturers"
-        name="manufacturers"
-        value={businessType}
-        onValueChange={handleBusinessTypeChange}
-        className="mt-3"
-      >
-        <TabsList className="w-full flex flex-wrap h-auto gap-2 p-1 bg-gray-100/50 rounded-lg">
-          {Object.entries({
-            manufacturer: "Manufacturer",
-            distributorwholesaler: "Distributor/Wholesaler",
-            agent: "Agent",
-            consultant: "Consultant",
-          }).map(([value, label]) => (
-            <TabsTrigger
-              key={value}
-              value={value}
-              className={`flex-1 min-w-[45%] sm:min-w-0 text-sm px-3 py-2 rounded-md transition-all ${
-                businessType === value
-                  ? `${businessTypeColors[value]} font-medium`
-                  : "text-gray-600 hover:text-gray-900 hover:bg-white"
-              }`}
-            >
-              {label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
-      {errors.manufacturers && (
-        <p className="text-red-500 text-xs mt-1">
-          {errors.manufacturers}
-        </p>
-      )}
-    </div>
+                    <div>
+                      <label
+                        htmlFor="manufacturers"
+                        className="block text-sm font-medium text-gray-900 mb-1"
+                      >
+                        Business Type *
+                      </label>
+                      <Tabs
+                        id="manufacturers"
+                        name="manufacturers"
+                        value={businessType}
+                        onValueChange={handleBusinessTypeChange}
+                        className="mt-3"
+                      >
+                        <TabsList className="w-full flex flex-wrap h-auto gap-2 p-1 bg-gray-100/50 rounded-lg">
+                          {Object.entries({
+                            manufacturer: "Manufacturer",
+                            distributorwholesaler: "Distributor/Wholesaler",
+                            agent: "Agent",
+                            consultant: "Consultant",
+                          }).map(([value, label]) => (
+                            <TabsTrigger
+                              key={value}
+                              value={value}
+                              className={`flex-1 min-w-[45%] sm:min-w-0 text-sm px-3 py-2 rounded-md transition-all ${
+                                businessType === value
+                                  ? `${businessTypeColors[value]} font-medium`
+                                  : "text-gray-600 hover:text-gray-900 hover:bg-white"
+                              }`}
+                            >
+                              {label}
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                      </Tabs>
+                      {errors.manufacturers && (
+                        <p className="text-red-500 text-xs mt-1">
+                          {errors.manufacturers}
+                        </p>
+                      )}
+                    </div>
 
-    <div>
-      <label
-        htmlFor="brands"
-        className="block text-sm font-medium text-gray-900 mb-1"
-      >
-        Brands (if any)
-      </label>
+                    <div>
+                      <label
+                        htmlFor="brands"
+                        className="block text-sm font-medium text-gray-900 mb-1"
+                      >
+                        Brands (if any)
+                      </label>
 
-      <input
-        type="text"
-        id="brands"
-        name="brands"
-        value={formData.brands}
-        onChange={handleChange}
-        placeholder="Brand (if any)"
-        className={`px-3  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
+                      <input
+                        type="text"
+                        id="brands"
+                        name="brands"
+                        value={formData.brands}
+                        onChange={handleChange}
+                        placeholder="Brand (if any)"
+                        className={`px-3  w-full rounded-md border-gray-300 shadow-sm  focus:outline-none focus:ring-1 
 
 focus:border-gray-300 focus:ring-indigo-500
 text-sm py-2 border`}
-      />
-    </div>
+                      />
+                    </div>
 
-   
-    {showCaptcha && (
-        <div className=" border-gray-200">
-          <TextCaptcha
-            onVerify={(isVerified) => {
-              setCaptchaVerified(isVerified);
-              if (!isVerified) {
-                setShowCaptchaError(true);
-                setCaptchaErrorType("failed");
-              } else {
-                setShowCaptchaError(false);
-                setCaptchaErrorType("");
-              }
-            }}
-            onRefresh={() => {
-              setCaptchaVerified(false);
-              setShowCaptchaError(false);
-              setCaptchaErrorType("");
-            }}
-            showVerifyButton={false}
-          />
-          {showCaptchaError && (
-            <p className="text-red-500 text-xs mt-2">
-              {captchaErrorType === "failed"
-                ? "CAPTCHA verification failed. Please try again."
-                : "Please complete the CAPTCHA verification"}
-            </p>
-          )}
-        </div>
-      )}
+                    {showCaptcha && (
+                      <div className=" border-gray-200">
+                        <TextCaptcha
+                          onVerify={(isVerified) => {
+                            setCaptchaVerified(isVerified);
+                            if (!isVerified) {
+                              setShowCaptchaError(true);
+                              setCaptchaErrorType("failed");
+                            } else {
+                              setShowCaptchaError(false);
+                              setCaptchaErrorType("");
+                            }
+                          }}
+                          onRefresh={() => {
+                            setCaptchaVerified(false);
+                            setShowCaptchaError(false);
+                            setCaptchaErrorType("");
+                          }}
+                          showVerifyButton={false}
+                        />
+                        {showCaptchaError && (
+                          <p className="text-red-500 text-xs mt-2">
+                            {captchaErrorType === "failed"
+                              ? "CAPTCHA verification failed. Please try again."
+                              : "Please complete the CAPTCHA verification"}
+                          </p>
+                        )}
+                      </div>
+                    )}
 
-    <div className="flex items-center justify-end space-x-4">
-      <Drawer.Close asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50"
-        >
-          Cancel
-        </Button>
-      </Drawer.Close>
-       {!showCaptcha && (
-                                <Button
-                                  onClick={handleNext}
-                                  className={`relative overflow-hidden transition-all ${
-                                    membershipCategory === "life-patron"
-                                      ? "bg-indigo-600 hover:bg-indigo-700"
-                                      : membershipCategory === "ordinary"
-                                      ? "bg-blue-600 hover:bg-blue-700"
-                                      : "bg-emerald-600 hover:bg-emerald-700"
-                                  } text-white`}
-                                >
-                                  <span className="relative z-10">Next</span>
-                                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </Button>
-                              )}
-                              {showCaptcha && (
-      <Button
-        type="submit"
-        onClick={handleSubmit}
-        disabled={loader}
-        className={`relative overflow-hidden transition-all ${
-          membershipCategory === "life-patron"
-            ? "bg-indigo-600 hover:bg-indigo-700"
-            : membershipCategory === "ordinary"
-            ? "bg-blue-600 hover:bg-blue-700"
-            : "bg-emerald-600 hover:bg-emerald-700"
-        } text-white`}
-      >
-        <span className="relative z-10">
-          {loader ? "Submitting..." : " Submit MemberShip"}
-        </span>
-        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </Button>
-        )}
-    </div>
-  </div>
-</>
+                    <div className="flex items-center justify-end space-x-4">
+                      <Drawer.Close asChild>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          className="text-gray-600 hover:text-gray-900 hover:bg-gray-100/50"
+                        >
+                          Cancel
+                        </Button>
+                      </Drawer.Close>
+                      {!showCaptcha && (
+                        <Button
+                          onClick={handleNext}
+                          className={`relative overflow-hidden transition-all ${
+                            membershipCategory === "life-patron"
+                              ? "bg-indigo-600 hover:bg-indigo-700"
+                              : membershipCategory === "ordinary"
+                                ? "bg-blue-600 hover:bg-blue-700"
+                                : "bg-emerald-600 hover:bg-emerald-700"
+                          } text-white`}
+                        >
+                          <span className="relative z-10">Next</span>
+                          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </Button>
+                      )}
+                      {showCaptcha && (
+                        <Button
+                          type="submit"
+                          onClick={handleSubmit}
+                          disabled={loader}
+                          className={`relative overflow-hidden transition-all ${
+                            membershipCategory === "life-patron"
+                              ? "bg-indigo-600 hover:bg-indigo-700"
+                              : membershipCategory === "ordinary"
+                                ? "bg-blue-600 hover:bg-blue-700"
+                                : "bg-emerald-600 hover:bg-emerald-700"
+                          } text-white`}
+                        >
+                          <span className="relative z-10">
+                            {loader ? "Submitting..." : " Submit MemberShip"}
+                          </span>
+                          <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
 
-
-  )}
-
-                {step === 3 && (
+              {step === 3 && (
                 <div className="relative max-w-5xl mx-auto bg-white rounded-md shadow-lg overflow-hidden border border-gray-200">
-                
                   <div className="p-8 bg-gradient-to-r from-green-50 via-white to-blue-50 border-b border-gray-100">
                     <motion.div
                       className="flex flex-col items-center text-center"
@@ -1308,28 +1299,28 @@ text-sm py-2 border`}
                       <h2 className="text-3xl font-medium text-gray-900">
                         Complete Your Payment
                       </h2>
-                      <p className="text-gray-600 mt-2 max-w-2xl">
-                        {resMsg} 
-                      </p>
+                      <p className="text-gray-600 mt-2 max-w-2xl">{resMsg}</p>
                     </motion.div>
                   </div>
-              
-               
+
                   <div className="md:flex">
-                    
                     <div className="md:w-1/2 p-8 border-r border-gray-100 bg-gradient-to-b from-gray-50 to-white">
-                      <motion.div 
+                      <motion.div
                         className={`p-6 rounded-2xl border ${membershipData[membershipCategory]?.borderColor} ${membershipData[membershipCategory]?.bgGradient} shadow-sm`}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.1, duration: 0.4 }}
                       >
                         <div className="flex items-center mb-5">
-                          <div className={`p-3 rounded-xl ${membershipData[membershipCategory]?.accentColor} text-white shadow-md`}>
+                          <div
+                            className={`p-3 rounded-xl ${membershipData[membershipCategory]?.accentColor} text-white shadow-md`}
+                          >
                             {membershipData[membershipCategory]?.icon}
                           </div>
                           <div className="ml-4">
-                            <h3 className={`font-semibold text-lg ${membershipData[membershipCategory]?.textColor}`}>
+                            <h3
+                              className={`font-semibold text-lg ${membershipData[membershipCategory]?.textColor}`}
+                            >
                               {formData.membership_category}
                             </h3>
                             <p className="text-sm text-gray-600">
@@ -1337,17 +1328,23 @@ text-sm py-2 border`}
                             </p>
                           </div>
                         </div>
-              
+
                         <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-5"></div>
-              
+
                         <div className="space-y-4">
                           <div className="flex justify-between">
-                            <span className="text-gray-600">Membership Type:</span>
-                            <span className="font-medium text-gray-900">{formData.membership_category}</span>
+                            <span className="text-gray-600">
+                              Membership Type:
+                            </span>
+                            <span className="font-medium text-gray-900">
+                              {formData.membership_category}
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Company:</span>
-                            <span className="font-medium text-gray-900">{formData.name_of_firm}</span>
+                            <span className="font-medium text-gray-900">
+                              {formData.name_of_firm}
+                            </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-600">Amount:</span>
@@ -1360,14 +1357,16 @@ text-sm py-2 border`}
                           </div>
                         </div>
                       </motion.div>
-              
-                      <motion.div 
+
+                      <motion.div
                         className="mt-8 p-5 bg-blue-50 rounded-xl border border-blue-200 shadow-sm"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2, duration: 0.4 }}
                       >
-                        <h4 className="font-semibold text-blue-800 mb-3 text-lg">Payment Instructions</h4>
+                        <h4 className="font-semibold text-blue-800 mb-3 text-lg">
+                          Payment Instructions
+                        </h4>
                         <ul className="text-blue-700 space-y-2">
                           <li className="flex items-start">
                             <span className="mr-2">•</span>
@@ -1375,58 +1374,67 @@ text-sm py-2 border`}
                           </li>
                           <li className="flex items-start">
                             <span className="mr-2">•</span>
-                            <span>After payment, enter the transaction ID below</span>
+                            <span>
+                              After payment, enter the transaction ID below
+                            </span>
                           </li>
                         </ul>
                       </motion.div>
                     </div>
-              
-                 
+
                     <div className="md:w-1/2 p-8 bg-gradient-to-b from-gray-50 to-white">
-                      <motion.div 
+                      <motion.div
                         className="text-center mb-7"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3, duration: 0.4 }}
                       >
-                        <h3 className="font-medium text-gray-900 text-xl mb-2">Scan to Pay</h3>
-                        <p className="text-gray-600">Use any UPI app to scan this code</p>
+                        <h3 className="font-medium text-gray-900 text-xl mb-2">
+                          Scan to Pay
+                        </h3>
+                        <p className="text-gray-600">
+                          Use any UPI app to scan this code
+                        </p>
                       </motion.div>
-              
-                      <motion.div 
+
+                      <motion.div
                         className="  mb-7 flex justify-center"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.4, duration: 0.4 }}
                       >
-                       {membershipData[membershipCategory]?.price == "₹20,000" ? (
-  <>
-  <img
-            src="/siga20k.png"
-            alt="20000 Payment QR Code"
-            className="w-64 h-64 border rounded-lg"
-          />
-  </>
-):(
-  <>
-    <img
-            src="/siga2k.png"
-            alt="2000 Payment QR Code"
-            className="w-64 h-64 border rounded-lg"
-          />
-  </>
-)}
+                        {membershipData[membershipCategory]?.price ==
+                        "₹20,000" ? (
+                          <>
+                            <img
+                              src="/siga20k.png"
+                              alt="20000 Payment QR Code"
+                              className="w-64 h-64 border rounded-lg"
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src="/siga2k.png"
+                              alt="2000 Payment QR Code"
+                              className="w-64 h-64 border rounded-lg"
+                            />
+                          </>
+                        )}
                       </motion.div>
-              
-                      <motion.form 
-                        onSubmit={handleTransactionSubmit} 
+
+                      <motion.form
+                        onSubmit={handleTransactionSubmit}
                         className="space-y-5"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5, duration: 0.4 }}
                       >
                         <div>
-                          <label htmlFor="directory_payment_transaction" className="block text-sm font-medium text-gray-700 mb-2">
+                          <label
+                            htmlFor="directory_payment_transaction"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
                             Transaction ID *
                           </label>
                           <input
@@ -1440,11 +1448,13 @@ text-sm py-2 border`}
                             required
                           />
                         </div>
-              
+
                         <Button
                           type="button"
                           onClick={handleTransactionSubmit}
-                          disabled={paymentSuccess || transactionMutation.isLoading}
+                          disabled={
+                            paymentSuccess || transactionMutation.isLoading
+                          }
                           className={`w-full py-3 px-4 rounded-xl text-white font-medium transition-all flex items-center justify-center shadow-md ${
                             paymentSuccess
                               ? "bg-green-600 cursor-not-allowed"
@@ -1453,9 +1463,25 @@ text-sm py-2 border`}
                         >
                           {transactionMutation.isLoading ? (
                             <>
-                              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              <svg
+                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
                               </svg>
                               Submitting...
                             </>
@@ -1465,9 +1491,9 @@ text-sm py-2 border`}
                             "Submit Transaction ID"
                           )}
                         </Button>
-              
+
                         {paymentSuccess && (
-                          <motion.div 
+                          <motion.div
                             className="mt-4 text-center"
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -1481,7 +1507,7 @@ text-sm py-2 border`}
                       </motion.form>
                     </div>
                   </div>
-              
+
                   {/* Footer */}
                   <div className="p-5 bg-gradient-to-r from-gray-50 to-white border-t border-gray-100">
                     <div className="flex items-center justify-center">
@@ -1489,8 +1515,18 @@ text-sm py-2 border`}
                         onClick={handleBacktoHome}
                         className="text-gray-600 hover:text-gray-900 flex items-center transition-colors font-medium"
                       >
-                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        <svg
+                          className="w-5 h-5 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                          />
                         </svg>
                         Back to Membership Selection
                       </button>
